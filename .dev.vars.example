@@ -1,0 +1,14 @@
+# ──────────────────────────────────────────
+# Cloudflare (editor deploys user Workers)
+# get from: https://dash.cloudflare.com/profile/api-tokens
+# scopes: Workers Scripts Write, D1 Edit, Account Settings Read
+# NEVER commit a filled copy of this file.
+# ──────────────────────────────────────────
+CLOUDFLARE_ACCOUNT_ID=
+CLOUDFLARE_API_TOKEN=
+
+# optional Workers for Platforms namespace
+DISPATCH_NAMESPACE=
+
+# optional public preview origin for the dispatch worker
+PREVIEW_HOST=

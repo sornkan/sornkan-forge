@@ -1,0 +1,26 @@
+{
+  "name": "sornkan-forge",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Agent-native editor: humans + ChatGPT build a live Cloudflare Worker with D1 and R2 via WebMCP",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sornkan/sornkan-forge.git"
+  },
+  "homepage": "https://forge-worker-editor.sornkan.workers.dev",
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "deploy:dispatch": "wrangler deploy --config wrangler.dispatch.jsonc",
+    "test": "vitest run",
+    "types": "wrangler types"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "latest",
+    "typescript": "^5.9.2",
+    "vitest": "^3.2.4",
+    "wrangler": "^4.125.0"
+  }
+}

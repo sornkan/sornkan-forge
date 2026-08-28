@@ -1,0 +1,15 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  // account_id is an identifier, not a secret. Dispatch namespace needs Workers for Platforms.
+  "name": "forge-worker-dispatch",
+  "main": "src/dispatch.ts",
+  "account_id": "a24ce30584273b42333051f1cdec48e2",
+  "compatibility_date": "2026-08-20",
+  "observability": { "enabled": true, "head_sampling_rate": 1 },
+  "dispatch_namespaces": [
+    {
+      "binding": "DISPATCHER",
+      "namespace": "forge-apps"
+    }
+  ]
+}

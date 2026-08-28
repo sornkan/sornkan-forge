@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light only">
+<title>SORNKan Forge</title>
+<link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+<div class="grain" aria-hidden="true"></div>
+
+<div id="empty" class="first">
+  <div class="first-grid">
+    <div class="first-copy">
+      <span class="eyebrow reveal r1">SORNKan Forge</span>
+      <h1 class="reveal r2">Let’s build<br>your system.</h1>
+      <p class="reveal r3">Tell us the system you want. Invite your agent. We attach <em>web</em> · <em>database</em> · <em>storage</em> on the same page.</p>
+      <div class="composer reveal r4">
+        <label class="sr" for="brief">What to build</label>
+        <textarea id="brief" rows="2">An online store with a cart, live stock in the database, and product photos in storage.</textarea>
+        <div class="modes" role="radiogroup" aria-label="How to start">
+          <button type="button" class="mode" data-start="blank" data-brief="Conjure a site from this brief. Start from a blank page.">
+            <strong>Conjure</strong><span>Blank canvas. Agent builds it.</span>
+          </button>
+          <button type="button" class="mode on" data-start="store" data-brief="An online store with a cart, live stock in the database, and product photos in storage.">
+            <strong>Store</strong><span>Shop template. Stock + photos.</span>
+          </button>
+          <button type="button" class="mode" data-start="cafe" data-brief="A cafe menu. Orders go to the database.">
+            <strong>Cafe</strong><span>Menu template. Live orders.</span>
+          </button>
+        </div>
+        <div class="cta-row">
+          <button type="button" class="pri" id="invite">Invite your agent<span class="arr">↗</span></button>
+          <button type="button" class="ghost" id="startOnly">Open project</button>
+        </div>
+      </div>
+      <p class="foot-hint reveal r5">This text is saved as the brief. Your agent can read it as soon as it arrives.</p>
+    </div>
+    <div class="stage-stack reveal r6" aria-hidden="true">
+      <article class="float f1">
+        <img src="/shop/tote.jpg" alt="" width="280" height="360">
+        <div><b>Tote</b><span>890 · database</span></div>
+      </article>
+      <article class="float f2">
+        <img src="/shop/cap.jpg" alt="" width="280" height="360">
+        <div><b>Cap</b><span>450 · storage</span></div>
+      </article>
+      <article class="float f3">
+        <img src="/shop/tee.jpg" alt="" width="280" height="360">
+        <div><b>Tee</b><span>1,290 · web</span></div>
+      </article>
+      <div class="mods">
+        <i>web</i><i>database</i><i>storage</i>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="ed" class="ed hidden">
+  <div class="ed-top">
+    <span class="logo">SORNKan <em>Forge</em></span>
+    <span class="chip off" id="modWeb">web</span>
+    <span class="chip off" id="modDb">database</span>
+    <span class="chip off" id="modSt">storage</span>
+    <div class="who wait" id="who">
+      <i class="face"></i>
+      <span class="who-copy"><b id="whoName">ChatGPT</b> · Codex · <em id="whoState">waiting</em></span>
+    </div>
+    <span class="work" id="workStatus"></span>
+    <button type="button" class="ghost" id="pinMode">Pin</button>
+    <button type="button" class="ghost" id="copyInvite">Copy invite</button>
+    <button type="button" class="pub" id="publish">Publish</button>
+  </div>
+  <div class="ed-body">
+    <div class="stage" id="stage">
+      <iframe id="preview" title="Preview" sandbox="allow-scripts allow-forms allow-same-origin"></iframe>
+      <div id="pins"></div>
+      <div id="overlay" class="hidden"></div>
+    </div>
+    <aside class="rail">
+      <h3>Brief</h3>
+      <p class="brief-text" id="briefView"></p>
+      <h3>Modules</h3>
+      <div id="modList"></div>
+      <h3>Pins</h3>
+      <p class="hint">Turn on Pin, then click the preview.</p>
+      <div id="pinList"></div>
+      <h3>Agent activity</h3>
+      <div id="act"></div>
+    </aside>
+  </div>
+</div>
+<script type="module" src="/app.js"></script>
+</body>
+</html>

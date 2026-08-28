@@ -1,0 +1,16 @@
+node_modules
+.wrangler
+.dev.vars
+.env
+.env.local
+.env.*.local
+!.env.example
+!.dev.vars.example
+
+*.log
+*.pem
+*.key
+*.p12
+dist
+.DS_Store
+Thumbs.db

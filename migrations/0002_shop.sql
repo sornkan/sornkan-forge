@@ -1,0 +1,16 @@
+CREATE TABLE IF NOT EXISTS shop_products (
+  project_id TEXT NOT NULL,
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  name TEXT NOT NULL,
+  price INTEGER NOT NULL,
+  stock INTEGER NOT NULL,
+  photo TEXT
+);
+
+CREATE TABLE IF NOT EXISTS shop_orders (
+  project_id TEXT NOT NULL,
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  product_id INTEGER NOT NULL,
+  qty INTEGER NOT NULL,
+  created_at TEXT NOT NULL
+);
