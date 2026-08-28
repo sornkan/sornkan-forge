@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { sanitizePath } from "../src/lib/paths.ts";
 import { isMutatingSql } from "../src/lib/sql.ts";
-import { toolsForState, TOOLS } from "../src/lib/catalog.ts";
+import { toolsForState, TOOLS, LOBBY_TOOLS } from "../src/lib/catalog.ts";
 
 describe("sanitizePath", () => {
   it("accepts project files", () => {
@@ -26,8 +26,11 @@ describe("isMutatingSql", () => {
 
 describe("catalog", () => {
   it("forbids additional properties", () => {
-    for (const t of TOOLS) {
+    for (const t of [...LOBBY_TOOLS, ...TOOLS]) {
       expect(t.inputSchema.additionalProperties).toBe(false);
+      expect(t.title).toMatch(/\S/);
+      expect(typeof t.annotations.readOnlyHint).toBe("boolean");
+      expect(typeof t.annotations.untrustedContentHint).toBe("boolean");
     }
   });
   it("hides sql until D1 exists", () => {
@@ -37,5 +40,12 @@ describe("catalog", () => {
   });
   it("includes attach_module", () => {
     expect(TOOLS.map((t) => t.name)).toContain("attach_module");
+  });
+  it("registers lobby tools ChatGPT can call on the first screen", () => {
+    expect(LOBBY_TOOLS.map((t) => t.name)).toEqual(["get_page_context", "start_project", "join_project"]);
+  });
+  it("registers search_products on the top-level editor", () => {
+    expect(TOOLS.map((t) => t.name)).toContain("search_products");
+    expect(TOOLS.map((t) => t.name)).toContain("add_annotation");
   });
 });

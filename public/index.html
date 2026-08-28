@@ -13,7 +13,13 @@
 <div id="empty" class="first">
   <div class="first-grid">
     <div class="first-copy">
-      <span class="eyebrow reveal r1">SORNKan Forge</span>
+      <div class="first-who reveal r1">
+        <span class="eyebrow">SORNKan Forge</span>
+        <div class="who wait" data-who>
+          <i class="face"></i>
+          <span class="who-copy"><b>ChatGPT</b> · Codex · <em data-who-state>waiting</em></span>
+        </div>
+      </div>
       <h1 class="reveal r2">Let’s build<br>your system.</h1>
       <p class="reveal r3">Tell us the system you want. Invite your agent. We attach <em>web</em> · <em>database</em> · <em>storage</em> on the same page.</p>
       <div class="composer reveal r4">
@@ -63,9 +69,9 @@
     <span class="chip off" id="modWeb">web</span>
     <span class="chip off" id="modDb">database</span>
     <span class="chip off" id="modSt">storage</span>
-    <div class="who wait" id="who">
+    <div class="who wait" id="who" data-who>
       <i class="face"></i>
-      <span class="who-copy"><b id="whoName">ChatGPT</b> · Codex · <em id="whoState">waiting</em></span>
+      <span class="who-copy"><b id="whoName">ChatGPT</b> · Codex · <em id="whoState" data-who-state>waiting</em></span>
     </div>
     <span class="work" id="workStatus"></span>
     <button type="button" class="ghost" id="pinMode">Pin</button>

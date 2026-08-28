@@ -23,6 +23,7 @@ button,input,textarea{font-family:"Segoe UI","Sukhumvit Set",sans-serif}
     var(--bg)}
 .first-grid{max-width:1120px;margin:0 auto;min-height:calc(100vh - 52px);
   display:grid;grid-template-columns:1.05fr .95fr;gap:40px;align-items:center}
+.first-who{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 .eyebrow{display:inline-block;font-family:"Segoe UI",sans-serif;font-size:11px;font-weight:700;
   letter-spacing:.18em;text-transform:uppercase;color:var(--accent-deep);
   border:1px solid var(--accent-line);border-radius:999px;padding:5px 12px;background:#fff}

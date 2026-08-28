@@ -36,16 +36,19 @@ await document.modelContext.registerTool({
 The live catalog is registered the same way in [`public/app.js`](public/app.js):
 
 ```js
-await document.modelContext.registerTool({
-  name: tool.name,
-  description: tool.description,
-  inputSchema: tool.inputSchema,
-  annotations: tool.annotations,
-  async execute(input) {
-    const result = await callTool(tool.name, input || {});
-    return { content: [{ type: "text", text: JSON.stringify(result) }] };
+await document.modelContext.registerTool(
+  {
+    name: "search_products",
+    title: "Search products",
+    description: "Search the product catalog by name.",
+    inputSchema: { type: "object", properties: { query: { type: "string" } }, additionalProperties: false },
+    annotations: { readOnlyHint: true, untrustedContentHint: false },
+    async execute(input, { signal } = {}) {
+      return callTool("search_products", input || {}, signal);
+    },
   },
-});
+  { signal: registration.signal },
+);
 ```
 
 Tool names live in [`src/lib/catalog.ts`](src/lib/catalog.ts) (`get_project`, `attach_module`, `write_file`, `deploy_preview`, `publish`, annotations, D1/R2, …).

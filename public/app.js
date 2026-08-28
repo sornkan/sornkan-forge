@@ -11,13 +11,31 @@ const workStatus = document.getElementById("workStatus");
 const pinBtn = document.getElementById("pinMode");
 let pinning = false;
 let projectId = new URLSearchParams(location.search).get("p");
+let phase = "lobby";
+let toolAbort = new AbortController();
+let pendingBoot = null;
+let pendingCatalog = false;
+let listenedToolchange = false;
 
 const log = (name, detail) => {
+  if (!actEl) return;
   const row = document.createElement("div");
   row.className = "act";
   row.textContent = `${name} · ${detail || "ok"}`;
   actEl.prepend(row);
 };
+
+function webmcpReady() {
+  return typeof document.modelContext?.registerTool === "function";
+}
+
+function setWho(state) {
+  const wait = state !== "in the room";
+  document.querySelectorAll("[data-who]").forEach((el) => el.classList.toggle("wait", wait));
+  document.querySelectorAll("[data-who-state]").forEach((el) => {
+    el.textContent = state;
+  });
+}
 
 async function api(path, opts = {}) {
   const res = await fetch(path, {
@@ -30,30 +48,79 @@ async function api(path, opts = {}) {
   return data;
 }
 
-async function callTool(name, input = {}) {
+async function callTool(name, input = {}, signal) {
   log(name, "…");
-  workStatus.dataset.live = "1";
-  workStatus.textContent = `Running ${name}`;
-  const result = await api("/api/tools", {
+  if (workStatus) {
+    workStatus.dataset.live = "1";
+    workStatus.textContent = `Running ${name}`;
+  }
+  const lobby = phase === "lobby" && (name === "get_page_context" || name === "start_project" || name === "join_project");
+  const result = await api(lobby ? "/api/lobby/tools" : "/api/tools", {
     method: "POST",
     body: JSON.stringify({ name, input }),
+    signal,
   });
   log(name, "done");
-  workStatus.textContent = `Just used ${name}`;
-  await refresh();
+  if (workStatus) workStatus.textContent = `Just used ${name}`;
+  if (result.projectId && (name === "start_project" || name === "join_project")) {
+    pendingBoot = result.projectId;
+  }
+  if (phase === "editor") {
+    await refresh();
+    if (name === "attach_module" || name === "provision_d1" || name === "provision_r2") pendingCatalog = true;
+  }
   return result;
 }
 
-function inviteUrl(id) {
-  const u = new URL(location.href);
-  u.search = `?p=${id}`;
-  return u.toString();
+async function registerTools(tools) {
+  if (!webmcpReady()) {
+    setWho("waiting");
+    return;
+  }
+  setWho("in the room");
+  toolAbort.abort();
+  toolAbort = new AbortController();
+  const regSignal = toolAbort.signal;
+  if (!listenedToolchange && typeof document.modelContext.addEventListener === "function") {
+    listenedToolchange = true;
+    document.modelContext.addEventListener("toolchange", () => log("webmcp", "toolchange"));
+  }
+  for (const tool of tools) {
+    if (regSignal.aborted) return;
+    try {
+      await document.modelContext.registerTool(
+        {
+          name: tool.name,
+          title: tool.title || tool.name,
+          description: tool.description,
+          inputSchema: tool.inputSchema,
+          annotations: tool.annotations,
+          async execute(input, options = {}) {
+            const result = await callTool(tool.name, input || {}, options.signal);
+            if (pendingBoot) {
+              const id = pendingBoot;
+              pendingBoot = null;
+              queueMicrotask(() => bootFromAgent(id));
+            }
+            if (pendingCatalog) {
+              pendingCatalog = false;
+              queueMicrotask(() => syncCatalog());
+            }
+            return result;
+          },
+        },
+        { signal: regSignal },
+      );
+    } catch (err) {
+      log("register", `${tool.name} · ${err.message || err}`);
+    }
+  }
 }
 
-async function copyInviteText(id) {
-  const text = `Open this URL in ChatGPT desktop (GPT-5.6 Sol or Terra) or Chrome with chrome://flags/#enable-webmcp-testing:\n${inviteUrl(id)}\n\nCall get_project first — the human already typed a brief. Attach modules web, database, storage if needed. Keep the store working. After they pin notes, call list_annotations and patch.`;
-  await navigator.clipboard.writeText(text);
-  log("invite", "copied");
+async function syncCatalog() {
+  const catalog = await api("/api/catalog");
+  phase = catalog.phase || phase;
+  await registerTools(catalog.tools);
 }
 
 async function refresh() {
@@ -89,34 +156,30 @@ async function refresh() {
   }
 }
 
-async function registerTools(tools) {
-  if (typeof document.modelContext?.registerTool !== "function") {
-    who.classList.add("wait");
-    whoState.textContent = "waiting";
-    return;
-  }
-  who.classList.remove("wait");
-  whoState.textContent = "in the room";
-  for (const tool of tools) {
-    await document.modelContext.registerTool({
-      name: tool.name,
-      description: tool.description,
-      inputSchema: tool.inputSchema,
-      annotations: tool.annotations,
-      async execute(input) {
-        const result = await callTool(tool.name, input || {});
-        return { content: [{ type: "text", text: JSON.stringify(result) }] };
-      },
-    });
-  }
+function inviteUrl(id) {
+  const u = new URL(location.href);
+  u.search = `?p=${id}`;
+  return u.toString();
+}
+
+async function copyInviteText(id) {
+  const text = `Open this URL in ChatGPT desktop (GPT-5.6 Sol or Terra) or Chrome with chrome://flags/#enable-webmcp-testing:\n${inviteUrl(id)}\n\nCall get_page_context, then get_project. Attach modules web, database, storage if needed. Keep the store working. After they pin notes, call list_annotations and patch.`;
+  await navigator.clipboard.writeText(text);
+  log("invite", "copied");
 }
 
 async function bootProject() {
   empty.classList.add("hidden");
   ed.classList.remove("hidden");
-  const catalog = await api("/api/catalog");
-  await registerTools(catalog.tools);
+  phase = "editor";
+  await syncCatalog();
   await refresh();
+}
+
+async function bootFromAgent(id) {
+  projectId = id;
+  history.replaceState({}, "", `?p=${id}`);
+  await bootProject();
 }
 
 let startMode = "store";
@@ -187,5 +250,13 @@ overlay.addEventListener("click", async (ev) => {
     } catch {
       /* fall through to first screen */
     }
+  }
+  try {
+    const catalog = await api("/api/catalog?phase=lobby");
+    phase = "lobby";
+    await registerTools(catalog.tools);
+  } catch (err) {
+    log("catalog", err.message || err);
+    setWho("waiting");
   }
 })();

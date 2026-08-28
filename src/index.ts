@@ -1,4 +1,4 @@
-import { toolsForState } from "./lib/catalog.ts";
+import { LOBBY_TOOLS, toolsForState } from "./lib/catalog.ts";
 import { sanitizePath } from "./lib/paths.ts";
 import { isMutatingSql } from "./lib/sql.ts";
 import { json, readSid, sidCookie } from "./lib/session.ts";
@@ -69,8 +69,26 @@ async function handleApi(request: Request, env: EditorEnv): Promise<Response> {
     return joinSession(env, url.protocol === "https:", String(body.projectId || ""));
   }
 
+  if (url.pathname === "/api/lobby" && request.method === "GET") {
+    return json(await lobbyView(request, env));
+  }
+
+  if (url.pathname === "/api/lobby/tools" && request.method === "POST") {
+    const body = (await request.json()) as { name?: string; input?: Record<string, unknown> };
+    return runLobbyTool(request, env, String(body.name || ""), body.input || {});
+  }
+
+  if (url.pathname === "/api/catalog" && request.method === "GET" && url.searchParams.get("phase") === "lobby") {
+    return json({ phase: "lobby", tools: LOBBY_TOOLS });
+  }
+
   const sid = readSid(request);
-  if (!sid) return json({ error: "no session" }, { status: 401 });
+  if (!sid) {
+    if (url.pathname === "/api/catalog" && request.method === "GET") {
+      return json({ phase: "lobby", tools: LOBBY_TOOLS });
+    }
+    return json({ error: "no session" }, { status: 401 });
+  }
   const session = await env.DB_PROJECTS.prepare("SELECT project_id FROM sessions WHERE id = ?")
     .bind(sid)
     .first<{ project_id: string }>();
@@ -80,6 +98,7 @@ async function handleApi(request: Request, env: EditorEnv): Promise<Response> {
   if (url.pathname === "/api/catalog" && request.method === "GET") {
     const p = await getProject(env, projectId);
     return json({
+      phase: "editor",
       tools: toolsForState({ hasD1: !!p.d1_id && p.d1_id !== "editor", hasR2: !!p.r2_prefix }),
     });
   }
@@ -105,6 +124,58 @@ async function handleApi(request: Request, env: EditorEnv): Promise<Response> {
   }
 
   return json({ error: "not found" }, { status: 404 });
+}
+
+const START_MODES = [
+  { id: "store", title: "Store", hint: "Shop template. Stock + photos." },
+  { id: "cafe", title: "Cafe", hint: "Menu template. Live orders." },
+  { id: "blank", title: "Conjure", hint: "Blank canvas. Agent builds it." },
+];
+
+async function lobbyView(request: Request, env: EditorEnv) {
+  const origin = new URL(request.url).origin;
+  const sid = readSid(request);
+  if (sid) {
+    const session = await env.DB_PROJECTS.prepare("SELECT project_id FROM sessions WHERE id = ?")
+      .bind(sid)
+      .first<{ project_id: string }>();
+    if (session) {
+      const p = await projectView(env, session.project_id);
+      return {
+        screen: "editor",
+        title: "SORNKan Forge",
+        start_modes: START_MODES,
+        invite_url: `${origin}/?p=${p.id}`,
+        ...p,
+      };
+    }
+  }
+  return {
+    screen: "start",
+    title: "SORNKan Forge",
+    start_modes: START_MODES,
+    project_id: null,
+    brief: null,
+    invite_url: null,
+  };
+}
+
+async function runLobbyTool(
+  request: Request,
+  env: EditorEnv,
+  name: string,
+  input: Record<string, unknown>,
+): Promise<Response> {
+  if (name === "get_page_context") return json(await lobbyView(request, env));
+  if (name === "start_project") {
+    const start: StartMode =
+      input.start === "blank" || input.start === "cafe" || input.start === "store" ? input.start : "store";
+    return createSession(env, new URL(request.url).protocol === "https:", String(input.brief || "").slice(0, 2000), start);
+  }
+  if (name === "join_project") {
+    return joinSession(env, new URL(request.url).protocol === "https:", String(input.project_id || input.projectId || ""));
+  }
+  return json({ error: `unknown lobby tool ${name}` }, { status: 400 });
 }
 
 async function createSession(
@@ -218,8 +289,12 @@ async function runTool(env: EditorEnv, projectId: string, name: string, input: R
   const now = new Date().toISOString();
 
   switch (name) {
+    case "get_page_context":
+      return { screen: "editor", title: "SORNKan Forge", ...(await projectView(env, projectId)) };
     case "get_project":
       return projectView(env, projectId);
+    case "get_invite_url":
+      return { project_id: projectId, path: `/?p=${projectId}` };
     case "attach_module": {
       if (input.confirmation !== true) throw new Error("confirmation required");
       const mod = String(input.module || "");
@@ -237,6 +312,58 @@ async function runTool(env: EditorEnv, projectId: string, name: string, input: R
       return env.DB_PROJECTS.prepare("SELECT path FROM files WHERE project_id = ? ORDER BY path")
         .bind(projectId)
         .all();
+    case "search_files": {
+      const q = String(input.query || "").slice(0, 120).replace(/[%_]/g, "");
+      if (!q) throw new Error("query required");
+      const like = `%${q}%`;
+      const { results } = await env.DB_PROJECTS.prepare(
+        "SELECT path FROM files WHERE project_id = ? AND (path LIKE ? OR content LIKE ?) ORDER BY path LIMIT 30",
+      )
+        .bind(projectId, like, like)
+        .all<{ path: string }>();
+      return { query: q, matches: results ?? [] };
+    }
+    case "search_products": {
+      await ensureShop(env.DB_PROJECTS, projectId);
+      const q = String(input.query || "").trim().toLowerCase();
+      const { results } = await env.DB_PROJECTS.prepare(
+        "SELECT id, name, price, stock, photo FROM shop_products WHERE project_id = ? ORDER BY id",
+      )
+        .bind(projectId)
+        .all<{ id: number; name: string; price: number; stock: number; photo: string | null }>();
+      const products = (results ?? []).filter((row) => !q || row.name.toLowerCase().includes(q));
+      return { query: q, products };
+    }
+    case "update_product": {
+      await ensureShop(env.DB_PROJECTS, projectId);
+      const id = Number(input.id);
+      if (!Number.isFinite(id)) throw new Error("bad id");
+      const row = await env.DB_PROJECTS.prepare(
+        "SELECT id, name, price, stock, photo FROM shop_products WHERE project_id = ? AND id = ?",
+      )
+        .bind(projectId, id)
+        .first<{ id: number; name: string; price: number; stock: number; photo: string | null }>();
+      if (!row) throw new Error("product not found");
+      const name = input.name != null ? String(input.name).slice(0, 80) : row.name;
+      const price = input.price != null ? Math.max(0, Number(input.price)) : row.price;
+      const stock = input.stock != null ? Math.max(0, Number(input.stock)) : row.stock;
+      const photo = input.photo != null ? String(input.photo).slice(0, 240) : row.photo;
+      await env.DB_PROJECTS.prepare(
+        "UPDATE shop_products SET name = ?, price = ?, stock = ?, photo = ? WHERE project_id = ? AND id = ?",
+      )
+        .bind(name, price, stock, photo, projectId, id)
+        .run();
+      return { ok: true, product: { id, name, price, stock, photo } };
+    }
+    case "list_orders": {
+      await ensureShop(env.DB_PROJECTS, projectId);
+      const { results } = await env.DB_PROJECTS.prepare(
+        "SELECT id, product_id, qty, created_at FROM shop_orders WHERE project_id = ? ORDER BY id DESC LIMIT 20",
+      )
+        .bind(projectId)
+        .all();
+      return { orders: results ?? [] };
+    }
     case "read_file": {
       const path = sanitizePath(String(input.path || ""));
       const row = await env.DB_PROJECTS.prepare(
@@ -290,6 +417,19 @@ async function runTool(env: EditorEnv, projectId: string, name: string, input: R
       )
         .bind(projectId)
         .all();
+    case "add_annotation": {
+      const x = Math.min(1, Math.max(0, Number(input.x)));
+      const y = Math.min(1, Math.max(0, Number(input.y)));
+      const note = String(input.note || "").slice(0, 500);
+      if (!note) throw new Error("note required");
+      const id = crypto.randomUUID();
+      await env.DB_PROJECTS.prepare(
+        "INSERT INTO annotations (id, project_id, x, y, note, resolved, created_at) VALUES (?, ?, ?, ?, ?, 0, ?)",
+      )
+        .bind(id, projectId, x, y, note, now)
+        .run();
+      return { ok: true, id, x, y, note };
+    }
     case "resolve_annotation":
       await env.DB_PROJECTS.prepare("UPDATE annotations SET resolved = 1 WHERE id = ? AND project_id = ?")
         .bind(String(input.id), projectId)
