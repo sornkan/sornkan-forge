@@ -91,7 +91,7 @@ export const TOOLS: ToolDef[] = [
     name: "get_project",
     title: "Read the project",
     description:
-      "Read the full project. The brief is what the human typed on Let's build your system. Also returns files, modules (web, database, storage), preview URL, and annotations.",
+      "Read the full project. Stack is locked: Hono Worker in src/index.js (import { Hono } from \"hono\"), pages in public/, schema.sql for this app's D1, R2 bound as BUCKET. Do not use Next, Prisma, Postgres, or Elysia. Also returns files, modules (web, database, storage), preview URL, and annotations.",
     side: "read",
     annotations: readUntrusted,
     always: true,
@@ -169,7 +169,8 @@ export const TOOLS: ToolDef[] = [
   {
     name: "write_file",
     title: "Write a file",
-    description: "Create or overwrite a project file. Allowed roots: src/, public/, schema.sql, wrangler.jsonc.",
+    description:
+      "Create or overwrite a project file. Allowed roots: src/, public/, schema.sql, wrangler.jsonc. Backend must stay Hono (import { Hono } from \"hono\"). Put UI in public/.",
     side: "write",
     annotations: write,
     always: true,

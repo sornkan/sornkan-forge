@@ -117,11 +117,16 @@ export async function listR2Objects(env: CfEnv, bucket: string): Promise<string[
   return rows.map((o) => o.key || o.name || "").filter(Boolean);
 }
 
+export function rewriteHonoImports(source: string): string {
+  return source.replace(/from\s+["']hono(?:\/[^"']*)?["']/g, 'from "./hono.mjs"');
+}
+
 export async function uploadUserWorker(
   env: CfEnv,
   scriptName: string,
   source: string,
   bindings: Record<string, unknown>[],
+  extraModules: { name: string; source: string }[] = [],
 ): Promise<{ url: string }> {
   const metadata = {
     main_module: "index.mjs",
@@ -132,9 +137,12 @@ export async function uploadUserWorker(
   form.set("metadata", JSON.stringify(metadata));
   form.set(
     "index.mjs",
-    new Blob([source], { type: "application/javascript+module" }),
+    new Blob([rewriteHonoImports(source)], { type: "application/javascript+module" }),
     "index.mjs",
   );
+  for (const mod of extraModules) {
+    form.set(mod.name, new Blob([mod.source], { type: "application/javascript+module" }), mod.name);
+  }
 
   const path = env.DISPATCH_NAMESPACE
     ? `/workers/dispatch/namespaces/${env.DISPATCH_NAMESPACE}/scripts/${scriptName}`

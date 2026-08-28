@@ -3,7 +3,9 @@ import { sanitizePath } from "../src/lib/paths.ts";
 import { isMutatingSql } from "../src/lib/sql.ts";
 import { toolsForState, TOOLS, LOBBY_TOOLS } from "../src/lib/catalog.ts";
 import { d1Name, isOwnDb, r2Name } from "../src/lib/isolate.ts";
-import { schemaForStart } from "../src/lib/seed.ts";
+import { indexForStart, schemaForStart } from "../src/lib/seed.ts";
+import { rewriteHonoImports } from "../src/lib/cf.ts";
+import { APP_STACK } from "../src/lib/isolate.ts";
 
 describe("sanitizePath", () => {
   it("accepts project files", () => {
@@ -67,5 +69,12 @@ describe("per-app isolate", () => {
     expect(schemaForStart("cafe")).toContain("Espresso");
     expect(schemaForStart("cafe")).not.toContain("Canvas tote");
     expect(schemaForStart("blank")).not.toContain("INSERT");
+  });
+  it("locks generated workers to Hono", () => {
+    expect(APP_STACK.backend).toBe("hono");
+    expect(indexForStart("blank")).toContain('import { Hono } from "hono"');
+    expect(indexForStart("store")).toContain("new Hono()");
+    expect(indexForStart("cafe")).toContain("/api/products");
+    expect(rewriteHonoImports('import { Hono } from "hono"')).toContain("./hono.mjs");
   });
 });

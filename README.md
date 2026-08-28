@@ -8,6 +8,8 @@ A Lovable-style editor where **your** agent builds a real Cloudflare Worker. The
 
 Forge does not run an LLM. The page registers tools with `document.modelContext.registerTool`. You watch, pin notes, and publish.
 
+Generated apps are locked to **Hono** on a Worker, static pages in `public/`, per-app D1 (`DB`) and R2 (`BUCKET`). Import `{ Hono } from "hono"` — the studio ships the module on deploy.
+
 Submission for the [OpenAI WebMCP Challenge](https://webmcp.devpost.com/) (deadline 3 Sep 2026, 1:00pm PT). License: **MIT** (OSI, visible in GitHub About).
 
 ## For judges

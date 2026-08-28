@@ -15,7 +15,7 @@ import {
   type CfEnv,
 } from "./lib/cf.ts";
 import { handlePreview } from "./lib/shop.ts";
-import { d1Name, isOwnDb, r2Name } from "./lib/isolate.ts";
+import { APP_STACK, d1Name, isOwnDb, r2Name } from "./lib/isolate.ts";
 
 function requireCf(env: EditorEnv): CfEnv {
   if (!env.CLOUDFLARE_API_TOKEN) throw new Error("CLOUDFLARE_API_TOKEN missing");
@@ -287,6 +287,7 @@ async function projectView(env: EditorEnv, id: string) {
       database: isOwnDb(p.d1_id),
       storage: !!p.r2_bucket,
     },
+    stack: APP_STACK,
     files: files.results ?? [],
     annotations: pins.results ?? [],
     logs: JSON.parse(p.logs || "[]"),
@@ -520,7 +521,9 @@ async function runTool(env: EditorEnv, projectId: string, name: string, input: R
         }
         if (fresh.r2_bucket) bindings.push({ type: "r2_bucket", name: "BUCKET", bucket_name: fresh.r2_bucket });
         const scriptName = `forge-user-${projectId}`;
-        const uploaded = await uploadUserWorker(requireCf(env), scriptName, sourceRow.content, bindings);
+        const honoRes = await env.ASSETS.fetch(new Request("https://assets.local/stack/hono.min.mjs"));
+        const extras = honoRes.ok ? [{ name: "hono.mjs", source: await honoRes.text() }] : [];
+        const uploaded = await uploadUserWorker(requireCf(env), scriptName, sourceRow.content, bindings, extras);
         const url = env.PREVIEW_HOST
           ? `${env.PREVIEW_HOST.replace(/\/$/, "")}/${scriptName}/`
           : uploaded.url;

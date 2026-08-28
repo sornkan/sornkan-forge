@@ -141,46 +141,57 @@ export function htmlForStart(start: StartMode): string {
   return SEED_HTML;
 }
 
-export const BLANK_INDEX = `export default {
-  async fetch() {
-    return new Response(${JSON.stringify(BLANK_HTML)}, {
-      headers: { "content-type": "text/html; charset=utf-8" },
-    });
-  },
-};
-`;
+function honoBlank(pageHtml: string): string {
+  return `import { Hono } from "hono";
 
-export const SEED_INDEX = `export default {
-  async fetch(request, env) {
-    const url = new URL(request.url);
-    if (url.pathname === "/api/products" && request.method === "GET") {
-      if (!env.DB) return Response.json({ products: [] });
-      const { results } = await env.DB.prepare("SELECT id, name, price, stock, photo FROM products").all();
-      return Response.json({ products: results ?? [] });
-    }
-    if (url.pathname === "/api/orders" && request.method === "POST") {
-      const body = await request.json();
-      const id = Number(body.product_id);
-      const qty = Math.max(1, Number(body.qty) || 1);
-      if (!env.DB) return Response.json({ ok: true, local: true });
-      const row = await env.DB.prepare("SELECT stock FROM products WHERE id = ?").bind(id).first();
-      if (!row || row.stock < qty) return Response.json({ error: "out of stock" }, { status: 409 });
-      await env.DB.batch([
-        env.DB.prepare("UPDATE products SET stock = stock - ? WHERE id = ?").bind(qty, id),
-        env.DB.prepare("INSERT INTO orders (product_id, qty, created_at) VALUES (?, ?, ?)").bind(id, qty, new Date().toISOString()),
-      ]);
-      return Response.json({ ok: true });
-    }
-    if (url.pathname.startsWith("/files/") && env.BUCKET) {
-      const obj = await env.BUCKET.get(url.pathname.slice("/files/".length));
-      if (!obj) return new Response("not found", { status: 404 });
-      return new Response(obj.body, { headers: { "content-type": obj.httpMetadata?.contentType || "application/octet-stream" } });
-    }
-    return new Response(${JSON.stringify(SEED_HTML)}, { headers: { "content-type": "text/html; charset=utf-8" } });
-  }
-};
+const app = new Hono();
+
+app.get("*", (c) => c.html(${JSON.stringify(pageHtml)}));
+
+export default app;
 `;
+}
+
+function honoShop(pageHtml: string): string {
+  return `import { Hono } from "hono";
+
+const app = new Hono();
+
+app.get("/api/products", async (c) => {
+  if (!c.env.DB) return c.json({ products: [] });
+  const { results } = await c.env.DB.prepare("SELECT id, name, price, stock, photo FROM products").all();
+  return c.json({ products: results ?? [] });
+});
+
+app.post("/api/orders", async (c) => {
+  const body = await c.req.json();
+  const id = Number(body.product_id);
+  const qty = Math.max(1, Number(body.qty) || 1);
+  if (!c.env.DB) return c.json({ ok: true, local: true });
+  const row = await c.env.DB.prepare("SELECT stock FROM products WHERE id = ?").bind(id).first();
+  if (!row || row.stock < qty) return c.json({ error: "out of stock" }, { status: 409 });
+  await c.env.DB.batch([
+    c.env.DB.prepare("UPDATE products SET stock = stock - ? WHERE id = ?").bind(qty, id),
+    c.env.DB.prepare("INSERT INTO orders (product_id, qty, created_at) VALUES (?, ?, ?)").bind(id, qty, new Date().toISOString()),
+  ]);
+  return c.json({ ok: true });
+});
+
+app.get("/files/*", async (c) => {
+  if (!c.env.BUCKET) return c.text("not found", 404);
+  const key = c.req.path.slice("/files/".length);
+  const obj = await c.env.BUCKET.get(key);
+  if (!obj) return c.text("not found", 404);
+  return new Response(obj.body, { headers: { "content-type": obj.httpMetadata?.contentType || "application/octet-stream" } });
+});
+
+app.get("*", (c) => c.html(${JSON.stringify(pageHtml)}));
+
+export default app;
+`;
+}
 
 export function indexForStart(start: StartMode): string {
-  return start === "blank" ? BLANK_INDEX : SEED_INDEX;
+  if (start === "blank") return honoBlank(BLANK_HTML);
+  return honoShop(htmlForStart(start));
 }

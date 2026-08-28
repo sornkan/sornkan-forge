@@ -13,3 +13,12 @@ export function isOwnDb(id: string | null | undefined): id is string {
 export function isOwnR2(bucket: string | null | undefined): bucket is string {
   return !!bucket && !bucket.startsWith("proj/");
 }
+
+export const APP_STACK = {
+  backend: "hono",
+  frontend: "public/",
+  database: "d1",
+  storage: "r2",
+  bindings: { DB: "D1", BUCKET: "R2" },
+  note: "Write a Hono app in src/index.js. Import { Hono } from \"hono\". Put pages in public/. Schema in schema.sql. Do not use Next, Prisma, or Postgres.",
+} as const;
