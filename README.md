@@ -68,7 +68,7 @@ npx wrangler dev
 npx vitest run
 ```
 
-`CLOUDFLARE_API_TOKEN` is a **secret**. Put it in `.dev.vars` locally and `wrangler secret put CLOUDFLARE_API_TOKEN` in production. See [SECURITY.md](SECURITY.md).
+`CLOUDFLARE_API_TOKEN` is a **secret**. Put it in `.dev.vars` locally and `wrangler secret put CLOUDFLARE_API_TOKEN` in production. Scopes: Workers Scripts Edit, D1 Edit, R2 Edit. Each app then gets its own D1 (`forge-d1-proj-{id}`) and R2 (`forge-r2-proj-{id}`). Without the token, modules stay off — the studio will not share its database across apps. See [SECURITY.md](SECURITY.md).
 
 ## Cloudflare names
 

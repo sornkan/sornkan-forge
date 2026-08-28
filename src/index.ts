@@ -2,9 +2,20 @@ import { LOBBY_TOOLS, toolsForState } from "./lib/catalog.ts";
 import { sanitizePath } from "./lib/paths.ts";
 import { isMutatingSql } from "./lib/sql.ts";
 import { json, readSid, sidCookie } from "./lib/session.ts";
-import { htmlForStart, indexForStart, SEED_SCHEMA, type StartMode } from "./lib/seed.ts";
-import { createD1, execD1, uploadUserWorker, type CfEnv } from "./lib/cf.ts";
-import { ensureShop, handlePreview } from "./lib/shop.ts";
+import { htmlForStart, indexForStart, schemaForStart, type StartMode } from "./lib/seed.ts";
+import {
+  createD1,
+  createR2,
+  execD1,
+  execD1Script,
+  listR2Objects,
+  putR2Object,
+  queryD1,
+  uploadUserWorker,
+  type CfEnv,
+} from "./lib/cf.ts";
+import { handlePreview } from "./lib/shop.ts";
+import { d1Name, isOwnDb, r2Name } from "./lib/isolate.ts";
 
 function requireCf(env: EditorEnv): CfEnv {
   if (!env.CLOUDFLARE_API_TOKEN) throw new Error("CLOUDFLARE_API_TOKEN missing");
@@ -30,6 +41,7 @@ type Project = {
   d1_id: string | null;
   d1_name: string | null;
   r2_prefix: string | null;
+  r2_bucket: string | null;
   logs: string;
 };
 
@@ -99,7 +111,7 @@ async function handleApi(request: Request, env: EditorEnv): Promise<Response> {
     const p = await getProject(env, projectId);
     return json({
       phase: "editor",
-      tools: toolsForState({ hasD1: !!p.d1_id && p.d1_id !== "editor", hasR2: !!p.r2_prefix }),
+      tools: toolsForState({ hasD1: isOwnDb(p.d1_id), hasR2: !!p.r2_bucket }),
     });
   }
 
@@ -205,17 +217,28 @@ async function createSession(
     ).bind(projectId, "public/index.html", htmlForStart(start), now),
     env.DB_PROJECTS.prepare(
       "INSERT INTO files (project_id, path, content, updated_at) VALUES (?, ?, ?, ?)",
-    ).bind(projectId, "schema.sql", SEED_SCHEMA, now),
+    ).bind(projectId, "schema.sql", schemaForStart(start), now),
   ]);
+  let isolated: { database: boolean; storage: boolean; error: string | null } = {
+    database: false,
+    storage: false,
+    error: null,
+  };
   if (start !== "blank") {
-    await ensureShop(env.DB_PROJECTS, projectId, start === "cafe" ? "cafe" : "store");
-    await env.DB_PROJECTS.prepare(
-      "UPDATE projects SET d1_id = ?, d1_name = ?, r2_prefix = ? WHERE id = ?",
-    )
-      .bind("editor", "database", `proj/${projectId}/`, projectId)
-      .run();
+    try {
+      await runTool(env, projectId, "provision_d1", { confirmation: true });
+      isolated.database = true;
+    } catch (err) {
+      isolated.error = err instanceof Error ? err.message : "d1 failed";
+    }
+    try {
+      await runTool(env, projectId, "provision_r2", { confirmation: true });
+      isolated.storage = true;
+    } catch (err) {
+      isolated.error = isolated.error || (err instanceof Error ? err.message : "r2 failed");
+    }
   }
-  return json({ projectId, preview, start }, { headers: { "set-cookie": sidCookie(sid, secure) } });
+  return json({ projectId, preview, start, isolated }, { headers: { "set-cookie": sidCookie(sid, secure) } });
 }
 
 async function joinSession(env: EditorEnv, secure: boolean, projectId: string): Promise<Response> {
@@ -256,32 +279,25 @@ async function projectView(env: EditorEnv, id: string) {
     brief: p.brief,
     preview_url: p.preview_url,
     published_url: p.published_url,
-    hasD1: !!p.d1_id,
-    hasR2: !!p.r2_prefix,
+    hasD1: isOwnDb(p.d1_id),
+    hasR2: !!p.r2_bucket,
+    r2_bucket: p.r2_bucket,
     modules: {
       web: !!p.preview_url,
-      database: !!p.d1_id,
-      storage: !!p.r2_prefix,
+      database: isOwnDb(p.d1_id),
+      storage: !!p.r2_bucket,
     },
     files: files.results ?? [],
     annotations: pins.results ?? [],
     logs: JSON.parse(p.logs || "[]"),
-    tools: toolsForState({ hasD1: !!p.d1_id && p.d1_id !== "editor", hasR2: !!p.r2_prefix }).map((t) => t.name),
+    tools: toolsForState({ hasD1: isOwnDb(p.d1_id), hasR2: !!p.r2_bucket }).map((t) => t.name),
   };
 }
 
 async function attachDatabase(env: EditorEnv, projectId: string) {
   const p = await getProject(env, projectId);
-  if (p.d1_id) return { ok: true, module: "database" };
-  try {
-    return await runTool(env, projectId, "provision_d1", { confirmation: true });
-  } catch {
-    await ensureShop(env.DB_PROJECTS, projectId);
-    await env.DB_PROJECTS.prepare("UPDATE projects SET d1_id = ?, d1_name = ? WHERE id = ?")
-      .bind("editor", "database", projectId)
-      .run();
-    return { ok: true, module: "database", local: true };
-  }
+  if (isOwnDb(p.d1_id)) return { ok: true, module: "database", d1_id: p.d1_id };
+  return runTool(env, projectId, "provision_d1", { confirmation: true });
 }
 
 async function runTool(env: EditorEnv, projectId: string, name: string, input: Record<string, unknown>) {
@@ -324,45 +340,45 @@ async function runTool(env: EditorEnv, projectId: string, name: string, input: R
       return { query: q, matches: results ?? [] };
     }
     case "search_products": {
-      await ensureShop(env.DB_PROJECTS, projectId);
+      if (!isOwnDb(p.d1_id)) throw new Error("attach database first");
       const q = String(input.query || "").trim().toLowerCase();
-      const { results } = await env.DB_PROJECTS.prepare(
-        "SELECT id, name, price, stock, photo FROM shop_products WHERE project_id = ? ORDER BY id",
-      )
-        .bind(projectId)
-        .all<{ id: number; name: string; price: number; stock: number; photo: string | null }>();
-      const products = (results ?? []).filter((row) => !q || row.name.toLowerCase().includes(q));
+      const rows = await queryD1(
+        requireCf(env),
+        p.d1_id,
+        "SELECT id, name, price, stock, photo FROM products ORDER BY id",
+      );
+      const products = rows.filter((row) => !q || String(row.name || "").toLowerCase().includes(q));
       return { query: q, products };
     }
     case "update_product": {
-      await ensureShop(env.DB_PROJECTS, projectId);
+      if (!isOwnDb(p.d1_id)) throw new Error("attach database first");
       const id = Number(input.id);
       if (!Number.isFinite(id)) throw new Error("bad id");
-      const row = await env.DB_PROJECTS.prepare(
-        "SELECT id, name, price, stock, photo FROM shop_products WHERE project_id = ? AND id = ?",
-      )
-        .bind(projectId, id)
-        .first<{ id: number; name: string; price: number; stock: number; photo: string | null }>();
+      const cf = requireCf(env);
+      const found = await queryD1(cf, p.d1_id, "SELECT id, name, price, stock, photo FROM products WHERE id = ?", [id]);
+      const row = found[0];
       if (!row) throw new Error("product not found");
-      const name = input.name != null ? String(input.name).slice(0, 80) : row.name;
-      const price = input.price != null ? Math.max(0, Number(input.price)) : row.price;
-      const stock = input.stock != null ? Math.max(0, Number(input.stock)) : row.stock;
-      const photo = input.photo != null ? String(input.photo).slice(0, 240) : row.photo;
-      await env.DB_PROJECTS.prepare(
-        "UPDATE shop_products SET name = ?, price = ?, stock = ?, photo = ? WHERE project_id = ? AND id = ?",
-      )
-        .bind(name, price, stock, photo, projectId, id)
-        .run();
+      const name = input.name != null ? String(input.name).slice(0, 80) : String(row.name);
+      const price = input.price != null ? Math.max(0, Number(input.price)) : Number(row.price);
+      const stock = input.stock != null ? Math.max(0, Number(input.stock)) : Number(row.stock);
+      const photo = input.photo != null ? String(input.photo).slice(0, 240) : (row.photo as string | null);
+      await execD1(cf, p.d1_id, "UPDATE products SET name = ?, price = ?, stock = ?, photo = ? WHERE id = ?", [
+        name,
+        price,
+        stock,
+        photo,
+        id,
+      ]);
       return { ok: true, product: { id, name, price, stock, photo } };
     }
     case "list_orders": {
-      await ensureShop(env.DB_PROJECTS, projectId);
-      const { results } = await env.DB_PROJECTS.prepare(
-        "SELECT id, product_id, qty, created_at FROM shop_orders WHERE project_id = ? ORDER BY id DESC LIMIT 20",
-      )
-        .bind(projectId)
-        .all();
-      return { orders: results ?? [] };
+      if (!isOwnDb(p.d1_id)) throw new Error("attach database first");
+      const orders = await queryD1(
+        requireCf(env),
+        p.d1_id,
+        "SELECT id, product_id, qty, created_at FROM orders ORDER BY id DESC LIMIT 20",
+      );
+      return { orders };
     }
     case "read_file": {
       const path = sanitizePath(String(input.path || ""));
@@ -437,45 +453,54 @@ async function runTool(env: EditorEnv, projectId: string, name: string, input: R
       return { ok: true };
     case "provision_d1": {
       if (input.confirmation !== true) throw new Error("confirmation required");
-      if (p.d1_id) return { ok: true, d1_id: p.d1_id };
-      const created = await createD1(requireCf(env), `forge-d1-proj-${projectId}`);
+      if (isOwnDb(p.d1_id)) return { ok: true, d1_id: p.d1_id, name: p.d1_name };
+      const cf = requireCf(env);
+      const created = await createD1(cf, d1Name(projectId));
       const schema = await env.DB_PROJECTS.prepare(
         "SELECT content FROM files WHERE project_id = ? AND path = 'schema.sql'",
       )
         .bind(projectId)
         .first<{ content: string }>();
-      if (schema?.content) await execD1(requireCf(env), created.uuid, schema.content);
+      if (schema?.content) await execD1Script(cf, created.uuid, schema.content);
       await env.DB_PROJECTS.prepare("UPDATE projects SET d1_id = ?, d1_name = ? WHERE id = ?")
         .bind(created.uuid, created.name, projectId)
         .run();
-      return { ok: true, d1_id: created.uuid };
+      return { ok: true, d1_id: created.uuid, name: created.name };
     }
     case "run_sql": {
-      if (!p.d1_id) throw new Error("no D1 yet");
+      if (!isOwnDb(p.d1_id)) throw new Error("attach database first");
       const sql = String(input.sql || "");
       if (isMutatingSql(sql) && input.confirmation !== true) throw new Error("confirmation required");
       return execD1(requireCf(env), p.d1_id, sql);
     }
     case "provision_r2": {
       if (input.confirmation !== true) throw new Error("confirmation required");
-      const prefix = `proj/${projectId}/`;
-      await env.DB_PROJECTS.prepare("UPDATE projects SET r2_prefix = ? WHERE id = ?").bind(prefix, projectId).run();
-      return { ok: true, prefix };
+      if (p.r2_bucket) return { ok: true, bucket: p.r2_bucket };
+      const name = r2Name(projectId);
+      await createR2(requireCf(env), name);
+      await env.DB_PROJECTS.prepare("UPDATE projects SET r2_bucket = ?, r2_prefix = ? WHERE id = ?")
+        .bind(name, "", projectId)
+        .run();
+      return { ok: true, bucket: name };
     }
     case "put_object": {
-      if (!p.r2_prefix) throw new Error("no R2 yet");
+      if (!p.r2_bucket) throw new Error("attach storage first");
       const key = String(input.key || "").replace(/^\/+/, "");
       if (!key || key.includes("..")) throw new Error("bad key");
       const bytes = Uint8Array.from(atob(String(input.content_base64 || "")), (c) => c.charCodeAt(0));
-      await env.R2_ASSETS.put(p.r2_prefix + key, bytes, {
-        httpMetadata: { contentType: String(input.content_type || "application/octet-stream") },
-      });
-      return { ok: true, key };
+      await putR2Object(
+        requireCf(env),
+        p.r2_bucket,
+        key,
+        bytes,
+        String(input.content_type || "application/octet-stream"),
+      );
+      return { ok: true, key, bucket: p.r2_bucket };
     }
     case "list_objects": {
-      if (!p.r2_prefix) throw new Error("no R2 yet");
-      const listed = await env.R2_ASSETS.list({ prefix: p.r2_prefix });
-      return { objects: listed.objects.map((o) => o.key.slice(p.r2_prefix!.length)) };
+      if (!p.r2_bucket) throw new Error("attach storage first");
+      const objects = await listR2Objects(requireCf(env), p.r2_bucket);
+      return { objects, bucket: p.r2_bucket };
     }
     case "deploy_preview":
     case "publish": {
@@ -490,10 +515,10 @@ async function runTool(env: EditorEnv, projectId: string, name: string, input: R
         if (!sourceRow) throw new Error("missing src/index.js");
         const fresh = await getProject(env, projectId);
         const bindings: Record<string, unknown>[] = [];
-        if (fresh.d1_id && fresh.d1_id !== "editor") {
+        if (isOwnDb(fresh.d1_id)) {
           bindings.push({ type: "d1", name: "DB", database_id: fresh.d1_id });
         }
-        if (fresh.r2_prefix) bindings.push({ type: "r2_bucket", name: "BUCKET", bucket_name: "forge-r2-assets" });
+        if (fresh.r2_bucket) bindings.push({ type: "r2_bucket", name: "BUCKET", bucket_name: fresh.r2_bucket });
         const scriptName = `forge-user-${projectId}`;
         const uploaded = await uploadUserWorker(requireCf(env), scriptName, sourceRow.content, bindings);
         const url = env.PREVIEW_HOST

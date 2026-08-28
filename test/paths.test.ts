@@ -2,6 +2,8 @@ import { describe, expect, it } from "vitest";
 import { sanitizePath } from "../src/lib/paths.ts";
 import { isMutatingSql } from "../src/lib/sql.ts";
 import { toolsForState, TOOLS, LOBBY_TOOLS } from "../src/lib/catalog.ts";
+import { d1Name, isOwnDb, r2Name } from "../src/lib/isolate.ts";
+import { schemaForStart } from "../src/lib/seed.ts";
 
 describe("sanitizePath", () => {
   it("accepts project files", () => {
@@ -47,5 +49,23 @@ describe("catalog", () => {
   it("registers search_products on the top-level editor", () => {
     expect(TOOLS.map((t) => t.name)).toContain("search_products");
     expect(TOOLS.map((t) => t.name)).toContain("add_annotation");
+  });
+});
+
+describe("per-app isolate", () => {
+  it("does not treat the studio database as an app database", () => {
+    expect(isOwnDb("editor")).toBe(false);
+    expect(isOwnDb(null)).toBe(false);
+    expect(isOwnDb("01d0822e-2dc8-49a2-b9e5-052a07b46985")).toBe(true);
+  });
+  it("names d1 and r2 per project", () => {
+    expect(d1Name("aabbccdd")).toBe("forge-d1-proj-aabbccdd");
+    expect(r2Name("aabbccdd")).toBe("forge-r2-proj-aabbccdd");
+  });
+  it("cafe schema is not the store catalog", () => {
+    expect(schemaForStart("store")).toContain("Canvas tote");
+    expect(schemaForStart("cafe")).toContain("Espresso");
+    expect(schemaForStart("cafe")).not.toContain("Canvas tote");
+    expect(schemaForStart("blank")).not.toContain("INSERT");
   });
 });

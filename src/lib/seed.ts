@@ -1,4 +1,6 @@
-export const SEED_SCHEMA = `CREATE TABLE IF NOT EXISTS products (
+export type StartMode = "blank" | "store" | "cafe";
+
+const TABLES = `CREATE TABLE IF NOT EXISTS products (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   name TEXT NOT NULL,
   price INTEGER NOT NULL,
@@ -11,11 +13,27 @@ CREATE TABLE IF NOT EXISTS orders (
   qty INTEGER NOT NULL,
   created_at TEXT NOT NULL DEFAULT (datetime('now'))
 );
-INSERT INTO products (name, price, stock, photo) VALUES
+`;
+
+const STORE_ROWS = `INSERT INTO products (name, price, stock, photo) VALUES
   ('Canvas tote', 890, 12, '/shop/tote.jpg'),
   ('Cap', 450, 20, '/shop/cap.jpg'),
   ('Tee', 1290, 8, '/shop/tee.jpg');
 `;
+
+const CAFE_ROWS = `INSERT INTO products (name, price, stock, photo) VALUES
+  ('Espresso', 80, 40, NULL),
+  ('Pour-over', 120, 24, NULL),
+  ('Butter croissant', 95, 16, NULL);
+`;
+
+export function schemaForStart(start: StartMode): string {
+  if (start === "blank") return TABLES;
+  if (start === "cafe") return TABLES + CAFE_ROWS;
+  return TABLES + STORE_ROWS;
+}
+
+export const SEED_SCHEMA = schemaForStart("store");
 
 export const SEED_HTML = `<!doctype html>
 <html lang="en">
@@ -116,8 +134,6 @@ export const CAFE_HTML = SEED_HTML
   .replace("Atelier", "Hearth")
   .replace("New in.", "On the bar.")
   .replace("Stock is live from the database. Photos are served from storage. Add something — the count drops.", "Drinks and pastry. Orders write to the database.");
-
-export type StartMode = "blank" | "store" | "cafe";
 
 export function htmlForStart(start: StartMode): string {
   if (start === "blank") return BLANK_HTML;

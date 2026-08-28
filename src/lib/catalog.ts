@@ -296,7 +296,7 @@ export const TOOLS: ToolDef[] = [
     name: "provision_d1",
     title: "Provision database",
     description:
-      "Create an isolated D1 database for this project, run schema.sql if present, and bind it on next deploy. Requires confirmation true.",
+      "Create a private D1 database for this app only, run schema.sql, and bind it as DB on next deploy. Never shares another app's tables. Requires confirmation true.",
     side: "confirm",
     annotations: write,
     always: true,
@@ -317,7 +317,8 @@ export const TOOLS: ToolDef[] = [
   {
     name: "provision_r2",
     title: "Provision storage",
-    description: "Bind object storage for this project (prefix-isolated). Requires confirmation true.",
+    description:
+      "Create a private R2 bucket for this app only (forge-r2-proj-{id}) and bind it as BUCKET on next deploy. Requires confirmation true.",
     side: "confirm",
     annotations: write,
     always: true,
