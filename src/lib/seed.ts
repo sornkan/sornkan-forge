@@ -80,15 +80,16 @@ const cartEl = document.getElementById("cart");
 const toast = document.getElementById("toast");
 let cart = 0;
 function say(t){ toast.textContent = t; toast.style.display = "block"; setTimeout(()=>toast.style.display="none", 1400); }
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
 async function load(){
   const r = await fetch("api/products");
   const data = await r.json();
   grid.innerHTML = (data.products||[]).map(p => \`
     <article class="card">
-      \${p.photo ? '<img src="'+p.photo+'" alt="'+p.name+'">' : '<div class="ph"></div>'}
-      <h2>\${p.name}</h2>
-      <p>\${p.price.toLocaleString()} · \${p.stock} left</p>
-      <button data-id="\${p.id}">Add to bag</button>
+      \${p.photo ? '<img src="'+esc(p.photo)+'" alt="'+esc(p.name)+'">' : '<div class="ph"></div>'}
+      <h2>\${esc(p.name)}</h2>
+      <p>\${Number(p.price).toLocaleString()} · \${Number(p.stock)} left</p>
+      <button data-id="\${Number(p.id)}">Add to bag</button>
     </article>\`).join("");
 }
 grid.addEventListener("click", async (e) => {

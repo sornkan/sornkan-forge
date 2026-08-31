@@ -136,7 +136,7 @@ async function refresh() {
     <div class="mod"><b>storage</b><span>${p.modules?.storage ? "Product photos" : "Not attached"}</span></div>`;
   const openPins = (p.annotations || []).filter((a) => !a.resolved);
   pinList.innerHTML = openPins
-    .map((a) => `<div class="pin-item">${a.note}</div>`)
+    .map((a) => `<div class="pin-item">${esc(a.note)}</div>`)
     .join("") || `<div class="hint">No pins yet</div>`;
   if (openPins.length) {
     workStatus.textContent = openPins.length === 1
@@ -147,13 +147,26 @@ async function refresh() {
   }
   pinsLayer.innerHTML = (p.annotations || [])
     .filter((a) => !a.resolved)
-    .map((a) => `<i class="pin" style="left:${a.x * 100}%;top:${a.y * 100}%"></i>`)
+    .map((a) => {
+      const x = Math.min(100, Math.max(0, Number(a.x) * 100));
+      const y = Math.min(100, Math.max(0, Number(a.y) * 100));
+      return `<i class="pin" style="left:${x}%;top:${y}%"></i>`;
+    })
     .join("");
-  const src = p.preview_url || `/preview/${p.id}/`;
+  const src =
+    p.preview_url && p.preview_url.startsWith("/") ? p.preview_url : `/preview/${p.id}/`;
   if (!preview.getAttribute("data-src") || preview.getAttribute("data-src") !== src) {
     preview.src = src;
     preview.setAttribute("data-src", src);
   }
+}
+
+function esc(s) {
+  return String(s)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
 }
 
 function inviteUrl(id) {
