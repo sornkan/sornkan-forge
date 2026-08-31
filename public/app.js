@@ -163,7 +163,7 @@ function inviteUrl(id) {
 }
 
 async function copyInviteText(id) {
-  const text = `Open this URL in ChatGPT desktop (GPT-5.6 Sol or Terra) or Chrome with chrome://flags/#enable-webmcp-testing:\n${inviteUrl(id)}\n\nCall get_page_context, then get_project. Attach modules web, database, storage if needed. Keep the store working. After they pin notes, call list_annotations and patch.`;
+  const text = `Open this URL in the ChatGPT desktop built-in browser (Work or Codex, GPT-5.6 Sol or Terra — not Luna) or Chrome 149+ with chrome://flags/#enable-webmcp-testing:\n${inviteUrl(id)}\n\nCodex CLI cannot use these site tools. Call get_page_context, then get_project. Attach modules web, database, storage if needed. Keep the store working. After they pin notes, call list_annotations and patch.`;
   await navigator.clipboard.writeText(text);
   log("invite", "copied");
 }

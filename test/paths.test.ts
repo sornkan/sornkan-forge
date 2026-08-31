@@ -1,3 +1,4 @@
+import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { sanitizePath } from "../src/lib/paths.ts";
 import { isMutatingSql } from "../src/lib/sql.ts";
@@ -76,5 +77,22 @@ describe("per-app isolate", () => {
     expect(indexForStart("store")).toContain("new Hono()");
     expect(indexForStart("cafe")).toContain("/api/products");
     expect(rewriteHonoImports('import { Hono } from "hono"')).toContain("./hono.mjs");
+  });
+});
+
+describe("editor routing", () => {
+  it("runs the Worker first for preview and API so SPA fallback cannot swallow them", () => {
+    const config = readFileSync(new URL("../wrangler.jsonc", import.meta.url), "utf8");
+    expect(config).toContain('"/api/*"');
+    expect(config).toContain('"/preview/*"');
+    expect(config).toContain("run_worker_first");
+  });
+});
+
+describe("agent chip", () => {
+  it("names the host Agent, not ChatGPT · Codex", () => {
+    const html = readFileSync(new URL("../public/index.html", import.meta.url), "utf8");
+    expect(html).toContain("<b>Agent</b>");
+    expect(html).not.toMatch(/ChatGPT<\/b>\s*·\s*Codex/);
   });
 });

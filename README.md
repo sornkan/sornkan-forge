@@ -4,7 +4,7 @@
 
 Live: **https://forge-worker-editor.sornkan.workers.dev**
 
-A Lovable-style editor where **your** agent builds a real Cloudflare Worker. The human types a brief, invites ChatGPT (desktop in-app browser) or Chrome with WebMCP, and watches the preview. Preview and publish sit on **Workers + D1 + R2** — more than a ChatGPT Site.
+A Lovable-style editor where **your** agent builds a real Cloudflare Worker. The human types a brief, opens the page in the ChatGPT desktop built-in browser (Work or Codex) or Chrome with WebMCP, and watches the preview. Preview and publish sit on **Workers + D1 + R2** — more than a ChatGPT Site. Codex CLI has no WebMCP host; it cannot join.
 
 Forge does not run an LLM. The page registers tools with `document.modelContext.registerTool`. You watch, pin notes, and publish.
 
@@ -14,7 +14,7 @@ Submission for the [OpenAI WebMCP Challenge](https://webmcp.devpost.com/) (deadl
 
 ## For judges
 
-1. Open the [live URL](https://forge-worker-editor.sornkan.workers.dev) in **ChatGPT desktop** (GPT-5.6 **Sol** or **Terra**, not Luna) or **Chrome 149+** with `chrome://flags/#enable-webmcp-testing`.
+1. Open the [live URL](https://forge-worker-editor.sornkan.workers.dev) in the **ChatGPT desktop built-in browser** (Work or Codex, GPT-5.6 **Sol** or **Terra**, not Luna) or **Chrome 149+** with `chrome://flags/#enable-webmcp-testing`. Codex CLI cannot see site tools. The chip reads **Agent · waiting** until `document.modelContext` exists, then **Agent · in the room**.
 2. Click **Store** (or Cafe / Conjure).
 3. Ask the agent:
 
