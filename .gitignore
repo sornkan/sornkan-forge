@@ -9,6 +9,8 @@ node_modules
 
 agent-temp/
 .playwright-mcp/
+instruction/work/*.lock
+instruction/work/*.lock.guard
 *.log
 *.pem
 *.key
