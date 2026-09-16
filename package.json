@@ -8,7 +8,7 @@
     "type": "git",
     "url": "git+https://github.com/sornkan/sornkan-forge.git"
   },
-  "homepage": "https://forge-worker-editor.sornkan.workers.dev",
+  "homepage": "https://forge.sornkan.com/",
   "type": "module",
   "scripts": {
     "dev": "wrangler dev",
@@ -19,13 +19,13 @@
     "vendor:hono": "node scripts/vendor-hono.mjs"
   },
   "dependencies": {
-    "hono": "^4.9.8"
+    "hono": "^4.13.5"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "latest",
     "esbuild": "^0.25.9",
     "typescript": "^5.9.2",
     "vitest": "^3.2.4",
-    "wrangler": "^4.125.0"
+    "wrangler": "^4.132.0"
   }
 }
