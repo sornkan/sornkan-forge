@@ -1,5 +1,6 @@
 import { SEED_HTML } from "./seed.ts";
 import { isOwnDb } from "./isolate.ts";
+import { readSid } from "./session.ts";
 import { getR2Object, queryD1, execD1, type CfEnv } from "./cf.ts";
 
 type PreviewEnv = {
@@ -19,6 +20,22 @@ function cfEnv(env: PreviewEnv): CfEnv | null {
   };
 }
 
+async function requireProjectSession(
+  request: Request,
+  env: PreviewEnv,
+  projectId: string,
+): Promise<Response | null> {
+  const sid = readSid(request);
+  if (!sid) return Response.json({ error: "auth required" }, { status: 401 });
+  const session = await env.DB_PROJECTS.prepare("SELECT project_id FROM sessions WHERE id = ?")
+    .bind(sid)
+    .first<{ project_id: string }>();
+  if (!session || session.project_id !== projectId) {
+    return Response.json({ error: "auth required" }, { status: 401 });
+  }
+  return null;
+}
+
 export async function handlePreview(
   request: Request,
   env: PreviewEnv,
@@ -26,6 +43,13 @@ export async function handlePreview(
   rest: string,
 ): Promise<Response> {
   const path = rest || "/";
+  // Order APIs touch D1 (writes) and disclose order history: same project session as the editor.
+  // The catalog (/api/products), product images (/files/*), and the page shell stay public
+  // so the storefront and published shops render for visitors.
+  if (path === "/api/orders" && (request.method === "GET" || request.method === "POST")) {
+    const denied = await requireProjectSession(request, env, projectId);
+    if (denied) return denied;
+  }
   const project = await env.DB_PROJECTS.prepare(
     "SELECT d1_id, r2_bucket, r2_prefix FROM projects WHERE id = ?",
   )
@@ -43,7 +67,8 @@ export async function handlePreview(
     if (!d1 || !cf) return Response.json({ error: "no database" }, { status: 409 });
     const body = (await request.json()) as { product_id?: number; qty?: number };
     const id = Number(body.product_id);
-    const qty = Math.max(1, Number(body.qty) || 1);
+    if (!Number.isFinite(id)) return Response.json({ error: "bad product" }, { status: 400 });
+    const qty = Math.min(99, Math.max(1, Number(body.qty) || 1));
     const rows = await queryD1(cf, d1, "SELECT stock FROM products WHERE id = ?", [id]);
     const stock = Number(rows[0]?.stock ?? 0);
     if (!rows[0] || stock < qty) return Response.json({ error: "out of stock" }, { status: 409 });

@@ -1,0 +1,1679 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light only">
+<title>แผน · LUNA ทั้งระบบ</title>
+<style>
+/* =============================================================
+   DESIGN SYSTEM — primitives + swappable themes
+   Style is NOT locked. Themes are starters; artifacts can pick
+   one with [data-theme="..."], override inline, or invent fresh.
+   Light-only (forced) · self-contained · Thai-friendly
+   Never ship a full-page dark brief — even if the OS/app is dark.
+   ============================================================= */
+*{box-sizing:border-box;margin:0;padding:0}
+html{color-scheme:light only}
+
+/* ---------- BASE TOKENS (defaults = indigo theme) ---------- */
+:root{
+  /* surfaces */
+  --bg:#F7F8FC; --card:#FFFFFF; --card-2:#FBFBFE;
+  --chrome:#EFF1F8; --line:#E8EBF3; --line-2:#D2D8E6;
+  /* ink */
+  --ink:#15172B; --ink-2:#4A5072; --ink-3:#8B91AB; --ink-4:#B8BED1;
+  /* accent (theme primary) */
+  --accent:#6E5AE6; --accent-rgb:110,90,230;
+  --accent-soft:#EFEAFC; --accent-line:#C7BAF6; --accent-deep:#5640D1;
+  /* semantic */
+  --ok:#14C7A1; --ok-rgb:20,199,161; --ok-soft:#DEFAF1; --ok-line:#8FE5CE; --ok-deep:#0E9D80;
+  --bad:#FF6B6B; --bad-rgb:255,107,107; --bad-soft:#FFE5E5; --bad-line:#FFB1B1; --bad-deep:#E54848;
+  --warn:#FFC53D; --warn-soft:#FFF4D1; --warn-deep:#A87800;
+  --info:#4FB8E5; --info-soft:#DCF1FB;
+  --pop:#FF80B5;
+  /* shape & motion */
+  --r:14px; --r-s:10px; --r-xs:7px;
+  --shadow-sm:0 1px 2px rgba(21,23,43,.05),0 3px 10px -3px rgba(21,23,43,.08);
+  --shadow:0 2px 4px rgba(21,23,43,.06),0 12px 28px -8px rgba(var(--accent-rgb),.18);
+  --shadow-lg:0 4px 8px rgba(21,23,43,.08),0 20px 50px -12px rgba(var(--accent-rgb),.25);
+  /* hero mesh (theme decides the wash) */
+  --hero-mesh:
+    radial-gradient(620px 380px at 90% -5%, rgba(110,90,230,.18), transparent 60%),
+    radial-gradient(500px 340px at 4% 95%, rgba(20,199,161,.14), transparent 60%),
+    radial-gradient(420px 280px at 55% 40%, rgba(255,128,181,.08), transparent 70%);
+  /* dark code panel — usually theme-stable */
+  --dark:#15172B; --dark-2:#1F2240; --dark-ink:#E8EAF5; --dark-dim:#7F84A8;
+  --code-k:#C58FFF; --code-s:#7EE6BD; --code-n:#FFB47A;
+  /* type */
+  --sans:-apple-system,BlinkMacSystemFont,'SF Pro Display','Segoe UI',
+    'Sukhumvit Set','Helvetica Neue',Arial,sans-serif;
+  --mono:'JetBrains Mono','SF Mono',ui-monospace,Menlo,Consolas,monospace;
+  color-scheme:light only;
+}
+
+/* ---------- THEME : mono (brutalist tech - mono font, hard shadows) ---------- */
+[data-theme="mono"]{
+  --bg:#FFFEF5; --card:#FFFFFF; --card-2:#F5F4ED;
+  --chrome:#F0EFE6; --line:#1A1A1A; --line-2:#1A1A1A;
+  --ink:#0A0A0A; --ink-2:#404040; --ink-3:#737373; --ink-4:#A3A3A3;
+  --accent:#171717; --accent-rgb:23,23,23;
+  --accent-soft:#E8FF6B; --accent-line:#1A1A1A; --accent-deep:#000000;
+  --ok:#16A34A; --ok-rgb:22,163,74; --ok-soft:#DCFCE7; --ok-line:#1A1A1A; --ok-deep:#15803D;
+  --bad:#DC2626; --bad-rgb:220,38,38; --bad-soft:#FEE2E2; --bad-line:#1A1A1A; --bad-deep:#B91C1C;
+  --warn:#CA8A04; --warn-soft:#FEF9C3; --warn-deep:#854D0E;
+  --sans:'JetBrains Mono','SF Mono',ui-monospace,Menlo,'Sukhumvit Set',monospace;
+  --r:2px; --r-s:2px; --r-xs:2px;
+  --shadow-sm:3px 3px 0 #1A1A1A;
+  --shadow:4px 4px 0 #1A1A1A;
+  --shadow-lg:6px 6px 0 #1A1A1A;
+  --hero-mesh:
+    radial-gradient(700px 380px at 90% -10%, rgba(232,255,107,.3), transparent 60%),
+    radial-gradient(500px 340px at 4% 95%, rgba(23,23,23,.04), transparent 60%);
+}
+
+/* ---------- THEME : warm (editorial - serif type, italic kicker, calm) ---------- */
+[data-theme="warm"]{
+  --bg:#F5F1E8; --card:#FFFFFF; --card-2:#FBF8F0;
+  --chrome:#EBE5D6; --line:#E0DAC8; --line-2:#CFC6AE;
+  --ink:#1B1A17; --ink-2:#55514A; --ink-3:#8B8678; --ink-4:#B0AB99;
+  --accent:#C8623E; --accent-rgb:200,98,62;
+  --accent-soft:#F2E0D6; --accent-line:#E0A98E; --accent-deep:#A5512F;
+  --ok:#6F864F; --ok-rgb:111,134,79; --ok-soft:#E4E8D8; --ok-line:#AEBE8E; --ok-deep:#516534;
+  --bad:#B4452F; --bad-rgb:180,69,47; --bad-soft:#F3DDD5; --bad-line:#DDA993; --bad-deep:#8D3322;
+  --warn:#B98828; --warn-soft:#F1E6CC; --warn-deep:#7A5715;
+  --sans:'Iowan Old Style','Georgia','Palatino','Sukhumvit Set',serif;
+  --mono:'JetBrains Mono','SF Mono',ui-monospace,Menlo,Consolas,monospace;
+  --r:8px; --r-s:6px;
+  --shadow:0 1px 2px rgba(27,26,23,.04),0 14px 32px -12px rgba(200,98,62,.16);
+  --shadow-lg:0 2px 4px rgba(27,26,23,.05),0 22px 48px -14px rgba(200,98,62,.2);
+  --hero-mesh:
+    radial-gradient(620px 380px at 90% -5%, rgba(200,98,62,.14), transparent 60%),
+    radial-gradient(500px 340px at 4% 95%, rgba(111,134,79,.1), transparent 60%);
+}
+[data-theme="warm"] .kicker{font-family:var(--sans);font-style:italic;
+  letter-spacing:.02em;text-transform:none;font-weight:500;font-size:14px}
+[data-theme="warm"] h1,[data-theme="warm"] h2,[data-theme="warm"] h3{
+  font-weight:600;letter-spacing:-.005em}
+
+/* ---------- THEME : fresh (Y2K playful - blob shapes, drop shadows, sherbet) ---------- */
+[data-theme="fresh"]{
+  --bg:#FFF4EC; --card:#FFFFFF; --card-2:#FFEDDF;
+  --chrome:#FFE0C9; --line:#FFCEB0; --line-2:#FFB088;
+  --ink:#2D1B1F; --ink-2:#6E4548; --ink-3:#9B7A7D; --ink-4:#C9ADB0;
+  --accent:#FF5E8E; --accent-rgb:255,94,142;
+  --accent-soft:#FFD6E3; --accent-line:#FFA8C3; --accent-deep:#E03570;
+  --ok:#14B89A; --ok-rgb:20,184,154; --ok-soft:#D4F5EC; --ok-line:#7DDDC2; --ok-deep:#0E8970;
+  --bad:#D63060; --bad-rgb:214,48,96; --bad-soft:#FCE0E8; --bad-line:#F09AB3; --bad-deep:#A41E48;
+  --warn:#FFA826; --warn-soft:#FFE9C5; --warn-deep:#9A5F00;
+  --r:22px; --r-s:16px; --r-xs:10px;
+  --shadow:0 6px 0 rgba(255,94,142,.18),0 18px 36px -10px rgba(255,94,142,.35);
+  --shadow-lg:0 8px 0 rgba(255,94,142,.22),0 28px 56px -14px rgba(255,94,142,.45);
+  --hero-mesh:
+    radial-gradient(620px 380px at 90% -5%, rgba(255,94,142,.22), transparent 60%),
+    radial-gradient(500px 340px at 4% 95%, rgba(255,168,38,.18), transparent 60%),
+    radial-gradient(420px 280px at 55% 40%, rgba(20,184,154,.14), transparent 70%);
+}
+
+/* ---------- THEME : mist (sage + slate, calm minimal) ---------- */
+[data-theme="mist"]{
+  --bg:#F2F4F1; --card:#FFFFFF; --card-2:#F8FAF7;
+  --chrome:#E8ECE6; --line:#DBE0D8; --line-2:#C2CABC;
+  --ink:#1A2620; --ink-2:#475C50; --ink-3:#7A8D80; --ink-4:#A8B5AC;
+  --accent:#4A6B5C; --accent-rgb:74,107,92;
+  --accent-soft:#E5EBE6; --accent-line:#A8BFB1; --accent-deep:#324A41;
+  --ok:#7A9D6C; --ok-rgb:122,157,108; --ok-soft:#E4EEDF; --ok-line:#B5CDA8; --ok-deep:#557448;
+  --bad:#B85650; --bad-rgb:184,86,80; --bad-soft:#F0DFDD; --bad-line:#DBA8A4; --bad-deep:#893E39;
+  --warn:#A8862F; --warn-soft:#EDE4C6; --warn-deep:#705915;
+  --r:10px; --r-s:7px;
+  --shadow:0 1px 2px rgba(26,38,32,.05),0 10px 24px -10px rgba(74,107,92,.16);
+  --shadow-lg:0 2px 4px rgba(26,38,32,.06),0 18px 42px -14px rgba(74,107,92,.2);
+  --hero-mesh:
+    radial-gradient(620px 380px at 90% -5%, rgba(74,107,92,.14), transparent 60%),
+    radial-gradient(500px 340px at 4% 95%, rgba(168,134,47,.09), transparent 60%);
+}
+
+/* ============================================================
+   SHARED COMPONENTS — read tokens above, work in any theme
+   ============================================================ */
+html,body{background:var(--bg)}
+body{font-family:var(--sans);color:var(--ink);line-height:1.7;font-size:15px;
+  font-weight:450;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+
+/* ---- type ---- */
+.kicker{font-family:var(--mono);font-size:11.5px;font-weight:700;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--accent)}
+h1,h2,h3{font-weight:800;letter-spacing:-.02em;line-height:1.18}
+h2{font-size:22px} h3{font-size:18px}
+.lead{font-size:16.5px;color:var(--ink-2);line-height:1.65}
+.mono{font-family:var(--mono)}
+a{color:var(--accent);text-decoration:none;font-weight:500}
+a:hover{text-decoration:underline}
+code{font-family:var(--mono);font-size:.88em;background:var(--accent-soft);
+  padding:2px 7px;border-radius:5px;color:var(--accent-deep);font-weight:500}
+
+/* ---- window chrome ---- */
+.window{background:var(--card);border:1px solid var(--line);border-radius:var(--r);
+  box-shadow:var(--shadow);overflow:hidden}
+.window>.bar{background:var(--chrome);border-bottom:1px solid var(--line);
+  padding:13px 16px;display:flex;align-items:center;position:relative}
+.window>.bar .dots{display:flex;gap:7px}
+.window>.bar .dots i{width:11px;height:11px;border-radius:50%;background:var(--line-2);display:block}
+.window>.bar .title{position:absolute;left:0;right:0;text-align:center;
+  font-family:var(--mono);font-size:12px;color:var(--ink-3);font-weight:500}
+.window>.body{padding:22px 24px}
+
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);
+  padding:20px 22px;box-shadow:var(--shadow-sm)}
+
+/* ---- pills / tags / badges ---- */
+.pill{display:inline-flex;align-items:center;gap:5px;font-family:var(--mono);
+  font-size:11px;font-weight:700;letter-spacing:.04em;padding:4px 10px;border-radius:20px;
+  border:1px solid transparent;text-transform:uppercase}
+.pill::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor;opacity:.95}
+.pill.todo{background:var(--card-2);color:var(--ink-3);border-color:var(--line)}
+.pill.doing{background:var(--accent-soft);color:var(--accent-deep);border-color:var(--accent-line)}
+.pill.impl{background:var(--warn-soft);color:var(--warn-deep);border-color:var(--warn)}
+.pill.done{background:var(--ok-soft);color:var(--ok-deep);border-color:var(--ok-line)}
+.pill.block{background:var(--bad-soft);color:var(--bad-deep);border-color:var(--bad-line)}
+
+.tag{display:inline-block;font-family:var(--mono);font-size:11px;color:var(--ink-2);
+  background:var(--card-2);border:1px solid var(--line);border-radius:6px;padding:3px 8px}
+.badge{font-family:var(--mono);font-size:10.5px;font-weight:700;letter-spacing:.05em;
+  text-transform:uppercase;padding:3px 8px;border-radius:5px}
+.badge.hi{background:var(--bad-soft);color:var(--bad-deep)}
+.badge.mid{background:var(--warn-soft);color:var(--warn-deep)}
+.badge.lo{background:var(--card-2);color:var(--ink-3);border:1px solid var(--line)}
+
+/* ---- toggle / sliders ---- */
+.tg{appearance:none;cursor:pointer;width:44px;height:24px;border-radius:14px;
+  background:var(--line-2);position:relative;transition:background .2s;flex:none}
+.tg::after{content:"";position:absolute;top:3px;left:3px;width:18px;height:18px;
+  border-radius:50%;background:#fff;box-shadow:0 2px 6px rgba(21,23,43,.25);transition:left .2s}
+.tg:checked{background:var(--accent)}
+.tg:checked::after{left:23px}
+.range{appearance:none;width:100%;height:6px;border-radius:3px;background:var(--line);outline:none}
+.range::-webkit-slider-thumb{appearance:none;width:20px;height:20px;border-radius:50%;
+  background:var(--accent);cursor:pointer;border:3px solid #fff;
+  box-shadow:0 2px 8px rgba(var(--accent-rgb),.45);transition:transform .15s}
+.range::-webkit-slider-thumb:hover{transform:scale(1.18)}
+
+/* ---- buttons ---- */
+.btn{font-family:var(--sans);font-size:14px;font-weight:600;cursor:pointer;
+  padding:10px 20px;border-radius:var(--r-s);border:1px solid transparent;transition:all .15s}
+.btn.primary{background:var(--accent);color:#fff;
+  box-shadow:0 1px 2px rgba(21,23,43,.1),0 6px 18px -4px rgba(var(--accent-rgb),.45)}
+.btn.primary:hover{background:var(--accent-deep);transform:translateY(-1px)}
+.btn.ghost{background:var(--card);color:var(--ink);border-color:var(--line-2)}
+.btn:active{transform:translateY(1px)}
+
+/* ---- stat ---- */
+.stat{background:var(--card-2);border:1px solid var(--line);border-radius:var(--r-s);
+  padding:18px 20px}
+.stat .n{font-size:34px;font-weight:800;line-height:1;letter-spacing:-.03em}
+.stat .l{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;
+  color:var(--ink-3);margin-bottom:8px;font-weight:600}
+.stat.good .n{color:var(--ok)} .stat.bad .n{color:var(--bad)} .stat.key .n{color:var(--accent)}
+
+/* ---- notes ---- */
+.note{border-radius:var(--r-s);padding:13px 16px;font-size:14px;border:1px solid;
+  display:flex;gap:11px;line-height:1.55}
+.note .ic{font-weight:800;flex:none}
+.note.info{background:var(--info-soft);border-color:var(--info);color:var(--ink-2)}
+.note.ok{background:var(--ok-soft);border-color:var(--ok-line);color:var(--ok-deep)}
+.note.warn{background:var(--warn-soft);border-color:var(--warn);color:var(--warn-deep)}
+.note.danger{background:var(--bad-soft);border-color:var(--bad-line);color:var(--bad-deep)}
+
+/* ---- code panel ---- */
+.code{background:var(--dark);border-radius:var(--r-s);overflow:hidden;
+  font-family:var(--mono);font-size:12.5px;line-height:1.7}
+.code .top{background:var(--dark-2);padding:8px 14px;display:flex;justify-content:space-between;
+  color:var(--dark-dim);font-size:11.5px;font-weight:500}
+.code pre{padding:14px 16px;color:var(--dark-ink);overflow-x:auto}
+.code .c{color:var(--dark-dim)} .code .k{color:var(--code-k);font-weight:600}
+.code .s{color:var(--code-s)} .code .n{color:var(--code-n)}
+
+/* ---- approach cards ---- */
+.approach{background:var(--card-2);border:1.5px solid var(--line);border-radius:var(--r);
+  padding:18px;cursor:pointer;transition:all .2s}
+.approach:hover:not(.pick){transform:translateY(-3px);
+  box-shadow:0 1px 2px rgba(21,23,43,.06),0 18px 36px -12px rgba(var(--accent-rgb),.2);
+  border-color:var(--accent-line)}
+.approach.pick{border-color:var(--accent);background:var(--card);
+  box-shadow:0 0 0 4px var(--accent-soft),0 2px 6px rgba(21,23,43,.08),
+             0 18px 36px -12px rgba(var(--accent-rgb),.3)}
+.approach .hd{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:11px}
+.approach .hd strong{font-size:15px;font-weight:700}
+.approach .hd .id{font-family:var(--mono);font-size:13px;color:var(--ink-4);font-weight:700}
+.approach.pick .id{color:var(--accent)}
+.approach .pro{color:var(--ok-deep);font-family:var(--mono);font-size:12.5px;font-weight:600}
+.approach .con{color:var(--bad-deep);font-family:var(--mono);font-size:12.5px;font-weight:600}
+
+/* ---- board ---- */
+.board{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.col-h{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--ink-3);font-weight:700;padding:0 2px 8px;display:flex;justify-content:space-between}
+.tk{background:var(--card);border:1px solid var(--line);border-radius:var(--r-s);
+  padding:13px 14px;margin-bottom:9px;box-shadow:var(--shadow-sm)}
+.tk .tkn{font-weight:700;font-size:14px;margin:7px 0 8px;line-height:1.4}
+.tk .meta{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.bar-track{height:7px;background:var(--line);border-radius:4px;overflow:hidden}
+.bar-fill{height:100%;background:linear-gradient(90deg,var(--ok),var(--accent));border-radius:4px}
+
+/* ---- table ---- */
+table{width:100%;border-collapse:collapse;font-size:13.5px}
+th{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;
+  color:var(--ink-3);text-align:left;padding:8px 10px;border-bottom:1px solid var(--line-2);font-weight:700}
+td{padding:9px 10px;border-bottom:1px solid var(--line);color:var(--ink-2)}
+tr:last-child td{border-bottom:none}
+
+/* ---- helpers ---- */
+.row{display:flex;gap:10px;align-items:center}
+.between{display:flex;justify-content:space-between;align-items:center}
+.muted{color:var(--ink-3)} .small{font-size:13px}
+.divider{height:1px;background:var(--line);margin:16px 0}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+
+/* ---- BRIEF tab nav ---- */
+.brief-tabs{display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap}
+.btab{font-family:var(--sans);font-size:13px;cursor:pointer;font-weight:700;
+  padding:10px 18px;border-radius:var(--r-s);border:1px solid var(--line);
+  background:var(--card);color:var(--ink-2);transition:all .18s}
+.btab:hover{border-color:var(--accent-line);color:var(--accent-deep);
+  background:var(--accent-soft);transform:translateY(-1px)}
+.btab.on{background:var(--ink);color:var(--card);border-color:var(--ink);
+  box-shadow:0 2px 4px rgba(0,0,0,.08),0 8px 20px -4px rgba(0,0,0,.25)}
+.btab .swatch{display:inline-block;width:8px;height:8px;border-radius:50%;
+  background:var(--theme-swatch,var(--accent));margin-right:6px;vertical-align:1px}
+
+.brief{display:none}
+.brief.on{display:block;animation:b-fade .35s ease}
+
+/* ---- CTA strip ---- */
+.cta-strip{margin-top:16px;padding:13px 16px;
+  background:linear-gradient(135deg,var(--accent-soft) 0%,var(--ok-soft) 100%);
+  border:1px solid var(--accent-line);border-radius:var(--r-s);
+  font-size:13px;color:var(--ink-2);
+  display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.cta-strip .arrow{color:var(--accent);font-weight:800;font-size:15px;margin-right:6px}
+.cta-strip strong{color:var(--accent-deep);font-weight:600;background:var(--card);
+  padding:4px 10px;border-radius:6px;border:1px solid var(--accent-line);
+  font-family:var(--mono);font-size:12px}
+
+/* ---- asymmetric grids ---- */
+.b-grid-2{display:grid;grid-template-columns:1.4fr 1fr;gap:24px;align-items:start}
+.b-grid-55{display:grid;grid-template-columns:1.2fr 1fr;gap:24px;align-items:center}
+
+/* ---- notes list ---- */
+.notes-list{font-size:14px;line-height:1.65;color:var(--ink-2);padding:0;list-style:none}
+.notes-list li{padding:10px 0;border-bottom:1px solid var(--line);
+  display:flex;gap:11px;align-items:flex-start}
+.notes-list li:last-child{border-bottom:none}
+.notes-list .mk{font-family:var(--mono);font-size:11px;color:var(--accent);
+  flex:none;min-width:18px;font-weight:700;padding:3px 6px;border-radius:5px;line-height:1;
+  background:var(--accent-soft)}
+
+/* ---- flat task ---- */
+.flat-task{display:flex;align-items:center;gap:10px;padding:11px 14px;
+  background:var(--card);border:1px solid var(--line);border-radius:var(--r-s);margin-bottom:6px;
+  transition:all .15s}
+.flat-task:hover{border-color:var(--accent-line);transform:translateX(2px)}
+.flat-task .tn{font-weight:600;flex:1;font-size:14px}
+.stat-row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+
+/* ---- product screen ---- */
+.screen{background:#fff;border:1px solid var(--line);border-radius:var(--r-s);
+  padding:22px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.5)}
+.field{display:flex;align-items:center;gap:10px;border:1.5px solid var(--accent-line);
+  border-radius:var(--r-s);padding:12px 14px;font-size:14px;color:var(--ink-3);background:#fff;
+  box-shadow:0 0 0 4px var(--accent-soft)}
+.result-row{display:flex;gap:12px;padding:11px 4px;border-bottom:1px solid var(--line);
+  align-items:center}
+.result-row:last-child{border-bottom:none}
+.thumb{width:42px;height:42px;border-radius:var(--r-s);flex:none;
+  background:linear-gradient(135deg,var(--accent-soft),var(--accent-line))}
+.preview-box{background:linear-gradient(135deg,var(--accent-soft),var(--ok-soft));
+  border:1px dashed var(--accent-line);border-radius:var(--r-s);
+  display:flex;align-items:center;justify-content:center;padding:32px}
+
+/* ---- details fold ---- */
+details.fold{border-top:1px solid var(--line);margin-top:14px;padding-top:12px}
+details.fold>summary{list-style:none;cursor:pointer;font-family:var(--mono);font-size:11.5px;
+  letter-spacing:.06em;text-transform:uppercase;color:var(--accent);font-weight:700}
+details.fold>summary::-webkit-details-marker{display:none}
+details.fold>summary::before{content:"+ "}
+details.fold[open]>summary::before{content:"− "}
+details.fold .inner{padding-top:10px;font-size:13.5px;color:var(--ink-2)}
+
+/* ---- animations ---- */
+@keyframes b-up{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+@keyframes b-fade{from{opacity:0}to{opacity:1}}
+@keyframes b-grad{0%,100%{transform:translate(0,0) scale(1)}
+  50%{transform:translate(4%,-3%) scale(1.08)}}
+@keyframes b-caret{0%,49%{opacity:1}50%,100%{opacity:0}}
+.reveal{opacity:0}
+.reveal.in{animation:b-up .75s cubic-bezier(.2,.7,.2,1) both;animation-delay:var(--d,0s)}
+.caret::after{content:"";display:inline-block;width:2px;height:1em;background:var(--accent);
+  margin-left:2px;vertical-align:-2px;animation:b-caret 1s steps(1) infinite}
+.flow-packet{filter:drop-shadow(0 0 8px rgba(var(--accent-rgb),.55))}
+
+/* ---- hero gradient (theme-driven) ---- */
+.hero-deco{position:absolute;inset:-30px;pointer-events:none;z-index:0;
+  background:var(--hero-mesh);animation:b-grad 26s ease-in-out infinite}
+
+/* ---- responsive ---- */
+@media(max-width:760px){
+  .b-grid-2,.b-grid-55,.grid-3,.grid-2,.board,.stat-row{grid-template-columns:1fr}
+  .window>.body{padding:18px 16px}
+}
+@media print{
+  body{background:#fff}
+  .window{box-shadow:none;break-inside:avoid}
+  .brief-tabs{display:none}
+}
+
+body[data-theme="fresh"]{
+  --bg:#FFF4F8; --card:#FFFFFF; --card-2:#FFEAF3;
+  --chrome:#FFD6E8; --line:#F8C2DC; --line-2:#F5A3C8;
+  --ink:#3B1230; --ink-2:#7A4560; --ink-3:#B07A94; --ink-4:#D4A8BC;
+  --accent:#DB2777; --accent-rgb:219,39,119;
+  --accent-soft:#FFD6E8; --accent-line:#FFA3C8; --accent-deep:#BE185D;
+  --pop:#FF4FA0;
+  --hero-mesh:
+    radial-gradient(620px 380px at 92% -8%, rgba(255,79,160,.28), transparent 58%),
+    radial-gradient(480px 320px at 0% 100%, rgba(196,181,253,.28), transparent 55%);
+}
+html,body{height:100%}
+body{overflow:hidden;padding:16px 20px 12px;position:relative}
+.wrap{position:relative;z-index:1;max-width:1180px;margin:0 auto}
+.kicker{margin-bottom:2px}
+h1.ttl{font-size:26px;margin:0 0 8px;letter-spacing:-.03em}
+.brief-tabs{margin-bottom:10px}
+.brief-tabs{flex-wrap:wrap}
+.brief-tabs .btab{padding:6px 10px;font-size:12px;border-radius:999px}
+.stage{display:grid;grid-template-columns:1.35fr .9fr;gap:14px;align-items:stretch}
+.mock-land{
+  background:linear-gradient(180deg,#FFE4F2 0%,#FFF7FB 58%,#F3E8FF 100%);
+  border-radius:22px;padding:16px 18px;min-height:430px;
+  display:grid;grid-template-columns:1.05fr .95fr;gap:12px;align-items:center;
+  outline:1px solid rgba(190,24,93,.12);position:relative;overflow:hidden;
+}
+.bubble{font-weight:900;font-size:34px;line-height:.95;letter-spacing:-.04em;color:#fff;
+  -webkit-text-stroke:3.5px #3B1230;paint-order:stroke fill;text-wrap:balance}
+.chip{display:inline-block;font-size:10px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;
+  border:1.5px solid #BE185D;color:#BE185D;border-radius:999px;padding:4px 10px;background:#fff}
+.who-mini{display:inline-flex;align-items:center;gap:6px;background:#fff;border:1px solid #FFC2DC;
+  border-radius:999px;padding:3px 10px 3px 4px;font-size:11px;margin-left:8px}
+.face{width:18px;height:18px;border-radius:50%;background:conic-gradient(from 210deg,#FF4FA0,#C4B5FD,#FF80B5,#FF4FA0)}
+.land p{font-size:13px;color:#7A4560;margin:8px 0 0;max-width:28em}
+.comp{margin-top:12px;background:#fff;border-radius:22px;padding:8px;
+  box-shadow:0 16px 36px -18px rgba(219,39,119,.45)}
+.modes{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.mode{border:1px solid #F8C2DC;border-radius:12px;padding:7px 8px;font-size:10px;color:#7A4560;background:#FFF5FA}
+.mode b{display:block;color:#3B1230;font-size:12px}
+.mode.on{border-color:#DB2777;background:#fff;box-shadow:0 0 0 3px #FFD6E8}
+.cta-row{display:flex;gap:6px;margin-top:8px}
+.pri{flex:1;display:flex;align-items:center;justify-content:center;gap:8px;
+  background:#DB2777;color:#fff;border-radius:999px;padding:9px;font-size:12px;font-weight:800}
+.pri i{width:26px;height:26px;border-radius:50%;background:rgba(255,255,255,.18);display:grid;place-items:center;font-style:normal}
+.ghost{background:#fff;border:1.5px solid #F5A3C8;border-radius:999px;padding:9px 12px;font-size:12px;font-weight:700;color:#3B1230}
+.floatc{position:relative;height:100%}
+.fc{position:absolute;width:132px;background:#fff;border-radius:16px;padding:6px 6px 10px;
+  box-shadow:0 18px 36px -16px rgba(59,18,48,.35);outline:1px solid rgba(0,0,0,.08)}
+.fc .ph{height:92px;border-radius:12px;outline:1px solid rgba(0,0,0,.1)}
+.fc b{display:block;font-size:12px;padding:6px 4px 0}
+.fc span{font-size:10px;color:#BE185D;font-weight:800;padding:0 4px;font-variant-numeric:tabular-nums}
+.fc1{left:8px;top:28px;transform:rotate(-7deg);z-index:2}
+.fc2{right:4px;top:0;transform:rotate(6deg);z-index:3}
+.ph.a{background:linear-gradient(160deg,#fce7f3,#f9a8d4)}
+.ph.b{background:linear-gradient(160deg,#ede9fe,#c4b5fd)}
+.ph.c{background:linear-gradient(160deg,#fff,#fbcfe8)}
+.heart{position:absolute;width:12px;height:12px;background:#ff4fa0;transform:rotate(-45deg);border-radius:2px;right:14px;top:14px;z-index:4}
+.heart::before,.heart::after{content:"";position:absolute;width:12px;height:12px;background:#ff4fa0;border-radius:50%}
+.heart::before{left:6px;top:0}.heart::after{left:0;top:-6px}
+.side{display:flex;flex-direction:column;gap:10px}
+.ed-mini{background:#fff;border-radius:16px;overflow:hidden;outline:1px solid rgba(190,24,93,.12)}
+.ed-bar{display:flex;align-items:center;gap:6px;padding:8px 10px;background:rgba(255,255,255,.9);border-bottom:1px solid #FFD6E8;font-size:11px}
+.ed-bar .logo{font-weight:800}.ed-bar .logo em{color:#DB2777;font-style:italic}
+.ed-chip{font-size:9px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;
+  padding:3px 7px;border-radius:999px;background:#FFD6E8;color:#BE185D;border:1px solid #FFA3C8}
+.ed-chip.off{background:#fff;color:#B07A94;border-color:#F8C2DC}
+.ed-pub{margin-left:auto;background:#3B1230;color:#fff;border-radius:999px;padding:5px 10px;font-size:10px;font-weight:800}
+.ed-stage{height:78px;background:linear-gradient(180deg,#FFE4F2,#F3E8FF);position:relative}
+.ed-frame{position:absolute;inset:8px;background:#fff;border-radius:10px;outline:1px solid rgba(0,0,0,.08);
+  display:flex;align-items:center;padding:8px;gap:8px}
+.shop-mini{background:linear-gradient(180deg,#FFE4F2,#FFF7FB);border-radius:16px;padding:10px 12px;flex:1;
+  outline:1px solid rgba(190,24,93,.12)}
+.shop-mini .bar{display:flex;justify-content:space-between;font-size:11px;font-weight:800;margin-bottom:4px}
+.shop-mini .bubble{font-size:18px;-webkit-text-stroke:2.5px #3B1230}
+.sg{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:6px}
+.scard{background:#fff;border-radius:10px;overflow:hidden;outline:1px solid rgba(0,0,0,.07)}
+.scard .ph{height:44px}
+.scard b{display:block;font-size:9px;padding:4px 6px 0}
+.price{color:#BE185D;font-weight:800;font-size:10px;padding:0 6px;font-variant-numeric:tabular-nums}
+.buy{display:block;margin:4px 6px 6px;text-align:center;background:#DB2777;color:#fff;border-radius:999px;font-size:8px;font-weight:800;padding:4px 0}
+.notes-list{margin:0}
+.cta-strip{margin-top:10px}
+.brief[data-tab="arch"] svg,.brief[data-tab="sec"] .note,.brief[data-tab="test"] table,.brief[data-tab="work"] .flat-task{font-size:13px}
+blockquote.q{margin:0;padding:12px 14px;background:#fff;border-left:4px solid var(--accent);border-radius:0 10px 10px 0;font-size:14px}
+.work .flat-task{margin-bottom:5px}
+.work .tn small{display:block;font-weight:500;color:var(--ink-3);font-size:11.5px;font-family:var(--mono)}
+.browser{background:#fff;border-radius:22px;overflow:hidden;outline:1px solid rgba(190,24,93,.14);
+  box-shadow:0 18px 40px -22px rgba(219,39,119,.35)}
+.browser .addr{display:flex;align-items:center;gap:8px;padding:8px 12px;background:#FFF7FB;border-bottom:1px solid #FFD6E8;font-size:12.5px}
+.browser .dots{display:flex;gap:5px}
+.browser .dots i{width:8px;height:8px;border-radius:50%;background:#FFC2DC;display:block}
+.browser .url{flex:1;background:#fff;border:1px solid #FFD6E8;border-radius:999px;padding:5px 12px;font-weight:700;color:#BE185D;font-family:var(--mono);font-size:12px}
+.browser .body{padding:0}
+.dom-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:stretch}
+.dom-card{background:#fff;border-radius:18px;padding:16px 18px;outline:1px solid rgba(190,24,93,.12)}
+.dom-card .was{font-family:var(--mono);font-size:12px;color:var(--ink-3);text-decoration:line-through}
+.dom-card .now{font-family:var(--mono);font-size:18px;font-weight:800;color:var(--accent-deep);margin-top:6px}
+.pick-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:12px;align-items:stretch}
+.cream-land{background:linear-gradient(180deg,#F6F1E8 0%,#FFFCFA 70%);border-radius:22px;padding:16px 18px;
+  outline:1px solid rgba(28,25,22,.08);font-family:Georgia,"Iowan Old Style",serif;color:#1C1916}
+.cream-land .chip{border-color:#E8B48A;color:#9A4218;background:#fff}
+.cream-land h2{font-size:30px;font-weight:500;letter-spacing:-.04em;line-height:.95;margin:10px 0 6px}
+.cream-land p{font-size:13px;color:#5C564C;max-width:28em}
+.cream-land .comp{margin-top:10px;background:#fff;border-radius:22px;padding:8px;
+  box-shadow:0 16px 36px -20px rgba(196,92,38,.4)}
+.themes{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:6px}
+.theme{border:1.5px solid rgba(28,25,22,.16);border-radius:14px;padding:8px 10px;text-align:left;background:#F6F1E8;cursor:pointer}
+.theme b{display:block;font-size:12px;font-family:"Segoe UI",sans-serif}
+.theme span{font-size:10px;color:#8A8276;font-family:"Segoe UI",sans-serif}
+.theme.on{border-color:#C45C26;background:#fff;box-shadow:0 0 0 3px #F3E4D6}
+.theme.luna.on{border-color:#DB2777;box-shadow:0 0 0 3px #FFD6E8}
+.cream-pri{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:8px;
+  background:#1C1916;color:#fff;border-radius:999px;padding:9px;font-size:12px;font-weight:800;font-family:"Segoe UI",sans-serif}
+.split-shops{display:grid;grid-template-rows:1fr 1fr;gap:8px}
+.mini-shop{border-radius:16px;padding:10px 12px;outline:1px solid rgba(0,0,0,.08)}
+.mini-shop.at{background:#F6F1E8;font-family:Georgia,serif;color:#1C1916}
+.mini-shop.lu{background:linear-gradient(180deg,#FFE4F2,#FFF7FB);color:#3B1230;font-family:"Segoe UI",sans-serif}
+.mini-shop .nm{font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;opacity:.6}
+.mini-shop h3{font-size:16px;margin:2px 0 6px;font-weight:600}
+.mini-shop.lu h3{font-weight:900;color:#fff;-webkit-text-stroke:2px #3B1230;paint-order:stroke fill}
+@media(max-width:900px){body{overflow:auto}.stage,.dom-grid,.pick-grid,.look-stage{grid-template-columns:1fr}}
+
+.look-stage{display:grid;grid-template-columns:240px 1fr;gap:12px;align-items:stretch;min-height:438px}
+.look-left{background:linear-gradient(180deg,#F6F1E8 0%,#FFFCFA 80%);border-radius:20px;padding:14px 14px 12px;
+  outline:1px solid rgba(28,25,22,.08);color:#1C1916}
+.look-left h2{font-family:Georgia,"Iowan Old Style",serif;font-size:26px;font-weight:500;letter-spacing:-.04em;
+  line-height:.95;margin:10px 0 12px;text-wrap:balance}
+.sys-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.sys{appearance:none;cursor:pointer;border:1.5px solid rgba(28,25,22,.16);background:#fff;border-radius:12px;
+  padding:8px 6px;font-size:11px;font-weight:700;color:#5C564C;font-family:"Segoe UI",sans-serif;
+  transition:transform 160ms cubic-bezier(.23,1,.32,1),border-color 160ms ease,box-shadow 160ms ease}
+.sys:hover{transform:translateY(-1px)}.sys:active{transform:scale(.97)}
+.sys.on{border-color:#1C1916;color:#1C1916;box-shadow:0 0 0 3px rgba(28,25,22,.08);background:#fff}
+.sys b{display:block;font-size:12.5px;color:#1C1916}
+.looks-row{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:12px}
+.look{appearance:none;cursor:pointer;border:0;background:transparent;padding:8px 2px 4px;color:#8A8276;
+  font-family:"Segoe UI",sans-serif;transition:color 160ms ease,transform 160ms cubic-bezier(.23,1,.32,1)}
+.look:hover{color:#1C1916;transform:translateY(-1px)}.look:active{transform:scale(.97)}
+.look.on{color:#DB2777}
+.look i{display:grid;place-items:center;width:36px;height:36px;margin:0 auto 5px;border-radius:10px;
+  border:1.5px solid currentColor;opacity:.85}
+.look.on i{opacity:1;background:rgba(219,39,119,.08)}
+.look svg{width:20px;height:20px;display:block}
+.look b{display:block;font-size:10.5px;font-weight:700;letter-spacing:.01em}
+.custom-look{margin-top:10px;width:100%;cursor:pointer;border:1.5px dashed rgba(28,25,22,.28);background:#fff;
+  border-radius:12px;padding:8px 10px;font-size:11px;font-weight:700;color:#5C564C;text-align:left;
+  font-family:"Segoe UI",sans-serif;transition:border-color 160ms ease,color 160ms ease}
+.custom-look.on{border-style:solid;border-color:#C45C26;color:#9A4218;box-shadow:0 0 0 3px #F3E4D6}
+.look-cap{margin-top:8px;font-size:11px;color:#8A8276;line-height:1.4}
+.look-preview{background-color:#0B1120;background-image:
+    radial-gradient(520px 220px at 90% -10%,rgba(244,114,182,.22),transparent 55%),
+    radial-gradient(420px 200px at 0% 110%,rgba(99,102,241,.18),transparent 50%),
+    linear-gradient(rgba(148,163,184,.08) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(148,163,184,.08) 1px,transparent 1px);
+  background-size:auto,auto,24px 24px,24px 24px;
+  border-radius:20px;padding:16px 14px;display:grid;grid-template-columns:1.12fr .88fr;gap:12px;align-items:center}
+.pcard{display:flex;background:#fff;overflow:hidden;min-height:268px;
+  transition:transform 200ms cubic-bezier(.23,1,.32,1),box-shadow 200ms ease,border-radius 200ms ease,background 200ms ease}
+.pcard img{width:168px;height:268px;object-fit:cover;flex:none;outline:1px solid rgba(0,0,0,.1);
+  background:#e8e8e8}
+.pbody{flex:1;padding:16px 16px 14px;display:flex;flex-direction:column;min-width:0}
+.prow{display:flex;justify-content:space-between;gap:8px;align-items:flex-start}
+.ptitle{font-size:16px;font-weight:650;line-height:1.25;text-wrap:balance;margin:0}
+.pprice{font-size:16px;font-weight:650;font-variant-numeric:tabular-nums;white-space:nowrap;color:#64748b}
+.pstock{font-size:12.5px;font-weight:600;margin-top:6px;color:#334155}
+.psizes{display:flex;gap:6px;margin:14px 0 16px;padding-bottom:14px;border-bottom:1px solid #e2e8f0;flex-wrap:wrap}
+.psz{width:32px;height:32px;display:grid;place-items:center;font-size:11px;font-weight:700;cursor:pointer;
+  color:#334155;transition:transform 160ms cubic-bezier(.23,1,.32,1),background 160ms ease,color 160ms ease}
+.psz:hover{transform:translateY(-1px)}.psz:active{transform:scale(.96)}
+.pctas{display:flex;gap:8px;align-items:center;margin-top:auto}
+.pbuy,.padd{display:inline-flex;align-items:center;justify-content:center;height:36px;padding:0 14px;
+  font-size:12.5px;font-weight:700;cursor:default}
+.phart{width:36px;height:36px;display:grid;place-items:center;margin-left:auto;color:#cbd5e1;flex:none}
+.pship{font-size:11.5px;color:#475569;margin-top:10px}
+.pcode{background:#020617;border:1px solid rgba(148,163,184,.22);border-radius:14px;color:#e2e8f0;
+  font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11px;line-height:1.55;overflow:hidden;height:268px}
+.pcode .top{display:flex;align-items:center;gap:6px;padding:8px 12px;background:#0f172a;color:#64748b;font-size:10.5px}
+.pcode .top i{width:8px;height:8px;border-radius:50%;background:#334155;display:block}
+.pcode pre{padding:10px 12px;color:#cbd5e1;white-space:pre-wrap}
+.pcode .k{color:#7dd3fc}.pcode .s{color:#86efac}.pcode .n{color:#fda4af}.pcode .c{color:#64748b}
+
+.look-stage[data-look=simple] .pcard{border-radius:12px;box-shadow:0 18px 40px -18px rgba(0,0,0,.55)}
+.look-stage[data-look=simple] .pcard img{border-radius:12px 0 0 12px}
+.look-stage[data-look=simple] .psz{border-radius:8px}
+.look-stage[data-look=simple] .psz.on{background:#0f172a;color:#fff}
+.look-stage[data-look=simple] .pbuy{background:#0f172a;color:#fff;border-radius:8px}
+.look-stage[data-look=simple] .padd{border:1px solid #e2e8f0;color:#0f172a;border-radius:8px}
+.look-stage[data-look=simple] .phart{border:1px solid #e2e8f0;border-radius:8px}
+
+.look-stage[data-look=playful] .pcard{border-radius:28px;background:#FFF7FB;
+  box-shadow:0 8px 0 rgba(219,39,119,.25),0 22px 40px -16px rgba(219,39,119,.55)}
+.look-stage[data-look=playful] .pcard img{border-radius:28px 0 0 28px}
+.look-stage[data-look=playful] .ptitle{font-weight:900;color:#BE185D}
+.look-stage[data-look=playful] .pprice{color:#DB2777}
+.look-stage[data-look=playful] .psizes{border-color:#F8C2DC}
+.look-stage[data-look=playful] .psz{border-radius:999px;background:#FFD6E8;color:#9D174D}
+.look-stage[data-look=playful] .psz.on{background:#DB2777;color:#fff}
+.look-stage[data-look=playful] .pbuy{background:#DB2777;color:#fff;border-radius:999px}
+.look-stage[data-look=playful] .padd{border:2px solid #F8C2DC;color:#BE185D;border-radius:999px}
+.look-stage[data-look=playful] .phart{color:#DB2777}
+
+.look-stage[data-look=elegant] .pcard{border-radius:2px;background:#F6F1E8;outline:1px solid #E0DAC8;
+  box-shadow:0 24px 48px -28px rgba(28,25,22,.55);font-family:Georgia,"Iowan Old Style",serif}
+.look-stage[data-look=elegant] .pcard img{border-radius:0}
+.look-stage[data-look=elegant] .ptitle{font-weight:500;font-style:italic;letter-spacing:-.01em}
+.look-stage[data-look=elegant] .pprice{color:#9A4218}
+.look-stage[data-look=elegant] .psizes{border-color:#E0DAC8}
+.look-stage[data-look=elegant] .psz{border-radius:0;border-bottom:1px solid transparent;width:auto;padding:0 4px;height:28px}
+.look-stage[data-look=elegant] .psz.on{border-bottom-color:#1C1916;color:#1C1916;background:transparent}
+.look-stage[data-look=elegant] .pbuy{background:transparent;color:#1C1916;border-bottom:1px solid #1C1916;border-radius:0;padding:0 2px}
+.look-stage[data-look=elegant] .padd{border:0;color:#8A8276;padding:0}
+.look-stage[data-look=elegant] .phart{color:#C45C26}
+
+.look-stage[data-look=brutalist] .pcard{border-radius:0;background:#FDE047;outline:3px solid #111;box-shadow:6px 6px 0 #111;
+  font-family:ui-monospace,Menlo,Consolas,monospace}
+.look-stage[data-look=brutalist] .pcard img{border-radius:0;outline:3px solid #111;outline-offset:-3px}
+.look-stage[data-look=brutalist] .ptitle,.look-stage[data-look=brutalist] .pbuy{text-transform:uppercase;letter-spacing:.04em}
+.look-stage[data-look=brutalist] .pprice{color:#111}
+.look-stage[data-look=brutalist] .psizes{border-color:#111}
+.look-stage[data-look=brutalist] .psz{border:2px solid #111;border-radius:0;background:#fff}
+.look-stage[data-look=brutalist] .psz.on{background:#111;color:#FDE047}
+.look-stage[data-look=brutalist] .pbuy{background:#111;color:#FDE047;border-radius:0}
+.look-stage[data-look=brutalist] .padd{border:2px solid #111;border-radius:0;background:#fff}
+.look-stage[data-look=brutalist] .phart{border:2px solid #111;color:#111}
+
+.look-stage[data-look=custom] .pcard{border-radius:14px;outline:2px dashed #F8C2DC;background:#fff;opacity:.9}
+.look-stage[data-look=custom] .pcard img{filter:grayscale(.35) contrast(.9);border-radius:14px 0 0 14px}
+.look-stage[data-sys=conjure] .psizes{display:none}
+.look-stage[data-sys=conjure] .phart{display:none}
+@media(max-width:900px){.look-stage,.look-preview{grid-template-columns:1fr}.pcode{display:none}.pcard img{width:140px;height:240px}}
+
+.wow-stage{display:grid;grid-template-columns:228px 1fr;gap:12px;align-items:stretch;min-height:438px}
+.wow-stage .look-left h2{font-size:22px;margin:8px 0 10px}
+.sys-5{grid-template-columns:1fr 1fr 1fr;gap:5px}
+.sys-5 .sys{padding:6px 4px;font-size:10px}
+.sys-5 .sys b{font-size:11.5px}
+.wow-preview{display:flex;align-items:center;justify-content:center;padding:18px 16px;
+  background-color:#0B1120;background-image:
+    radial-gradient(520px 220px at 90% -10%,rgba(244,114,182,.22),transparent 55%),
+    radial-gradient(420px 200px at 0% 110%,rgba(99,102,241,.18),transparent 50%),
+    linear-gradient(rgba(148,163,184,.08) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(148,163,184,.08) 1px,transparent 1px);
+  background-size:auto,auto,24px 24px,24px 24px;border-radius:20px}
+.vis{background:#fff;overflow:hidden;width:100%;max-width:560px;
+  transition:transform 200ms cubic-bezier(.23,1,.32,1),box-shadow 200ms ease,background 200ms ease,border-radius 200ms ease}
+.vis-hero{width:100%;height:132px;object-fit:cover;display:block;outline:1px solid rgba(0,0,0,.1)}
+.vis-body{padding:14px 16px 16px}
+.vis-kicker{font-size:10.5px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:#64748b;margin-bottom:8px}
+.vis .ptitle{font-size:18px}
+.days,.slots{display:flex;gap:6px;flex-wrap:wrap;margin:10px 0}
+.slot{min-width:44px;height:32px;padding:0 8px;display:grid;place-items:center;font-size:11px;font-weight:700;cursor:pointer;color:#334155}
+.ticket{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid #e2e8f0}
+.ticket:last-child{border-bottom:0}
+.ticket img{width:44px;height:44px;object-fit:cover;flex:none;outline:1px solid rgba(0,0,0,.1)}
+.ticket b{display:block;font-size:13px}
+.ticket span{font-size:11px;color:#64748b}
+.ticket em{margin-left:auto;font-style:normal;font-size:11px;font-weight:700;font-variant-numeric:tabular-nums;color:#0f172a}
+.lesson{display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid #e2e8f0;font-size:13px}
+.lesson:last-of-type{border-bottom:0}
+.lesson i{width:16px;height:16px;border-radius:50%;border:1.5px solid #cbd5e1;flex:none;display:grid;place-items:center;font-size:9px;font-style:normal}
+.lesson.done i{background:#0f172a;border-color:#0f172a;color:#fff}
+.lesson.on{font-weight:700}
+.bar{height:7px;background:#e2e8f0;border-radius:99px;overflow:hidden;margin:8px 0 4px}
+.bar>i{display:block;height:100%;width:38%;background:#0f172a;border-radius:99px;font-style:normal}
+.cta-main{display:inline-flex;align-items:center;justify-content:center;height:36px;padding:0 16px;margin-top:12px;font-size:12.5px;font-weight:700}
+.vis.store{display:flex;min-height:280px}
+.vis.store>img{width:176px;height:280px;object-fit:cover;flex:none;outline:1px solid rgba(0,0,0,.1)}
+.vis.canvas .vis-body{min-height:268px;display:flex;flex-direction:column;justify-content:center}
+
+.wow-stage[data-look=simple] .vis{border-radius:14px;box-shadow:0 18px 40px -18px rgba(0,0,0,.55)}
+.wow-stage[data-look=simple] .vis.store>img{border-radius:14px 0 0 14px}
+.wow-stage[data-look=simple] .slot{border-radius:8px}
+.wow-stage[data-look=simple] .slot.on{background:#0f172a;color:#fff;border-radius:8px}
+.wow-stage[data-look=simple] .lesson.on{color:#0f172a}
+.wow-stage[data-look=simple] .lesson.on i{background:#0f172a;border-color:#0f172a;color:#fff}
+.wow-stage[data-look=simple] .cta-main{background:#0f172a;color:#fff;border-radius:8px}
+.wow-stage[data-look=simple] .padd{border:1px solid #e2e8f0;border-radius:8px;padding:0 12px;height:36px;display:inline-flex;align-items:center;font-size:12.5px;font-weight:700}
+.wow-stage[data-look=simple] .ticket img{border-radius:8px}
+
+.wow-stage[data-look=playful] .vis{border-radius:28px;background:#FFF7FB;box-shadow:0 8px 0 rgba(219,39,119,.25),0 22px 40px -16px rgba(219,39,119,.5)}
+.wow-stage[data-look=playful] .vis.store>img{border-radius:28px 0 0 28px}
+.wow-stage[data-look=playful] .ptitle,.wow-stage[data-look=playful] .cta-main{font-weight:900}
+.wow-stage[data-look=playful] .pprice,.wow-stage[data-look=playful] .ticket em{color:#DB2777}
+.wow-stage[data-look=playful] .slot{border-radius:999px;background:#FFD6E8;color:#9D174D}
+.wow-stage[data-look=playful] .slot.on{background:#DB2777;color:#fff;border-radius:999px}
+.wow-stage[data-look=playful] .lesson.on{color:#DB2777}
+.wow-stage[data-look=playful] .lesson.on i{background:#DB2777;border-color:#DB2777;color:#fff}
+.wow-stage[data-look=playful] .cta-main{background:#DB2777;color:#fff;border-radius:999px}
+.wow-stage[data-look=playful] .padd{border:2px solid #F8C2DC;color:#BE185D;border-radius:999px;padding:0 12px;height:36px;display:inline-flex;align-items:center;font-size:12.5px;font-weight:700}
+.wow-stage[data-look=playful] .bar>i,.wow-stage[data-look=playful] .lesson.done i{background:#DB2777;border-color:#DB2777}
+.wow-stage[data-look=playful] .ticket img{border-radius:999px}
+
+.wow-stage[data-look=elegant] .vis{border-radius:2px;background:#F6F1E8;outline:1px solid #E0DAC8;font-family:Georgia,"Iowan Old Style",serif;box-shadow:0 24px 48px -28px rgba(28,25,22,.5)}
+.wow-stage[data-look=elegant] .ptitle{font-weight:500;font-style:italic}
+.wow-stage[data-look=elegant] .pprice{color:#9A4218}
+.wow-stage[data-look=elegant] .slot{border-radius:0;border-bottom:1px solid transparent}
+.wow-stage[data-look=elegant] .slot.on{border-bottom-color:#1C1916;background:transparent;color:#1C1916}
+.wow-stage[data-look=elegant] .lesson.on{color:#9A4218;font-style:italic}
+.wow-stage[data-look=elegant] .lesson.on i{border-color:#C45C26}
+.wow-stage[data-look=elegant] .cta-main{background:transparent;color:#1C1916;border-bottom:1px solid #1C1916;border-radius:0;padding:0 2px;height:auto}
+.wow-stage[data-look=elegant] .padd{border:0;color:#8A8276;padding:0}
+.wow-stage[data-look=elegant] .bar>i,.wow-stage[data-look=elegant] .lesson.done i{background:#C45C26;border-color:#C45C26}
+
+.wow-stage[data-look=brutalist] .vis{border-radius:0;background:#FDE047;outline:3px solid #111;box-shadow:6px 6px 0 #111;font-family:ui-monospace,Menlo,Consolas,monospace}
+.wow-stage[data-look=brutalist] .ptitle,.wow-stage[data-look=brutalist] .cta-main{text-transform:uppercase;letter-spacing:.04em}
+.wow-stage[data-look=brutalist] .slot{border:2px solid #111;border-radius:0;background:#fff}
+.wow-stage[data-look=brutalist] .slot.on{background:#111;color:#FDE047}
+.wow-stage[data-look=brutalist] .lesson.on{color:#111;text-decoration:underline}
+.wow-stage[data-look=brutalist] .lesson.on i{background:#111;border-color:#111;color:#FDE047}
+.wow-stage[data-look=brutalist] .cta-main{background:#111;color:#FDE047;border-radius:0}
+.wow-stage[data-look=brutalist] .padd{border:2px solid #111;border-radius:0;background:#fff;padding:0 12px;height:36px;display:inline-flex;align-items:center;font-size:12.5px;font-weight:700}
+.wow-stage[data-look=brutalist] .bar>i,.wow-stage[data-look=brutalist] .lesson.done i{background:#111;border-color:#111}
+.wow-stage[data-look=brutalist] .ticket{border-color:#111}
+.wow-stage[data-look=brutalist] .vis-hero,.wow-stage[data-look=brutalist] .vis.store>img{outline:3px solid #111}
+
+.wow-stage[data-look=custom] .vis{outline:2px dashed #F8C2DC;opacity:.88}
+@media(max-width:900px){.wow-stage{grid-template-columns:1fr}}
+
+/* ---- cafe back-of-house KDS strip, lives inside .wow-preview only (10:30) ---- */
+.kds{display:grid;grid-template-columns:1fr 1fr 1fr;gap:5px;margin-top:10px}
+.kds-col{background:#F1F5F9;border-radius:8px;padding:6px 6px 7px}
+.kds-h{font-size:8.5px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:#64748b;margin-bottom:4px}
+.kds-card{background:#fff;border-radius:6px;padding:4px 6px;font-size:9px;font-weight:600;
+  margin-bottom:3px;box-shadow:0 1px 2px rgba(0,0,0,.06);color:#0f172a}
+.kds-card:last-child{margin-bottom:0}
+.wow-stage[data-look=playful] .kds-col{background:#FFEAF3}
+.wow-stage[data-look=playful] .kds-card{border-radius:10px;color:#9D174D}
+.wow-stage[data-look=elegant] .kds-col{background:#FFFCFA;border-radius:2px}
+.wow-stage[data-look=elegant] .kds-card{border-radius:2px;font-family:Georgia,"Iowan Old Style",serif}
+.wow-stage[data-look=brutalist] .kds-col{background:#fff;border-radius:0;outline:2px solid #111}
+.wow-stage[data-look=brutalist] .kds-card{border-radius:0;outline:1px solid #111;box-shadow:none;text-transform:uppercase}
+
+/* ---- book: room picker + host + today's bookings (10:35) ---- */
+.book-vis{display:flex;flex-direction:column}
+.room-row{display:flex;gap:5px;padding:8px 8px 0}
+.room-pick{appearance:none;cursor:pointer;border:1.5px solid transparent;background:none;border-radius:10px;
+  padding:3px;display:flex;flex-direction:column;align-items:center;gap:3px;flex:1;min-width:0}
+.room-pick img{width:100%;height:34px;object-fit:cover;border-radius:7px;display:block}
+.room-pick span{font-size:9px;font-weight:700;color:#64748b;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.room-pick.on{border-color:#0f172a}
+.room-pick.on span{color:#0f172a}
+.wow-persona{display:inline-flex;align-items:center;gap:6px;background:#F1F5F9;border-radius:999px;
+  padding:3px 10px 3px 3px;font-size:10.5px;margin:8px 0}
+.wow-persona img{width:22px;height:22px;border-radius:50%;object-fit:cover;flex:none}
+.wow-persona span{color:#64748b}
+.wow-persona b{color:#0f172a;font-weight:700}
+.day-list{margin-top:6px}
+.day-row{display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid #e2e8f0;font-size:11.5px}
+.day-row:last-child{border-bottom:none}
+.day-row b{font-variant-numeric:tabular-nums;color:#0f172a;min-width:38px}
+.day-row span{flex:1;color:#334155}
+.day-row em{font-style:normal;font-size:10px;font-weight:700;color:#64748b}
+.dot{width:7px;height:7px;border-radius:50%;flex:none}
+.dot.ok{background:#16a34a}.dot.pend{background:#f59e0b}.dot.open{background:#cbd5e1}
+.wow-stage[data-look=playful] .room-pick.on{border-color:#DB2777}
+.wow-stage[data-look=playful] .room-pick.on span{color:#BE185D}
+.wow-stage[data-look=playful] .wow-persona{background:#FFEAF3}
+.wow-stage[data-look=playful] .wow-persona b{color:#BE185D}
+.wow-stage[data-look=elegant] .room-pick img{border-radius:2px}
+.wow-stage[data-look=elegant] .room-pick.on{border-color:#1C1916}
+.wow-stage[data-look=elegant] .wow-persona{background:#FFFCFA;font-family:Georgia,"Iowan Old Style",serif}
+.wow-stage[data-look=brutalist] .room-pick img{border-radius:0;outline:2px solid #111}
+.wow-stage[data-look=brutalist] .room-pick.on{border-color:#111}
+.wow-stage[data-look=brutalist] .wow-persona{background:#fff;border-radius:0;outline:2px solid #111}
+.wow-stage[data-look=brutalist] .day-row{border-color:#111}
+
+/* ---- custom 2-field builder (10:15 amendment) ---- */
+.mc-grid{display:grid;grid-template-columns:1.3fr 1fr;gap:14px;align-items:start}
+.mc-form{background:#fff;border-radius:20px;padding:18px 20px;outline:1px solid rgba(28,25,22,.08)}
+.mc-label{display:block;font-size:11px;font-weight:800;letter-spacing:.03em;color:#5C564C;margin-bottom:6px}
+.mc-req{font-size:9px;font-weight:700;color:#BE185D;background:#FFEAF3;padding:2px 6px;
+  border-radius:6px;margin-left:4px;text-transform:uppercase}
+.mc-chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
+.mc-chip{font-family:"Segoe UI",sans-serif;font-size:10.5px;font-weight:700;cursor:pointer;
+  padding:5px 11px;border-radius:999px;border:1.5px solid #E0DAC8;background:#F6F1E8;color:#5C564C;transition:all .15s}
+.mc-chip:hover{border-color:#C45C26;color:#9A4218}
+.mc-input{width:100%;border:1.5px solid #E0DAC8;border-radius:12px;padding:10px 12px;font-size:12px;
+  font-family:"Segoe UI",sans-serif;color:#1C1916;resize:none;background:#FFFCFA}
+.mc-input:focus{outline:none;border-color:#C45C26;box-shadow:0 0 0 3px #F3E4D6}
+.mc-preview{background:#0B1120;border-radius:20px;padding:16px 18px;color:#CBD5E1;
+  font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11px;min-height:100%}
+.mc-pv-label{font-size:9px;text-transform:uppercase;letter-spacing:.08em;color:#64748B;
+  margin-bottom:10px;font-weight:700}
+.mc-pv-block{margin-bottom:10px;line-height:1.5}
+.mc-pv-block b{color:#7DD3FC;display:block;margin-bottom:2px}
+.mc-pv-block span{color:#E2E8F0;word-break:break-word}
+.mc-pv-hint{margin-top:10px;padding-top:10px;border-top:1px solid rgba(148,163,184,.2);
+  color:#8B95A8;font-size:10px;line-height:1.5}
+@media(max-width:900px){.mc-grid{grid-template-columns:1fr}}
+
+</style>
+</head>
+<body data-theme="fresh">
+<div class="hero-deco"></div>
+<div class="wrap">
+  <div class="kicker">แผน · แก้ 2026-09-02 10:15 · มิติตัวอย่าง + คนจริงต่อสไตล์ + custom 2 ช่อง</div>
+  <h1 class="ttl">ทุกสไตล์มีหน้าร้าน มีหลังบ้าน มีคนจริง</h1>
+
+  <nav class="brief-tabs">
+    <button class="btab on" data-t="wow">ภาพล้วน / ระบบว้าว</button>
+    <button class="btab" data-t="looks">ตัวอย่างใหญ่</button>
+    <button class="btab" data-t="custom">พิมพ์สไตล์ / custom</button>
+    <button class="btab" data-t="makeCustom">Custom 2 ช่อง</button>
+    <button class="btab" data-t="own">ของใครของมัน</button>
+    <button class="btab" data-t="pick">เลือกธีมตอนสร้าง</button>
+    <button class="btab" data-t="see">ร่างชมพูทั้งไซต์</button>
+    <button class="btab" data-t="dom">โดเมน demo</button>
+    <button class="btab" data-t="req">คำขอ</button>
+    <button class="btab" data-t="arch">สถาปัตย์</button>
+    <button class="btab" data-t="sec">ความปลอดภัย</button>
+    <button class="btab" data-t="test">เทส</button>
+    <button class="btab" data-t="work">งาน</button>
+  </nav>
+
+
+
+  <section class="brief on" data-tab="wow">
+    <div class="wow-stage" id="wowStage" data-look="simple" data-sys="book">
+      <div class="look-left">
+        <span class="chip" style="border-color:#C45C26;color:#9A4218">SORNKan Forge</span>
+        <h2>Let’s build your system.</h2>
+        <div class="sys-row sys-5" id="wowSys">
+          <button type="button" class="sys" data-sys="store"><b>Store</b>Shop</button>
+          <button type="button" class="sys" data-sys="cafe"><b>Cafe</b>Queue</button>
+          <button type="button" class="sys on" data-sys="book"><b>Book</b>Rooms</button>
+          <button type="button" class="sys" data-sys="learn"><b>Learn</b>Course</button>
+          <button type="button" class="sys" data-sys="conjure"><b>Conjure</b>Blank</button>
+        </div>
+        <div class="looks-row" id="wowLooks">
+          <button type="button" class="look on" data-look="simple">
+            <i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="5" y="5" width="14" height="14" rx="3.5"/></svg></i><b>Simple</b>
+          </button>
+          <button type="button" class="look" data-look="playful">
+            <i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3.5" y="8" width="11" height="11" rx="3"/><rect x="9.5" y="4" width="11" height="11" rx="3"/></svg></i><b>Playful</b>
+          </button>
+          <button type="button" class="look" data-look="elegant">
+            <i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 3.5 13.2 8l4.8.2-3.8 3.2 1.4 4.6L12 13.7 8.4 16l1.4-4.6L6 8.2 10.8 8z"/></svg></i><b>Elegant</b>
+          </button>
+          <button type="button" class="look" data-look="brutalist">
+            <i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="4" width="9" height="9"/><rect x="11" y="11" width="9" height="9"/></svg></i><b>Brutalist</b>
+          </button>
+        </div>
+        <button type="button" class="custom-look" id="wowCustom">Custom · พิมพ์สไตล์ แล้วต้อง Invite</button>
+        <p class="look-cap" id="wowCap">ไม่มีช่องโค้ด · Cafe เป็นคิวออเดอร์ ไม่ใช่ตะกร้า · Book จองห้อง · Learn เป็นคอร์ส</p>
+      </div>
+      <div class="wow-preview" id="wowVis"></div>
+    </div>
+    <div class="cta-strip">
+      <span><span class="arrow">→</span> ตอบในแชท:
+        <strong>ลุย</strong>
+        <strong>ไม่ต้อง Learn เอาแค่ Book</strong>
+        <strong>Cafe พอ ไม่เพิ่มระบบ</strong></span>
+      <span class="muted">แก้ 09:25 · ภาพล้วน · ระบบไม่ซ้ำร้าน</span>
+    </div>
+  </section>
+
+  <section class="brief" data-tab="looks">
+    <div class="look-stage" id="lookStage" data-look="simple" data-sys="store">
+      <div class="look-left">
+        <span class="chip" style="border-color:#C45C26;color:#9A4218">SORNKan Forge</span>
+        <h2>Let’s build your system.</h2>
+        <div class="sys-row" id="sysRow">
+          <button type="button" class="sys on" data-sys="store"><b>Store</b>Shop</button>
+          <button type="button" class="sys" data-sys="cafe"><b>Cafe</b>Menu</button>
+          <button type="button" class="sys" data-sys="conjure"><b>Conjure</b>Blank</button>
+        </div>
+        <div class="looks-row" id="looksRow">
+          <button type="button" class="look on" data-look="simple">
+            <i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="5" y="5" width="14" height="14" rx="3.5"/></svg></i>
+            <b>Simple</b>
+          </button>
+          <button type="button" class="look" data-look="playful">
+            <i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3.5" y="8" width="11" height="11" rx="3"/><rect x="9.5" y="4" width="11" height="11" rx="3"/></svg></i>
+            <b>Playful</b>
+          </button>
+          <button type="button" class="look" data-look="elegant">
+            <i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 3.5 13.2 8l4.8.2-3.8 3.2 1.4 4.6L12 13.7 8.4 16l1.4-4.6L6 8.2 10.8 8z"/></svg></i>
+            <b>Elegant</b>
+          </button>
+          <button type="button" class="look" data-look="brutalist">
+            <i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="4" width="9" height="9"/><rect x="11" y="11" width="9" height="9"/></svg></i>
+            <b>Brutalist</b>
+          </button>
+        </div>
+        <button type="button" class="custom-look" id="customLook">Custom · พิมพ์สไตล์ แล้วต้อง Invite</button>
+        <p class="look-cap">ล็อบบี้ยังครีม · กดสไตล์แล้วการ์ดขวาเปลี่ยนทันที · รูปหมุนตามลุค · ค่าเริ่ม Elegant = Atelier · Playful = LUNA</p>
+      </div>
+      <div class="look-preview">
+        <article class="pcard" id="pcard">
+          <img id="pimg" src="looks/w3.jpg" alt="Everyday V-Neck Tee" width="168" height="268">
+          <div class="pbody">
+            <div class="prow">
+              <h3 class="ptitle" id="ptitle">Everyday V-Neck Tee</h3>
+              <div class="pprice" id="pprice">$45.00</div>
+            </div>
+            <div class="pstock" id="pstock">In stock</div>
+            <div class="psizes" id="psizes">
+              <span class="psz on">XS</span><span class="psz">S</span><span class="psz">M</span><span class="psz">L</span><span class="psz">XL</span>
+            </div>
+            <div class="pctas">
+              <span class="pbuy" id="pbuy">Buy now</span>
+              <span class="padd" id="padd">Add to bag</span>
+              <span class="phart" aria-hidden="true">♡</span>
+            </div>
+            <p class="pship" id="pship">Free shipping on all continental US orders.</p>
+          </div>
+        </article>
+        <aside class="pcode" aria-hidden="true">
+          <div class="top"><i></i><i></i><i></i><span id="pcodeName">simple.css</span></div>
+          <pre id="pcodePre"><span class="c">/* Simple · swiss shop */</span>
+<span class="k">.card</span> { <span class="n">radius</span>: <span class="s">12px</span>; }
+<span class="k">.buy</span>  { <span class="n">bg</span>: <span class="s">#0f172a</span>; }
+<span class="k">.type</span> { <span class="n">sans</span>: <span class="s">system</span>; }</pre>
+        </aside>
+      </div>
+    </div>
+    <div class="cta-strip">
+      <span><span class="arrow">→</span> ตอบในแชท:
+        <strong>ลุย</strong>
+        <strong>ไม่ต้องมี code แค่การ์ด</strong>
+        <strong>ค่าเริ่ม Elegant</strong></span>
+      <span class="muted">แก้ 08:55 · ตัวอย่างใหญ่แบบ Tailwind</span>
+    </div>
+  </section>
+
+  <section class="brief" data-tab="custom">
+    <div class="pick-grid">
+      <div class="cream-land">
+        <span class="chip">SORNKan Forge</span>
+        <h2 style="font-size:24px;margin-top:8px">Let’s build your system.</h2>
+        <div class="comp">
+          <div class="themes" id="stylePick">
+            <div class="theme on" data-prev="atelier"><b>Atelier</b><span>ค่าเริ่ม · ครีมเรียบหรู</span></div>
+            <div class="theme luna" data-prev="luna"><b>LUNA</b><span>ชมพูจากโฆษณา</span></div>
+            <div class="theme luna" data-prev="custom" style="grid-column:1/-1"><b>Custom</b><span>พิมพ์สไตล์ · ต้อง Invite (WebMCP)</span></div>
+          </div>
+          <div class="cta-row" style="margin-top:8px;display:flex;gap:6px">
+            <span class="cream-pri" style="flex:1" id="ctaInv">Invite your agent ↗</span>
+            <span class="ghost" id="ctaOpen">Open project</span>
+          </div>
+        </div>
+      </div>
+      <div id="stylePrev" class="mini-shop at" style="min-height:280px">
+        <div class="nm" id="prevLabel">ตัวอย่าง · Atelier</div>
+        <h3 id="prevH">New in.</h3>
+        <div class="sg" id="prevCards">
+          <div class="scard"><div class="ph" style="background:linear-gradient(160deg,#E8E2D6,#C9B8A0);height:72px"></div><b>Tote</b><div class="price" style="color:#1C1916">฿890</div></div>
+          <div class="scard"><div class="ph" style="background:linear-gradient(160deg,#ddd,#bbb);height:72px"></div><b>Cap</b><div class="price" style="color:#1C1916">฿450</div></div>
+          <div class="scard"><div class="ph" style="background:linear-gradient(160deg,#eee,#ccc);height:72px"></div><b>Tee</b><div class="price" style="color:#1C1916">฿1,290</div></div>
+        </div>
+        <p class="small muted" id="prevHint" style="margin-top:10px">กดสไตล์ซ้าย แล้วดูร้านนี้ทางขวา</p>
+      </div>
+    </div>
+    <div class="cta-strip">
+      <span><span class="arrow">→</span> ตอบในแชท:
+        <strong>ลุย</strong>
+        <strong>ตัวอย่างใหญ่กว่านี้</strong>
+        <strong>Custom ก็เปิดได้แต่เตือน</strong></span>
+      <span class="muted">แก้ 07:50 · ตัวอย่างอยู่ขวา</span>
+    </div>
+  </section>
+
+  <section class="brief" data-tab="makeCustom">
+    <div class="mc-grid">
+      <div class="mc-form">
+        <span class="chip" style="border-color:#C45C26;color:#9A4218">SORNKan Forge · Conjure · Custom</span>
+        <h2 style="font-size:21px;margin:10px 0 4px">Tell us what to build — and how it should feel.</h2>
+        <p class="small muted" style="margin-bottom:12px">สองช่องนี้แยกกัน ไปหา WebMCP ตอนเอเจนต์เข้าร่วมสตูดิโอ (ต้อง Invite เท่านั้น — Open project ปิดไว้)</p>
+
+        <label class="mc-label">What do you want to build? <span class="mc-req">required</span></label>
+        <div class="mc-chips" id="mcWhatChips">
+          <button type="button" class="mc-chip" data-fill="what" data-v="A queue board where baristas mark orders New → Making → Ready.">Cafe queue</button>
+          <button type="button" class="mc-chip" data-fill="what" data-v="A room booking calendar with time slots and a host's day view.">Room booking</button>
+          <button type="button" class="mc-chip" data-fill="what" data-v="A course page with lessons, progress, and a completion badge.">Course / LMS</button>
+          <button type="button" class="mc-chip" data-fill="what" data-v="">เริ่มจากศูนย์</button>
+        </div>
+        <textarea class="mc-input" id="mcWhat" rows="3" placeholder="เช่น ระบบคิวคาเฟ่ที่บาริสต้ากดเปลี่ยนสถานะออเดอร์ได้…"></textarea>
+
+        <label class="mc-label" style="margin-top:12px">What style should it have?</label>
+        <div class="mc-chips" id="mcStyleChips">
+          <button type="button" class="mc-chip" data-fill="style" data-v="Simple — clean, minimal, no clutter.">Simple</button>
+          <button type="button" class="mc-chip" data-fill="style" data-v="Playful — bright pink, rounded shapes, confident type.">Playful</button>
+          <button type="button" class="mc-chip" data-fill="style" data-v="Elegant — cream and serif, quiet and unhurried.">Elegant</button>
+          <button type="button" class="mc-chip" data-fill="style" data-v="Brutalist — hard shadows, mono type, no apologies.">Brutalist</button>
+        </div>
+        <textarea class="mc-input" id="mcStyle" rows="2" placeholder="เช่น มินิมอล ขาวดำ ปุ่มเหลี่ยม…"></textarea>
+
+        <div class="cta-row" style="margin-top:14px">
+          <span class="pri" style="flex:1">Invite your agent to build this<i>↗</i></span>
+        </div>
+      </div>
+      <div class="mc-preview">
+        <div class="mc-pv-label">Sent to WebMCP once invited</div>
+        <div class="mc-pv-block"><b>build</b><span id="mcPvWhat">—</span></div>
+        <div class="mc-pv-block"><b>style</b><span id="mcPvStyle">—</span></div>
+        <div class="mc-pv-hint">เอเจนต์อ่านสอง field นี้จาก get_page_context แล้วค่อยเขียนไฟล์เอง — ไม่มีสตริงไหนถูกต่อเข้า CSS ตรง ๆ</div>
+      </div>
+    </div>
+    <div class="cta-strip">
+      <span><span class="arrow">→</span> ตอบในแชท:
+        <strong>ลุย</strong>
+        <strong>ให้พิมพ์ช่องเดียวพอ</strong>
+        <strong>เพิ่ม prefill อีก</strong></span>
+      <span class="muted">แก้ 10:15 · custom แยก "จะสร้างอะไร" กับ "สไตล์ไหน" · รองรับทั้งพิมพ์เองและกด prefill</span>
+    </div>
+  </section>
+
+  <section class="brief" data-tab="own">
+    <svg viewBox="0 0 760 220" width="100%" height="210" role="img" aria-label="Open project creates a private room; invite lets only the agent in">
+      <rect x="8" y="18" width="228" height="184" rx="16" fill="#FFF8F2" stroke="#E8B48A"/>
+      <text x="122" y="48" text-anchor="middle" font-size="12" font-weight="800" fill="#9A4218">คน ก กด Open project</text>
+      <rect x="28" y="64" width="188" height="56" rx="12" fill="#fff" stroke="#C45C26"/>
+      <text x="122" y="88" text-anchor="middle" font-size="13" font-weight="800" fill="#1C1916">ร้านของ ก</text>
+      <text x="122" y="106" text-anchor="middle" font-size="11" fill="#5C564C">ที่อยู่ยังเป็น forge.sornkan.com</text>
+      <text x="122" y="148" text-anchor="middle" font-size="11" fill="#5C564C">รีเฟรชแล้วยังร้านนี้</text>
+      <text x="122" y="168" text-anchor="middle" font-size="11" fill="#5C564C">คนอื่นเปิดหน้าแรกไม่เจอ</text>
+
+      <rect x="266" y="18" width="228" height="184" rx="16" fill="#F6F1E8" stroke="#CFC6AE"/>
+      <text x="380" y="48" text-anchor="middle" font-size="12" font-weight="800" fill="#5C564C">คน ข กด Open project</text>
+      <rect x="286" y="64" width="188" height="56" rx="12" fill="#fff" stroke="#1C1916"/>
+      <text x="380" y="88" text-anchor="middle" font-size="13" font-weight="800" fill="#1C1916">ร้านของ ข</text>
+      <text x="380" y="106" text-anchor="middle" font-size="11" fill="#5C564C">คนละร้านกับ ก</text>
+      <text x="380" y="148" text-anchor="middle" font-size="11" fill="#5C564C">สต็อกตะกร้าไม่ปนกัน</text>
+      <text x="380" y="168" text-anchor="middle" font-size="11" fill="#5C564C">แม้สินค้าตั้งต้นจะคล้ายกัน</text>
+
+      <rect x="524" y="18" width="228" height="184" rx="16" fill="#FFEAF3" stroke="#FFA3C8"/>
+      <text x="638" y="48" text-anchor="middle" font-size="12" font-weight="800" fill="#BE185D">ก กด Invite your agent</text>
+      <rect x="544" y="64" width="188" height="56" rx="12" fill="#fff" stroke="#DB2777"/>
+      <text x="638" y="88" text-anchor="middle" font-size="13" font-weight="800" fill="#3B1230">เอเจนต์เข้าห้อง ก</text>
+      <text x="638" y="106" text-anchor="middle" font-size="11" fill="#7A4560">ลิงก์เชิญเท่านั้นที่แชร์ได้</text>
+      <text x="638" y="148" text-anchor="middle" font-size="11" fill="#7A4560">ข ยังเข้าห้อง ก ไม่ได้</text>
+      <text x="638" y="168" text-anchor="middle" font-size="11" fill="#7A4560">ไม่ใช่ร้านกลางของทั้งเว็บ</text>
+    </svg>
+    <ul class="notes-list">
+      <li><span class="mk">ตอนนี้</span><div>กดแล้วได้รหัสโปรเจกต์ใหม่ แต่แถบที่อยู่กลายเป็นลิงก์ <b>?p=</b> — ใครได้ลิงก์นั้นเข้าห้องเดียวกันได้</div></li>
+      <li><span class="mk">จะทำ</span><div><b>Open project</b> เป็นของเบราว์เซอร์นั้น รีเฟรชแล้วยังร้านเดิม · <b>Invite</b> เท่านั้นที่คัดลอกลิงก์ให้เอเจนต์</div></li>
+    </ul>
+    <div class="cta-strip">
+      <span><span class="arrow">→</span> ตอบในแชท:
+        <strong>ลุย</strong>
+        <strong>ต้องล็อกอินด้วย</strong>
+        <strong>Open project สร้างใหม่ทุกครั้ง</strong></span>
+      <span class="muted">แก้ 07:20 · ไม่มีบัญชี ใช้คุกกี้ของเบราว์เซอร์นี้</span>
+    </div>
+  </section>
+
+  <section class="brief" data-tab="pick">
+    <div class="pick-grid">
+      <div class="cream-land">
+        <span class="chip">SORNKan Forge</span>
+        <span class="who-mini" style="border-color:#E8B48A"><i class="face" style="background:conic-gradient(from 210deg,#2A8F6F,#C45C26,#6E5AE6,#2A8F6F)"></i><b>Agent</b> · waiting</span>
+        <h2>Let’s build<br>your system.</h2>
+        <p>Tell us the system you want. Invite your agent. We attach web · database · storage on the same page.</p>
+        <div class="comp">
+          <div class="modes">
+            <div class="mode"><b>Conjure</b>Blank</div>
+            <div class="mode on" style="border-color:#C45C26;box-shadow:0 0 0 3px #F3E4D6"><b>Store</b>Shop</div>
+            <div class="mode"><b>Cafe</b>Menu</div>
+          </div>
+          <div class="themes">
+            <div class="theme on" data-th="atelier"><b>Atelier</b><span>เรียบหรูแบบเดิม · ค่าเริ่ม</span></div>
+            <div class="theme luna" data-th="luna"><b>LUNA</b><span>ชมพูแบบโฆษณา</span></div>
+          </div>
+          <span class="cream-pri">Invite your agent ↗</span>
+        </div>
+      </div>
+      <div class="split-shops">
+        <div class="mini-shop at">
+          <div class="nm">ค่าเริ่ม · Atelier</div>
+          <h3>New in.</h3>
+          <div class="sg">
+            <div class="scard"><div class="ph" style="background:linear-gradient(160deg,#E8E2D6,#C9B8A0);height:36px"></div><b>Tote</b><div class="price" style="color:#1C1916">฿890</div></div>
+            <div class="scard"><div class="ph" style="background:linear-gradient(160deg,#ddd,#bbb);height:36px"></div><b>Cap</b><div class="price" style="color:#1C1916">฿450</div></div>
+            <div class="scard"><div class="ph" style="background:linear-gradient(160deg,#eee,#ccc);height:36px"></div><b>Tee</b><div class="price" style="color:#1C1916">฿1,290</div></div>
+          </div>
+        </div>
+        <div class="mini-shop lu">
+          <div class="nm">ถ้าเลือก LUNA</div>
+          <h3>New in.</h3>
+          <div class="sg">
+            <div class="scard"><div class="ph a" style="height:36px"></div><b>Tote</b><div class="price">฿890</div></div>
+            <div class="scard"><div class="ph b" style="height:36px"></div><b>Cap</b><div class="price">฿450</div></div>
+            <div class="scard"><div class="ph c" style="height:36px"></div><b>Tee</b><div class="price">฿1,290</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <ul class="notes-list" style="margin-top:8px">
+      <li><span class="mk">01</span><div>หน้าแรกกับแถบ editor <b>ไม่เปลี่ยนสี</b> — ยังครีมเรียบหรู</div></li>
+      <li><span class="mk">02</span><div>ตอนสร้าง Store / Cafe / Conjure มีให้เลือก Atelier หรือ LUNA — ค่าเริ่มคือ Atelier</div></li>
+      <li><span class="mk">03</span><div>เดโมยังเป็น <b>https://forge.sornkan.com/</b></div></li>
+    </ul>
+    <div class="cta-strip">
+      <span><span class="arrow">→</span> ตอบในแชท:
+        <strong>ลุย</strong>
+        <strong>เพิ่ม Vibe Drop ด้วย</strong>
+        <strong>LUNA เฉพาะ Store</strong></span>
+      <span class="muted">แก้ 07:05 · ไม่ทาสีทั้งสตูดิโอ</span>
+    </div>
+  </section>
+
+  <section class="brief" data-tab="see">
+    <div class="browser" style="margin-bottom:10px">
+      <div class="addr"><span class="dots"><i></i><i></i><i></i></span><span class="url">https://forge.sornkan.com/</span></div>
+      <div class="stage" style="padding:10px">
+      <div class="mock-land land">
+        <div>
+          <span class="chip">SORNKan Forge</span>
+          <span class="who-mini"><i class="face"></i><b>Agent</b> · waiting</span>
+          <h2 class="bubble" style="margin-top:10px">Let’s build<br>your system.</h2>
+          <p>Tell us the system you want. Invite your agent. We attach <em style="color:#BE185D;font-style:normal;font-weight:700">web</em> · <em style="color:#BE185D;font-style:normal;font-weight:700">database</em> · <em style="color:#BE185D;font-style:normal;font-weight:700">storage</em> on the same page.</p>
+          <div class="comp">
+            <div class="modes">
+              <div class="mode"><b>Conjure</b>Blank canvas</div>
+              <div class="mode on"><b>Store</b>Shop + photos</div>
+              <div class="mode"><b>Cafe</b>Live orders</div>
+            </div>
+            <div class="cta-row">
+              <span class="pri">Invite your agent<i>↗</i></span>
+              <span class="ghost">Open project</span>
+            </div>
+          </div>
+        </div>
+        <div class="floatc">
+          <i class="heart"></i>
+          <article class="fc fc1"><div class="ph a"></div><b>Tote</b><span>฿890</span></article>
+          <article class="fc fc2"><div class="ph b"></div><b>Cap</b><span>฿450</span></article>
+        </div>
+      </div>
+      <div class="side">
+        <div class="ed-mini">
+          <div class="ed-bar">
+            <span class="logo">SORNKan <em>Forge</em></span>
+            <span class="ed-chip">web</span>
+            <span class="ed-chip">database</span>
+            <span class="ed-chip off">storage</span>
+            <span class="ed-pub">Publish</span>
+          </div>
+          <div class="ed-stage">
+            <div class="ed-frame">
+              <div class="ph c" style="width:42px;height:42px;border-radius:8px;flex:none"></div>
+              <div style="font-size:11px"><b>Atelier</b><div class="muted" style="font-size:10px">preview · pink shop</div></div>
+            </div>
+          </div>
+        </div>
+        <div class="shop-mini">
+          <div class="bar"><span>Atelier</span><span>Cart 0</span></div>
+          <div class="bubble">New in.</div>
+          <div class="sg">
+            <div class="scard"><div class="ph a"></div><b>Tote</b><div class="price">฿890</div><span class="buy">Add to bag</span></div>
+            <div class="scard"><div class="ph b"></div><b>Cap</b><div class="price">฿450</div><span class="buy">Add to bag</span></div>
+            <div class="scard"><div class="ph c"></div><b>Tee</b><div class="price">฿1,290</div><span class="buy">Add to bag</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    </div>
+    <ul class="notes-list" style="margin-top:8px">
+      <li><span class="mk">01</span><div>ภาษาอังกฤษเหมือนเดิม — เปลี่ยนแค่สี ฟอนต์ และการ์ด</div></li>
+      <li><span class="mk">02</span><div>ร้านที่สร้างยังชื่อ Atelier / คาเฟ่ Hearth — ไม่ใช้ชื่อ Luna</div></li>
+      <li><span class="mk">03</span><div>หัวใจเป็นลายตกแต่ง ไม่ใช้เป็นปุ่ม และไม่มีโลโก้ Shopee</div></li>
+      <li><span class="mk">04</span><div>ลิงก์เดโมคือ <b>https://forge.sornkan.com/</b> — ไม่ใช่ workers.dev</div></li>
+    </ul>
+    <div class="cta-strip">
+      <span><span class="arrow">→</span> ตอบในแชท:
+        <strong>ลุย</strong>
+        <strong>แค่ร้านที่ generate</strong>
+        <strong>หัวใจน้อยลง</strong></span>
+      <span class="muted">brief · ยังไม่ลงมือจนกว่าจะตอบ</span>
+    </div>
+  </section>
+
+  <section class="brief" data-tab="dom">
+    <div class="dom-grid">
+      <div class="dom-card">
+        <div class="pill todo">ตอนนี้</div>
+        <div class="was" style="margin-top:10px">https://forge-worker-editor.sornkan.workers.dev</div>
+        <p class="small muted" style="margin-top:8px">ลิงก์กรรมการชุดเดิม ยังใช้ได้เป็นสำรอง</p>
+      </div>
+      <div class="dom-card" style="box-shadow:0 0 0 4px var(--accent-soft)">
+        <div class="pill doing">เดโม</div>
+        <div class="now">https://forge.sornkan.com/</div>
+        <p class="small" style="margin-top:8px;color:var(--ink-2)">เปิดอันนี้ใน ChatGPT desktop / Chrome ธง WebMCP · เชิญเอเจนต์ก็ได้โดเมนนี้</p>
+      </div>
+    </div>
+    <ul class="notes-list" style="margin-top:10px">
+      <li><span class="mk">1</span><div>ผูกโดเมนกับ editor เท่านั้น — หน้า sornkan.com หลักไม่ขยับ</div></li>
+      <li><span class="mk">2</span><div>ร้านที่ publish ยังอยู่บน Worker ของแอป ไม่ได้ย้ายมาที่ forge.sornkan.com</div></li>
+      <li><span class="mk">3</span><div>โซน sornkan.com พร้อมแล้ว และชื่อ forge ยังว่าง</div></li>
+    </ul>
+    <div class="cta-strip">
+      <span><span class="arrow">→</span> ตอบในแชท: <strong>ลุย</strong> <strong>ปิด workers.dev ด้วย</strong></span>
+      <span class="muted">แก้ 2026-09-02 06:45</span>
+    </div>
+  </section>
+
+  <section class="brief" data-tab="req">
+    <p class="lead" style="margin-bottom:10px">เปลี่ยนธีม Forge ทั้งระบบเป็นโทน LUNA จากโฆษณา</p>
+    <blockquote class="q">เราเปลีย่น theme ของ sornkan forge เป็นสไตล์นี้ได้ไหม 555+</blockquote>
+    <blockquote class="q" style="margin-top:8px">luna ละกัน</blockquote>
+    <blockquote class="q" style="margin-top:8px">โดเมนขอเป็น https://forge.sornkan.com/ ด้วยนะ demo อ่ะ</blockquote>
+    <blockquote class="q" style="margin-top:8px">ฉันว่าสไต์เดิมก็ดูเรียบหรูอยุ่แล้วแฮะ เอาเป็นตัวอย่าง theme ให้เลือกตอนจะสร้างใหม่มะ</blockquote>
+    <blockquote class="q" style="margin-top:8px">ตอนกด open project มาอ่ะ มันต้องเป็นของผู้ใช้คนนั้นปะ ไม่ใช่ว่าทุกคนได้ project เดียวกันหมดนะ</blockquote>
+    <blockquote class="q" style="margin-top:8px">ลูกค้าไม่เห็นสไตล์ default อ่ะ สิ จริง ๆ น่าจะมีให้พิมพ์ได้ปะ ว่าจะเอาสไตล์ไหน หรือทำระบบอะไร หรือ web MCP มันมาอ่านทีหลังได้ปะ ?</blockquote>
+    <blockquote class="q" style="margin-top:8px">แบบถ้าเป็น custom ต้องเชื่อม web mcp นะ อะไรงี้</blockquote>
+    <blockquote class="q" style="margin-top:8px">เลือก style ต้องมีตัวอย่างให้ดูด้วยสิด้านขวาก็ได้มะ</blockquote>
+    <blockquote class="q" style="margin-top:8px">ตัวอย่างอยากให้เป็น style ชัดเจนกว่านี้แฮะ … https://v3.tailwindcss.com/ เหมือนตัวเลือกแบบนี้อ่ะ เเล้วเขาเห็น สไตล์เปลี่ยนไป simple playful elegant brtalist อะไรงี้ เราเอาตามนี้เลยก็ได้นะ แต่ตัวอย่าง card อาจเปลี่ยนไปตามรูปแบบของตัวระบบที่เขาเลือกเช่น ecom แสดงแบบนี้ (หาภาพประกอบฟรีมาหมุนด้วยนะ) เว็บอื่น ๆ แสดงตามตัวอย่างที่ควรจะเป็น</blockquote>
+    <blockquote class="q" style="margin-top:8px">css ไม่ต้องแสดงนะ เน้นแสดง visual ที่เขาจะเห็นมากกว่า ถ้าเป็น ส่วนอื่น อยากให้แสดงมากกว่า ecom อ่ะ เหมือนมี ecommerc  2 ตัวอย่างเลย คิดหน่อยระบบอะไรที่เขาน่าจะมาใช้เราได้อีก lms, จองห้อง ? หรืออะไรดี ให้มันว้าว ๆ หน่อย</blockquote>
+    <blockquote class="q" style="margin-top:8px">แต่ละตัวอย่าง มีมิติมากขึ้นมากกว่าแค่ card เฉย ๆ นะ เราขยายภาพออกมาได้อีกให้เห็นชัดขึ้นว่าสไตล์แตกต่างโดดเด่น สวยงามขนาดไหนในเว็บไซต์ และสามารถขยายขอบเขตให้เห็นชัดขึ้นได้อีกเช่น cafe ให้รู้สึกได้ถึง การจัดการออเดอร์หลังบ้านก็ได้ room นี่น่าจะมี สไตล์ที่มากขึ้น ฉันรู้สก 2 บรรทัดแบบนี้มันทื่อ ๆ ไป หรืออื่น ๆ อีกอย่างที่อยากได้คือ อยากให้ใช้ภาพประกอบมากขึ้น โดยเป็นภาพที่ เห็นหน้าคน ตามสไตล์เช่น playful เป็น เด็กผู้หญิง อื่น ๆ ก็เป็นคนตามสไตล์นั้น ขอแบบที่ free นะเอามาใช้อ่ะ</blockquote>
+    <blockquote class="q" style="margin-top:8px">ส่วนของ ui คิดว่า ถ้าเลือก blank มันควรเป็น custom theme และมีให้ใส่ prompt ไหมอ่ะ เพื่อส่งต่อไปให้ WebMCP สร้างอีกทีตอนเขาเข้าร่วม studio มาแล้ว อะไรงี้ custom style ก็ด้วย คือมันเป็น custom สองอันคือ พิมพ์สิ่งทีอยากสร้างเอง แบบ What you want to build กับ สไตล์ที่ต้องการ rework ui หน่อยมันควรเป้นแบบไหนที่ให้รองรับทั้ง prefill และ custom และแสดงตัวอย่างได้อย่างกลมกลื่นสวยงาม</blockquote>
+    <blockquote class="q" style="margin-top:8px">มันซ้ำเกินไป ไปดู ตัวอย่างแบบเดิมอ่ะ มันต้องเป็นแบบนั้น เปลี่ยนไปเลย ไม่ใช่ภาพเหมือนกันทุก system แบบนี้ ภาพประกอบที่บอกคือ อย่าง store อ่ะ ตอนนี้เห็นแค่เสื้อ มันควรเป้นแบบที่มีคนด้วย playful เป็น เด็กอะไรเงี้ย ดูที่หน้าแรกของ plan มันคือสไตล์นั้นแต่ขยายออกมา และสร้างความแตกต่างของฟีเจอร์ในระบบแต่ละแบบ</blockquote>
+    <blockquote class="q" style="margin-top:8px">ตัว simple ก็ยังไม่เห็นคนนะ room ก็ต้องไม่เห็นคนอ่ะ เด็กขอภาพมองตรง โตกว่านี้หน่อยสักประถม แล้วก็ ui จองห้องประชุมให้มันว้าวกว่านี้หน่อย อันนี้ดูเรียบ ๆ อ่ะ</blockquote>
+    <blockquote class="q" style="margin-top:8px">cafe, learn, store ขอดูดีกว่านี้ บางจุดยังแปลก ๆ เช่น ชิดขอบ หรือใส่ค่าสีไป มันควรแสดงฟีเจอร์ของ cafe ไม่ใช่ style guide line [แนบภาพหน้าจอ cafe และ learn]</blockquote>
+    <blockquote class="q" style="margin-top:8px">ใน system อื่น ๆ ก็ควรเปลี่ยนสไตล์ภาพที่ใช้ด้วยครับ ให้เข้ากับ สไตล์ที่เลือก ห้องเรียน หรือ course หรืองานจองห้องก็ควรเปลี่ยนภาพด้วย</blockquote>
+    <blockquote class="q" style="margin-top:8px">simple, brutal -&gt; learn ภาพซ้ำ | cafe ยังซ้ำกาแฟหรอ ของควรเปลีย่นไปเรื่อย ๆ | book room นี่คือไม่เปลี่ยนภาพ room เลยด้วยซ้ำ ทั้ง 3 room ควรเปลี่ยนเมื่อเลือกสไตล์อื่น</blockquote>
+    <table style="margin-top:12px;background:#fff;border-radius:12px;overflow:hidden">
+      <tr><th>ข้อ</th><th>ล็อกแล้ว</th></tr>
+      <tr><td>สตูดิโอ Forge</td><td>คงครีมเรียบหรู — ไม่ทาสีชมพูทั้งไซต์</td></tr>
+      <tr><td>ธีมตอนสร้าง</td><td>Simple · Playful (LUNA) · Elegant (Atelier ค่าเริ่ม) · Brutalist · Custom พิมพ์แล้วต้อง Invite</td></tr>
+      <tr><td>ตัวอย่าง</td><td>ภาพล้วน ไม่มีช่องโค้ด · Store สินค้า · Cafe คิวออเดอร์ · Book จองห้อง+ช่วงเวลา · Learn คอร์ส+บทเรียน · Conjure หน้าว่าง</td></tr>
+      <tr><td>Custom</td><td>ต้อง Invite agent / เชื่อม WebMCP — ปิด Open project · เอเจนต์อ่าน brief ได้ทีหลัง</td></tr>
+      <tr><td>โดเมนเดโม</td><td>https://forge.sornkan.com/ — editor เท่านั้น ไม่แตะ sornkan.com หลัก</td></tr>
+      <tr><td>เจ้าของโปรเจกต์</td><td>Open project เป็นของเบราว์เซอร์นั้น · Invite เท่านั้นที่ให้เอเจนต์เข้าห้องเดียวกัน · ไม่มีร้านกลาง</td></tr>
+      <tr><td>คงไว้</td><td>โครงหน้า, โหมด, ชิป Agent, ภาษาอังกฤษ, workers.dev เป็นสำรอง</td></tr>
+      <tr><td>มิติตัวอย่าง</td><td>ไม่แยกแท็บใหม่ — เสริมเข้าแท็บแรก "ภาพล้วน / ระบบว้าว" เดิม: คำโปรยเปลี่ยนตามคู่ระบบ×สไตล์จริง (20 ประโยค) + คนจริงในภาพต่อระบบ (ไม่ซ้ำกันข้ามระบบ) + หลังบ้านเฉพาะของแต่ละระบบ (cafe=KDS, book=ตัวเลือกห้อง+host+bookings)</td></tr>
+      <tr><td>ภาพประกอบ</td><td>Store: simple=looks/w3.jpg, playful=looks/kid-girl.jpg, elegant=looks/shopw.jpg, brutalist=looks/jacket2.jpg (ทุกรูปมีคนจริง) · Book: 3 ห้องจริง (studio/desk/room) + host persona ต่อสไตล์ · kid-girl.jpg ดาวน์โหลดจาก Pexels หลังขอสิทธิ์ผู้ใช้แล้ว (เครดิตใน looks/CREDITS.md) ที่เหลือใช้ของเดิมในโปรเจกต์ — โฮสต์ในโปรเจกต์เท่านั้น ไม่ฮอตลิงก์</td></tr>
+      <tr><td>Custom 2 ช่อง</td><td>แยก "จะสร้างอะไร" (What you want to build) กับ "สไตล์ที่ต้องการ" (style) เป็นคนละช่อง มีปุ่ม prefill ต่อยอดจากตัวอย่าง หรือพิมพ์เองล้วนก็ได้ ทั้งสองไปหา WebMCP ตอน Invite เท่านั้น</td></tr>
+      <tr><td>Bug: cafe ชิดขอบ</td><td>root cause คือ markup มี <code>&lt;/div&gt;</code> เกินหนึ่งอัน ทำให้แผง "Behind the counter" หลุดออกจาก .vis-body ก่อนถึง padding — แก้แล้วในต้นแบบ</td></tr>
+      <tr><td>Bug: learn สีเต็มแถว</td><td>root cause คือ <code>.lesson.on</code> ใช้กฎสีเดียวกับ <code>.slot.on</code> (ชิพเล็ก) — แยกกฎใหม่ให้ไฮไลต์แค่ไอคอน+สีตัวอักษร ครบ 4 ลุค</td></tr>
+      <tr><td>ภาพต่อลุคครบระบบ (แก้รอบ 2)</td><td>รอบแรกแก้ไม่สุด — Book เปลี่ยนแค่ห้องเริ่มต้น ไม่ได้เปลี่ยนรูปห้องเอง, Cafe เปลี่ยนแค่ตั๋วใบแรก, Learn simple/brutalist ยังใช้รูปเดียวกัน รอบนี้แก้ให้ทุกช่องเปลี่ยนจริง ตรวจด้วยสคริปต์ยืนยันไม่มีคู่ลุคไหนได้ภาพชุดเดียวกัน — โหลดเพิ่ม 5 ไฟล์จาก Pexels (คอนเฟิร์มแล้ว) + ใช้ w5.jpg เดิมอีก 1</td></tr>
+    </table>
+    <div class="cta-strip">
+      <span><span class="arrow">→</span> ตอบในแชท: <strong>ลุย</strong> <strong>แก้ขอบเขต</strong></span>
+    </div>
+  </section>
+
+  <section class="brief" data-tab="arch">
+    <svg viewBox="0 0 720 280" width="100%" height="250" role="img" aria-label="LUNA tokens flow to editor and generated shops">
+      <rect x="16" y="90" width="150" height="88" rx="16" fill="#FFD6E8" stroke="#FFA3C8"/>
+      <text x="91" y="128" text-anchor="middle" font-size="13" font-weight="800" fill="#BE185D">LUNA tokens</text>
+      <text x="91" y="148" text-anchor="middle" font-size="11" fill="#7A4560">ชมพู · ฟองสบู่ · เม็ดยา</text>
+      <path d="M166 134 H230" stroke="#DB2777" stroke-width="2" marker-end="url(#ar)"/>
+      <rect x="230" y="28" width="200" height="88" rx="16" fill="#fff" stroke="#F8C2DC"/>
+      <text x="330" y="64" text-anchor="middle" font-size="13" font-weight="800" fill="#3B1230">หน้าแรก + แถบ editor</text>
+      <text x="330" y="86" text-anchor="middle" font-size="11" fill="#7A4560">คนเห็นตอนเชิญเอเจนต์</text>
+      <rect x="230" y="164" width="200" height="88" rx="16" fill="#fff" stroke="#F8C2DC"/>
+      <text x="330" y="200" text-anchor="middle" font-size="13" font-weight="800" fill="#3B1230">ร้าน / คาเฟ่ / หน้าว่าง</text>
+      <text x="330" y="222" text-anchor="middle" font-size="11" fill="#7A4560">สิ่งที่เอเจนต์สร้างให้</text>
+      <path d="M166 134 C198 134,198 72,230 72" fill="none" stroke="#DB2777" stroke-width="2"/>
+      <path d="M166 134 C198 134,198 208,230 208" fill="none" stroke="#DB2777" stroke-width="2"/>
+      <path d="M430 72 H500" stroke="#DB2777" stroke-width="2"/>
+      <path d="M430 208 H500" stroke="#DB2777" stroke-width="2"/>
+      <rect x="500" y="28" width="200" height="224" rx="16" fill="#FFF7FB" stroke="#FFA3C8"/>
+      <text x="600" y="88" text-anchor="middle" font-size="13" font-weight="800" fill="#3B1230">พรีวิวในเฟรม</text>
+      <text x="600" y="114" text-anchor="middle" font-size="11" fill="#7A4560">คนกับเอเจนต์เห็นโทนเดียวกัน</text>
+      <text x="600" y="148" text-anchor="middle" font-size="11" fill="#BE185D">ไม่มี CDN ฟอนต์</text>
+      <text x="600" y="168" text-anchor="middle" font-size="11" fill="#BE185D">ไม่มีภาพจากโฆษณา</text>
+      <text x="600" y="188" text-anchor="middle" font-size="11" fill="#BE185D">ไม่มีโลโก้ Shopee</text>
+    </svg>
+    <details class="fold"><summary>รายละเอียดสำหรับคนงาน</summary>
+      <div class="inner">แก้ 07:05: ห้ามเปลี่ยนโทเค็น public/styles.css ของสตูดิโอให้เป็นชมพู ค่าครีมเดิมคงไว้ · เพิ่ม theme=atelier|luna ใน start_project และ POST /api/session ค่าเริ่ม atelier · htmlForStart(start, theme) คืน Atelier เดิมหรือ LUNA seed · ชื่อร้านยัง Atelier/Hearth ไม่ใช้คำว่า Luna เป็นชื่อร้าน · LUNA เป็นชุด CSS คงที่ ไม่ต่อสตริงจาก input · โดเมนเดโม: routes pattern forge.sornkan.com custom_domain true บน forge-worker-editor ชื่อ Worker ไม่เปลี่ยน · workers_dev คง true · cookie ไม่ใส่ Domain · อย่าผูกโซนหลัก sornkan.com · แก้ 09:25: ตัวอย่างภาพล้วน ห้ามแผงโค้ด · Cafe เป็นคิวออเดอร์ไม่ใช่สินค้า · เพิ่ม start book (จองห้อง+ช่วงเวลา) และ learn (คอร์ส+บทเรียน) · Conjure หน้าว่าง · แก้ 08:55: ล็อบบี้เป็น look switcher แบบ Tailwind — Simple/Playful/Elegant/Brutalist สลับตัวอย่างตาม start รูปฟรีโฮสต์ใน public หมุนตามลุค · parseTheme รับ simple|playful|elegant|brutalist นามแฝง atelier→elegant luna→playful ค่าอื่น→elegant · Custom ไม่ generate CSS · แก้ 10:15: get_page_context เพิ่ม buildPrompt และ stylePrompt แยกกันสองฟิลด์ (เดิมมีแค่ brief รวม) ฝั่งเอเจนต์อ่านสองค่านี้แทน · ปุ่ม prefill ฝั่ง client เติมค่าใน textarea เฉย ๆ ไม่ยิง request จนกด Invite · แก้ 10:30 (revert 10:15 dimension-tab): ยกเลิกแท็บ dimension แยก เพราะการ์ดออกมาเหมือนกันทุกระบบ (แค่เปลี่ยน label) กลับไปใช้โครง wow-stage เดิมที่ store/cafe/book/learn/conjure คนละฟังก์ชัน คนละ DOM จริง แล้วเสริมของเดิมแทนการสร้างของใหม่คู่ขนาน — store(): playful→looks/kid-girl.jpg, elegant→looks/shopw.jpg, simple→looks/w3.jpg (ภาพมีคนจริงแทนผ้าแขวน/หมวกวางเปล่า ๆ) · cafe(): เพิ่มแผง .kds 3 คอลัมน์ (New/Making/Ready) เป็นมุมมองพนักงานหลังเคาน์เตอร์ ใช้เฉพาะ cafe ไม่ลอกไปใช้กับ book/learn · เพิ่ม TAGLINE[sys][look] คนละประโยคต่อคู่ระบบ×ลุค (20 ประโยค ไม่ใช่แคปชันนิ่งเดิม) เขียนเข้า #wowCap ทุกครั้งที่ paint() ทำงาน · แก้ 10:35: store simple → looks/w3.jpg เปลี่ยนสินค้าโชว์เป็น Everyday V-Neck Tee ให้ตรงกับภาพ (เดิม jacket.jpg มีแค่มือ ไม่นับเป็นคน) · เพิ่มรูปเด็กประถมมองตรงกล้อง (looks/kid-girl.jpg จาก Pexels — เครดิตใน looks/CREDITS.md) แทน kid.jpg เดิมที่เด็กมองไม่ตรงและดูเด็กกว่าที่ขอ · book() ยกเครื่องใหม่: เพิ่ม ROOMS[] 3 ห้อง (studio/desk/room.jpg) พร้อม room-pick switcher ที่คลิกแล้ว paint() ใหม่ (state เก็บใน stage[data-room]) · เพิ่ม HOST{} persona พนักงานต้อนรับต่อสไตล์ (w1/w2/w4/w6 — คนละไฟล์กับที่ store ใช้ กันภาพซ้ำข้ามระบบ) · เพิ่มรายการ "Today's bookings" (day-list) เป็นหลังบ้านเฉพาะของ book ต่างจากโครง kds ของ cafe · แก้ 10:40 (bug): cafe() มี </div> เกินมาหนึ่งอันหลัง ticket ที่ 3 ทำให้ .vis-body ปิดก่อนที่ kds จะถูกแทรก เลยหลุดไปอยู่นอก padding ของการ์ด (ชิดขอบ) — ลบ tag ที่เกินออก · .lesson.on เคยแชร์กฎเดียวกับ .slot.on (background เต็มแท่งสำหรับชิพเล็ก) พอมาใช้กับแถวลิสต์เต็มความกว้างเลยกลายเป็นบล็อกสีทึบทั้งแถว — แยกกฎใหม่ต่อลุค ให้ไฮไลต์เฉพาะวงกลมไอคอน (เหมือน .lesson.done) บวกสีตัวอักษร ไม่ทาพื้นเต็มแถว · หลักการ: state ของ component เล็ก (chip/slot) กับ state ของ list row ต้องแยกกฎกันเสมอ แม้ชื่อ modifier จะเหมือนกัน (.on) · แก้ 10:50: cafe() เพิ่ม CAFE_FEATURED{look} เลือกภาพตั๋วเด่นสุดต่อลุค (simple/brutalist=coffee2.jpg, playful=coffee.jpg, elegant=cafepe.jpg — ของเดิมในโปรเจกต์ ไม่ต้องหาเพิ่ม) · book() เพิ่ม LOOK_ROOM{look} กำหนดห้องเริ่มต้นต่อลุค (simple/elegant=Focus Room, playful=Studio A, brutalist=Garden Room) ปุ่มเปลี่ยนลุคทุกปุ่ม (รวม custom) เรียก stage.removeAttribute('data-room') ก่อน paint() เพื่อรีเซ็ตกลับค่าเริ่มของลุคนั้น ผู้ใช้คลิกเลือกห้องเองได้และค่านั้นจะคงอยู่จนกว่าจะเปลี่ยนลุคอีกที · learn() เพิ่ม LEARN_IMG{look} = simple/brutalist ใช้ class.jpg ร่วมกัน (สไตล์ CSS ต่างกันมากพอ) elegant=notebook.jpg playful=looks/learn-playful.jpg (ใหม่ จาก Pexels ยืนยันสิทธิ์แล้ว) · แก้ 11:00 (รอบก่อนแก้ไม่สุด): cafe() เปลี่ยนจาก "ตั๋วใบแรกเปลี่ยน ใบ 2-3 ฮาร์ดโค้ด" เป็น CAFE_TICKETS{look} คืน array 3 รายการ [img,name,status,time] ต่อลุค วนสร้าง ticket ทั้งหมดจาก array เดียว ไม่มีการฮาร์ดโค้ดรูปที่เหลืออีก · book() เปลี่ยนจาก ROOMS[].img (ค่าคงที่ต่อห้อง) เป็น ROOMS[].imgs{calm,bold} สองสถานะต่อห้อง อ่านผ่าน LOOK_GROUP{look} (simple/elegant=calm, playful/brutalist=bold) ผ่านฟังก์ชัน roomImg(room,look) ที่ทั้ง room-pick thumbnail และ vis-hero เรียกร่วมกัน · แก้ LOOK_ROOM ให้ห้องตั้งต้นของ 4 ลุคไม่ชนกัน (เดิม simple กับ elegant ตั้งต้นห้องเดียวกันและอยู่กลุ่มภาพเดียวกัน เท่ากับรูปซ้ำสนิทตอนโหลดหน้าแรก) — ตรวจด้วยสคริปต์ Node แยก (ไม่ผ่าน browser) ยืนยันว่าไม่มีคู่ลุคไหนในสามระบบนี้ได้ภาพ(ชุด)ซ้ำกันอีก · หลักการที่พลาดไปตอนแก้ครั้งก่อน: "เปลี่ยนเฉพาะ default/featured" ไม่เท่ากับ "เปลี่ยนภาพจริง" ถ้า asset ที่อยู่ข้างใต้ยังเป็นค่าคงที่ · แก้ 07:20: Open project ไม่ทำ history.replaceState เป็น ?p= · ถ้ามีคุกกี้ session ให้เปิดโปรเจกต์เดิม ไม่สร้างร้านกลาง · Invite / copy invite เท่านั้นที่ใส่ ?p= · รหัสโปรเจกต์เป็น UUID เต็ม ยังรับของเก่า 8 ตัวได้ · ไม่มี API ลิสต์โปรเจกต์ทั้งหมด</div>
+    </details>
+  </section>
+
+  <section class="brief" data-tab="sec">
+    <div class="note danger"><span class="ic">!</span><div><b>CDN / ฮอตลิงก์</b> — ห้ามโหลดฟอนต์หรือภาพจากโดเมนนอก (รวมภาพโฆษณา sornkan.com) เพราะเปิดช่องติดตามและทำให้หน้าพังตอนออฟไลน์</div></div>
+    <div class="note danger" style="margin-top:8px"><span class="ic">!</span><div><b>เครื่องหมายการค้า</b> — ห้ามโลโก้ Shopee, ป้าย LIVE แบบแอปนั้น, หรือคัดลอกเลย์เอาต์รถเข็นจนดูเป็นของแพลตฟอร์มอื่น</div></div>
+    <div class="note danger" style="margin-top:8px"><span class="ic">!</span><div><b>คอนทราสต์</b> — ตัวอักษรปกติ ≥ 4.5:1 ห้ามชมพูอ่อนบนชมพูอ่อน ปุ่มหลักเป็นขาวบน #DB2777 ราคา #BE185D บนขาว อย่าพึ่ง text-stroke เป็นคอนทราสต์เดียวของเนื้อความ</div></div>
+    <div class="note danger" style="margin-top:8px"><span class="ic">!</span><div><b>CSS ในหน้าที่ generate</b> — สไตล์เป็นสตริงคงที่ ห้ามแทรก brief ของคนลงใน CSS เพราะจะกลายเป็น injection ใน Worker ที่เผยแพร่</div></div>
+    <div class="note danger" style="margin-top:8px"><span class="ic">!</span><div><b>โดเมน / คุกกี้</b> — ห้ามผูก sornkan.com หลัก (มีแอปอื่นอยู่แล้ว) คุกกี้ session ต้อง host-only ที่ forge.sornkan.com ห้าม Domain=.sornkan.com คุกกี้ต้อง Secure+HttpOnly+SameSite=Lax บน HTTPS</div></div>
+    <div class="note danger" style="margin-top:8px"><span class="ic">!</span><div><b>พารามิเตอร์ธีม</b> — theme รับได้แค่ simple | playful | elegant | brutalist และนามแฝง atelier=elegant, luna=playful ค่าอื่นตกไป elegant ห้ามเอสตริงจากผู้ใช้ไปต่อใน CSS ของหน้าที่ generate · Custom ไม่ใช่ชุด CSS</div></div>
+    <div class="note danger" style="margin-top:8px"><span class="ic">!</span><div><b>ภาพตัวอย่าง</b> — ใช้ภาพฟรีที่โฮสต์ในโปรเจกต์เท่านั้น ห้ามฮอตลิงก์ Unsplash / Tailwind / โฆษณา หมุนภาพตามลุคจากชุดที่อนุญาต · รูปใหม่ที่ยังไม่มีในโปรเจกต์ต้องขอสิทธิ์ผู้ใช้ก่อนดาวน์โหลดทุกครั้ง (ชื่อไฟล์ + แหล่งที่มา + ขนาด) แล้วบันทึกเครดิต/สัญญาอนุญาตไว้ที่ <code>looks/CREDITS.md</code></div></div>
+    <div class="note danger" style="margin-top:8px"><span class="ic">!</span><div><b>ห้องโปรเจกต์</b> — ห้ามมีโปรเจกต์กลางที่ทุกคนเปิดแล้วเจออันเดียว Open project ต้องผูกคุกกี้ host-only ของเบราว์เซอร์นั้น ห้ามใส่ ?p= ในแถบที่อยู่ตอน Open project (มีแค่ตอน Invite) รหัสโปรเจกต์ต้องเดายาก อย่าแสดงรายชื่อโปรเจกต์ทั้งหมด</div></div>
+    <div class="note danger" style="margin-top:8px"><span class="ic">!</span><div><b>Custom กับเอเจนต์</b> — ข้อความ brief เป็น untrusted ห้ามเอไปต่อใน CSS โดยตรง เอเจนต์อ่านแล้วค่อยเขียนไฟล์ผ่านเครื่องมือ ถ้า theme=custom ห้าม Open project ข้าม Invite</div></div>
+    <div class="note danger" style="margin-top:8px"><span class="ic">!</span><div><b>Custom 2 ช่อง (10:15)</b> — buildPrompt และ stylePrompt ต้อง length-limit และ strip ก่อนเก็บ/ส่งต่อ WebMCP ทั้งคู่ยัง untrusted เหมือน brief เดิม ห้ามเอาไปต่อ CSS/HTML ตรง ๆ ปุ่ม prefill เติมข้อความ client-side เท่านั้น ไม่ยิง network จนกด Invite</div></div>
+    <div class="note danger" style="margin-top:8px"><span class="ic">!</span><div><b>Persona photo</b> — ต้องมาจาก allowlist ไฟล์ในโปรเจกต์เท่านั้น (public/looks/) ห้ามรับ URL ภาพจาก brief หรือ query string ห้ามใช้ภาพหน้าคนจริงของลูกค้า/พนักงานจริง ใช้ได้เฉพาะสต็อกฟรีที่โฮสต์ไว้แล้ว</div></div>
+    <div class="cta-strip"><span class="muted">ช่องโจมตีเหล่านี้เป็นงาน security ของตัวเอง</span></div>
+  </section>
+
+  <section class="brief" data-tab="test">
+    <table style="background:#fff;border-radius:12px;overflow:hidden">
+      <tr><th>ชั้น</th><th>เคส</th><th>ผ่านเมื่อ</th></tr>
+      <tr><td>Unit</td><td>สัญญาโทน</td><td>สไตล์ editor ไม่มีครีม/serif เดิม · seed ไม่มีพื้นครีม · ไม่มี fonts.googleapis / shopee · คาเฟ่ยัง Hearth · ร้านยัง tote</td></tr>
+      <tr><td>UI Storybook</td><td>—</td><td>โปรเจกต์ไม่มี Storybook ข้าม ใช้ Playwright แทน</td></tr>
+      <tr><td>E2E</td><td>ล็อบบี้</td><td>พื้นชมพู ปุ่มหลักชมพู ชิป Agent อ่านได้ โหมด Store ยังเลือกได้</td></tr>
+      <tr><td>E2E</td><td>ร้าน + คาเฟ่</td><td>พรีวิว Atelier การ์ดมน ราคาบานเย็น ใส่ตะกร้าแล้วยังตัดสต็อก · Hearth ได้โทนเดียวกัน</td></tr>
+      <tr><td>E2E</td><td>editor</td><td>แถบบนชมพู Publish ยังทำงาน โฟกัสคีย์บอร์ดเห็น</td></tr>
+      <tr><td>E2E</td><td>โดเมนเดโม</td><td>https://forge.sornkan.com/ ตอบ 200, HTTPS, ล็อบบี้ LUNA, เชิญลิงก์ใช้โดเมนนี้</td></tr>
+      <tr><td>Unit</td><td>routes</td><td>config มี custom_domain ที่ forge.sornkan.com และไม่ผูกโซนหลัก</td></tr>
+    </table>
+    <p class="small muted" style="margin:10px 0 6px">แก้ 07:05 — เทสชุดชมพูทั้งไซต์ใช้ไม่ได้แล้ว ใช้ชุดนี้แทน</p>
+    <table style="background:#fff;border-radius:12px;overflow:hidden">
+      <tr><th>ชั้น</th><th>เคส</th><th>ผ่านเมื่อ</th></tr>
+      <tr><td>Unit</td><td>ค่าเริ่ม</td><td>ไม่ส่ง theme แล้วยังได้ร้านครีม Atelier / serif · cafe ยัง Hearth</td></tr>
+      <tr><td>Unit</td><td>luna</td><td>theme=luna ได้ CSS ชมพู · ไม่มี Shopee / fonts.googleapis · theme=evil ตกไป atelier</td></tr>
+      <tr><td>Unit</td><td>สตูดิโอ</td><td>public/styles.css ยังครีม #F6F1E8 และ serif</td></tr>
+      <tr><td>E2E</td><td>ตัวเลือก</td><td>ล็อบบี้ครีม มี Atelier/LUNA · ค่าเริ่ม Atelier · สลับ LUNA แล้วเปิด Store พรีวิวชมพู · ตะกร้ายังตัดสต็อก</td></tr>
+      <tr><td>E2E</td><td>โดเมน</td><td>https://forge.sornkan.com/ เป็นล็อบบี้ครีม ไม่ใช่ชมพูทั้งหน้า</td></tr>
+      <tr><td>E2E</td><td>ของใครของมัน</td><td>Open project สองเบราว์เซอร์ได้คนละรหัส · แถบที่อยู่ไม่มี ?p= · รีเฟรชแล้วยังร้านเดิม · Invite คัดลอกลิงก์แล้วอีกแท็บเข้าห้องนั้นได้</td></tr>
+      <tr><td>E2E</td><td>เห็นสไตล์</td><td>ล็อบบี้ Atelier โชว์การ์ดครีม · สลับ LUNA การ์ดชมพู · Custom พิมพ์ได้ Open project กดไม่ได้ · Invite ยังได้</td></tr>
+      <tr><td>Unit</td><td>context</td><td>get_page_context มี brief และ theme รวม custom</td></tr>
+    </table>
+    <p class="small muted" style="margin:10px 0 6px">แก้ 08:55 — ตัวอย่างใหญ่แบบ Tailwind</p>
+    <table style="background:#fff;border-radius:12px;overflow:hidden">
+      <tr><th>ชั้น</th><th>เคส</th><th>ผ่านเมื่อ</th></tr>
+      <tr><td>E2E</td><td>ลุค</td><td>ล็อบบี้มี Simple / Playful / Elegant / Brutalist · กดแล้วการ์ดใหญ่เปลี่ยนรูป ปุ่ม รัศมี ฟอนต์ ในแว้บเดียว</td></tr>
+      <tr><td>E2E</td><td>ระบบ</td><td>Store การ์ดสินค้า · Cafe คิวออเดอร์ ไม่มี Buy now · Book มีวัน+ช่วงเวลา+Reserve · Learn มีบทเรียน+หลอดความคืบหน้า · Conjure หน้าว่าง · ไม่มีแผงโค้ด</td></tr>
+      <tr><td>E2E</td><td>รูป</td><td>รูปมาจากโฮสต์เดียวกัน ไม่มี unsplash.com / v3.tailwindcss.com ใน network · สลับลุคแล้วรูปเปลี่ยน</td></tr>
+      <tr><td>Unit</td><td>allowlist</td><td>simple playful elegant brutalist ผ่าน · atelier→elegant · luna→playful · evil→elegant · ไม่ต่อสตริงลง CSS</td></tr>
+    </table>
+    <p class="small muted" style="margin:10px 0 6px">แก้ 10:15 — custom 2 ช่อง</p>
+    <table style="background:#fff;border-radius:12px;overflow:hidden">
+      <tr><th>ชั้น</th><th>เคส</th><th>ผ่านเมื่อ</th></tr>
+      <tr><td>E2E</td><td>custom 2 ช่อง</td><td>กด chip แล้ว textarea ที่ตรงกันถูกเติมและพรีวิวขวาซิงก์ทันที · พิมพ์เองก็ซิงก์เหมือนกัน · ไม่กด Invite แล้วไม่มี network request ออกไป</td></tr>
+      <tr><td>Unit</td><td>context</td><td>get_page_context มี buildPrompt และ stylePrompt แยกกันสองคีย์ ทั้งคู่ผ่าน length-limit/strip ก่อนเก็บ</td></tr>
+    </table>
+    <p class="small muted" style="margin:10px 0 6px">แก้ 10:30–10:35 — wow-stage เดิม เสริมของจริงต่อระบบ ไม่ใช่การ์ดซ้ำ</p>
+    <table style="background:#fff;border-radius:12px;overflow:hidden">
+      <tr><th>ชั้น</th><th>เคส</th><th>ผ่านเมื่อ</th></tr>
+      <tr><td>E2E</td><td>คำโปรย</td><td>สลับ (ระบบ, ลุค) คู่ไหนก็ตาม ข้อความใต้ตัวเลือก (#wowCap) เปลี่ยนเนื้อหาจริง ไม่ใช่ค่าตั้งต้นค้าง — ครบ 5 ระบบ × 4 ลุค = 20 ค่าไม่ซ้ำกัน</td></tr>
+      <tr><td>E2E</td><td>Store มีคน</td><td>Simple/Playful/Elegant ทั้งสามใช้รูปที่เห็นหน้า/ตัวคนชัดเจน (ไม่ใช่แค่มือ) และคนละไฟล์กัน; Brutalist มีลำตัว/มืออย่างน้อย</td></tr>
+      <tr><td>E2E</td><td>Cafe หลังบ้าน</td><td>แผง "Behind the counter" (kds 3 คอลัมน์) ปรากฏเฉพาะ Cafe เท่านั้น ไม่ปรากฏใน Store/Book/Learn</td></tr>
+      <tr><td>E2E</td><td>Book มีคน + ว้าว</td><td>มี room-pick 3 ห้อง คลิกแล้วรูป+ราคา+ที่นั่งเปลี่ยนจริง · มี persona host พร้อมรูปคน (ไม่ใช่ห้องว่างเปล่า) · มีรายการ "Today's bookings" ต่างจากโครง kds ของ cafe</td></tr>
+      <tr><td>Unit</td><td>ไม่ซ้ำภาพข้ามระบบ</td><td>ไฟล์รูปที่ Store ใช้ (w3/kid-girl/shopw/jacket2) ไม่ซ้ำกับไฟล์ที่ Book ใช้เป็น host (w1/w2/w4/w6)</td></tr>
+      <tr><td>Unit</td><td>เครดิตภาพนอก</td><td>รูปที่ไม่ได้มาจาก repo เดิม (เช่น kid-girl.jpg) มีแถวใน looks/CREDITS.md ครบ แหล่งที่มา/ช่างภาพ/สัญญาอนุญาต</td></tr>
+    </table>
+    <p class="small muted" style="margin:10px 0 6px">แก้ 10:40 — bug fix: cafe ชิดขอบ, learn สีเต็มแถว</p>
+    <table style="background:#fff;border-radius:12px;overflow:hidden">
+      <tr><th>ชั้น</th><th>เคส</th><th>ผ่านเมื่อ</th></tr>
+      <tr><td>E2E</td><td>Cafe KDS padding</td><td>แผง "Behind the counter" อยู่ใน .vis-body จริง (มี padding ซ้าย/ขวา/ล่างเท่ากับเนื้อหาส่วนอื่นในการ์ด) ไม่ชิดขอบการ์ดหรือหลุดออกนอกมุมโค้ง</td></tr>
+      <tr><td>E2E</td><td>Learn current-lesson</td><td>แถว "Exposure" (สถานะ on) ไม่มี background เต็มแถว — ไฮไลต์อยู่ที่วงกลมไอคอนกับสีตัวอักษรเท่านั้น ครบทั้ง 4 ลุค</td></tr>
+      <tr><td>Unit</td><td>DOM balance</td><td>ทุกฟังก์ชัน render (store/cafe/book/learn/conjure) นับ &lt;div&gt; เปิด-ปิดเท่ากัน และ &lt;article&gt; เปิด-ปิดเท่ากัน</td></tr>
+    </table>
+    <p class="small muted" style="margin:10px 0 6px">แก้ 10:50 — ภาพเปลี่ยนตามลุคครบทั้ง cafe/book/learn</p>
+    <table style="background:#fff;border-radius:12px;overflow:hidden">
+      <tr><th>ชั้น</th><th>เคส</th><th>ผ่านเมื่อ</th></tr>
+      <tr><td>E2E</td><td>Cafe เปลี่ยนภาพ</td><td>สลับ 4 ลุค แล้วรูปตั๋วที่โชว์เด่นสุด (ใบแรก) เปลี่ยนไฟล์จริง อย่างน้อย 3 ไฟล์ต่างกันใน 4 ลุค</td></tr>
+      <tr><td>E2E</td><td>Book ห้องตามลุค</td><td>สลับลุคแล้วห้อง+รูปที่โชว์เปลี่ยนเป็นค่าเริ่มของลุคนั้นเสมอ (ไม่ค้างห้องจากลุคก่อนหน้า) · คลิกเลือกห้องเองยังทำงานได้ในลุคเดิม</td></tr>
+      <tr><td>E2E</td><td>Learn เปลี่ยนภาพ</td><td>Playful ใช้ looks/learn-playful.jpg ไม่ใช่ looks/class.jpg เหมือน simple/brutalist</td></tr>
+      <tr><td>Unit</td><td>เครดิตภาพนอกรอบ 2</td><td>learn-playful.jpg มีแถวใน looks/CREDITS.md ครบแหล่งที่มา/ช่างภาพ/สัญญาอนุญาต</td></tr>
+    </table>
+    <p class="small muted" style="margin:10px 0 6px">แก้ 11:00 — รอบก่อนแก้ไม่สุด: ยืนยันไม่มี "ภาพซ้ำ" หลงเหลือจริง ๆ</p>
+    <table style="background:#fff;border-radius:12px;overflow:hidden">
+      <tr><th>ชั้น</th><th>เคส</th><th>ผ่านเมื่อ</th></tr>
+      <tr><td>Unit</td><td>Learn ไม่ซ้ำ</td><td>LEARN_IMG ทั้ง 4 ค่า (simple/playful/elegant/brutalist) เป็นไฟล์คนละไฟล์ — ไม่มีสองลุคชี้ path เดียวกัน</td></tr>
+      <tr><td>Unit</td><td>Cafe ไม่ซ้ำ</td><td>CAFE_TICKETS[look] แต่ละลุคมี 3 รูปไม่ซ้ำกันเอง (internal) และไม่มีสองลุคที่ชุด 3 รูปเหมือนกันทั้งชุด (คนละ set)</td></tr>
+      <tr><td>Unit</td><td>Book ไม่ซ้ำ</td><td>คำนวณ roomImg(ห้องตั้งต้นของลุค, ลุค) ทั้ง 4 ลุคแล้วได้ path รูปต่างกันครบ 4 — ไม่มีสองลุคที่ตั้งต้นแล้วเจอรูปเดียวกัน</td></tr>
+      <tr><td>E2E</td><td>Book สลับห้องยังทำงาน</td><td>อยู่ลุคเดิม คลิกห้องอื่น (room-pick) แล้ว hero + ชื่อ + ราคาเปลี่ยนตามห้องที่คลิก โดยยังใช้ภาพในกลุ่ม (calm/bold) ของลุคปัจจุบัน</td></tr>
+    </table>
+    <div class="cta-strip"><span class="muted">TDD: เขียนเทส unit ก่อน แล้วค่อยลงธีม LUNA ใน seed</span></div>
+  </section>
+
+  <section class="brief" data-tab="work">
+    <div class="work">
+      <div class="flat-task"><span class="pill doing">001</span><div class="tn">ล็อบบี้ + แถบ editor เป็น LUNA<small>standard · grok-4.5 · ui-ux-pro-max, emil-design-eng</small></div></div>
+      <div class="flat-task"><span class="pill doing">002</span><div class="tn">ร้าน / คาเฟ่ / หน้าว่างที่ generate เป็น LUNA<small>standard · grok-4.5 · ทำขนานกับ 001 ได้</small></div></div>
+      <div class="flat-task"><span class="pill block">003</span><div class="tn">กัน CDN, Shopee, คอนทราสต์, CSS injection<small>security · grok-4.5</small></div></div>
+      <div class="flat-task"><span class="pill todo">004</span><div class="tn">unit สัญญาโทน (ไม่มีครีม/serif/CDN)<small>standard · grok-4.5 · TDD ก่อนลงสี</small></div></div>
+      <div class="flat-task"><span class="pill todo">005</span><div class="tn">Playwright ล็อบบี้ ร้าน คาเฟ่ แถบ editor<small>standard · grok-4.5 · frontend-test</small></div></div>
+      <div class="flat-task"><span class="pill doing">006</span><div class="tn">ผูก https://forge.sornkan.com/ เป็นโดเมนเดโม<small>standard · grok-4.5 · wrangler, cloudflare-naming, deploy</small></div></div>
+      <div class="flat-task"><span class="pill block">007</span><div class="tn">กันคุกกี้ข้ามโดเมน และไม่แย่ง sornkan.com หลัก<small>security · grok-4.5</small></div></div>
+      <div class="flat-task"><span class="pill todo">008</span><div class="tn">ตรวจ live HTTPS ที่ forge.sornkan.com<small>standard · grok-4.5 · frontend-test</small></div></div>
+      <div class="flat-task"><span class="pill block">001–005</span><div class="tn">ยกเลิกทาสีทั้งสตูดิโอ<small>ถูกแทนด้วย 009+</small></div></div>
+      <div class="flat-task"><span class="pill doing">009</span><div class="tn">ตัวเลือกธีม Atelier / LUNA บนล็อบบี้<small>standard · grok-4.5 · สตูดิโอคงครีม</small></div></div>
+      <div class="flat-task"><span class="pill doing">010</span><div class="tn">seed LUNA เป็นธีมทางเลือก Store/Cafe/Conjure<small>standard · grok-4.5</small></div></div>
+      <div class="flat-task"><span class="pill block">011</span><div class="tn">allowlist ธีม กันต่อสตริงลง CSS<small>security · grok-4.5</small></div></div>
+      <div class="flat-task"><span class="pill todo">012</span><div class="tn">เทสค่าเริ่ม Atelier + สลับ LUNA<small>standard · grok-4.5 · frontend-test</small></div></div>
+      <div class="flat-task"><span class="pill doing">013</span><div class="tn">Open project เป็นของเบราว์เซอร์นี้ ไม่ใส่ ?p=<small>standard · grok-4.5</small></div></div>
+      <div class="flat-task"><span class="pill block">014</span><div class="tn">รหัสโปรเจกต์เดายาก Invite เท่านั้นที่แชร์ห้อง<small>security · grok-4.5</small></div></div>
+      <div class="flat-task"><span class="pill doing">015</span><div class="tn">ล็อบบี้โชว์ตัวอย่าง Atelier/LUNA ให้เห็นก่อนกด<small>standard · grok-4.5</small></div></div>
+      <div class="flat-task"><span class="pill doing">016</span><div class="tn">ธีม Custom พิมพ์ใน brief · ปิด Open project ต้อง Invite<small>standard · grok-4.5</small></div></div>
+      <div class="flat-task"><span class="pill todo">017</span><div class="tn">เอเจนต์อ่าน brief/theme ได้จาก get_page_context<small>standard · grok-4.5</small></div></div>
+      <div class="flat-task"><span class="pill doing">018</span><div class="tn">ล็อบบี้สลับ Simple/Playful/Elegant/Brutalist กับการ์ดใหญ่<small>standard · grok-4.5 · frontend-design, ui-ux-pro-max, emil-design-eng</small></div></div>
+      <div class="flat-task"><span class="pill doing">019</span><div class="tn">ชุด CSS สี่ลุค + นามแฝง atelier/luna · รูปฟรีโฮสต์แล้วหมุน<small>standard · grok-4.5</small></div></div>
+      <div class="flat-task"><span class="pill doing">020</span><div class="tn">ตัวอย่างตามระบบ Store สินค้า / Cafe เมนู / Conjure หน้าว่าง<small>standard · grok-4.5</small></div></div>
+      <div class="flat-task"><span class="pill block">021</span><div class="tn">ขยาย allowlist กันฮอตลิงก์รูป กันต่อสตริง CSS<small>security · grok-4.5</small></div></div>
+      <div class="flat-task"><span class="pill todo">022</span><div class="tn">เทสลุค การ์ดตามระบบ และรูปในโฮสต์<small>standard · grok-4.5 · frontend-test</small></div></div>
+      <div class="flat-task"><span class="pill doing">023</span><div class="tn">ตัวอย่างภาพล้วน · Cafe คิว · Book จอง · Learn คอร์ส<small>standard · grok-4.5 · frontend-design</small></div></div>
+      <div class="flat-task"><span class="pill doing">024</span><div class="tn">seed เริ่มต้น Book และ Learn<small>standard · grok-4.5</small></div></div>
+      <div class="flat-task"><span class="pill todo">025</span><div class="tn">เทสห้ามแผงโค้ด และห้าม Cafe ดูเป็นตะกร้า<small>standard · grok-4.5 · frontend-test</small></div></div>
+      <div class="flat-task" style="opacity:.5"><span class="pill block">026</span><div class="tn" style="text-decoration:line-through">การ์ดมีมิติ: persona + หน้าร้าน + หลังบ้าน ต่อลุค (cafe, book)<small>superseded 10:30 — ยุบรวมเข้า 033/034/035</small></div></div>
+      <div class="flat-task"><span class="pill todo">027</span><div class="tn">คำโปรยเฉพาะตัวต่อคู่ระบบ×ลุคแทนแคปชันนิ่งเดิม ครบทุกระบบ (ต้นแบบ: TAGLINE ใน wow-stage)<small>standard · opus · frontend-design, emil-design-eng</small></div></div>
+      <div class="flat-task" style="opacity:.5"><span class="pill block">028</span><div class="tn" style="text-decoration:line-through">Persona photo allowlist เฉพาะ looks/ ห้ามรับ URL จาก brief<small>superseded 10:30 — ซ้ำกับ 021</small></div></div>
+      <div class="flat-task"><span class="pill todo">029</span><div class="tn">Custom แยก 2 ช่อง (what to build / style) พร้อม prefill chips<small>standard · opus · ui-ux-pro-max, emil-design-eng, make-interfaces-feel-better</small></div></div>
+      <div class="flat-task"><span class="pill todo">030</span><div class="tn">get_page_context ส่ง buildPrompt กับ stylePrompt แยกคีย์<small>standard · opus</small></div></div>
+      <div class="flat-task"><span class="pill todo">031</span><div class="tn">Length-limit/strip สอง prompt ยังบังคับ Invite ก่อน Open project<small>security · opus</small></div></div>
+      <div class="flat-task"><span class="pill todo">032</span><div class="tn">E2E custom 2 ช่อง prefill/พรีวิวซิงก์<small>standard · opus · frontend-test</small></div></div>
+      <div class="flat-task"><span class="pill todo">033</span><div class="tn">Cafe: แผงหลังบ้าน KDS (New/Making/Ready) เฉพาะ cafe<small>standard · opus · frontend-design, ui-ux-pro-max, emil-design-eng</small></div></div>
+      <div class="flat-task"><span class="pill todo">034</span><div class="tn">Book: room picker 3 ห้อง + host persona ต่อลุค + Today's bookings<small>standard · opus · frontend-design, ui-ux-pro-max, emil-design-eng, make-interfaces-feel-better</small></div></div>
+      <div class="flat-task"><span class="pill todo">035</span><div class="tn">Store: คนในภาพครบทุกลุค คนละไฟล์ไม่ซ้ำข้ามระบบ<small>standard · opus · frontend-design, ui-ux-pro-max</small></div></div>
+      <div class="flat-task"><span class="pill todo">036</span><div class="tn">Bug fix: cafe KDS ชิดขอบ (nesting) + learn .lesson.on สีเต็มแถว (แชร์กฎกับ .slot.on ผิด)<small>standard · opus · frontend-design, make-interfaces-feel-better</small></div></div>
+      <div class="flat-task" style="opacity:.5"><span class="pill block">037</span><div class="tn" style="text-decoration:line-through">Cafe/Book/Learn เปลี่ยนภาพตามลุคจริง (ไม่ใช่ภาพเดียวซ้ำทุกลุค)<small>superseded 11:00 — แก้ไม่สุด (เปลี่ยนแค่ default ไม่ใช่ asset จริง) แทนด้วย 038</small></div></div>
+      <div class="flat-task"><span class="pill todo">038</span><div class="tn">Cafe 3 ตั๋ว + Book 3 ห้อง (2 สถานะ/ห้อง) + Learn 4 ลุค เปลี่ยนภาพจริงครบ ไม่มี asset ซ้ำข้ามลุค (ตรวจด้วยสคริปต์)<small>standard · opus · frontend-design, ui-ux-pro-max</small></div></div>
+    </div>
+    <div class="cta-strip">
+      <span><span class="arrow">→</span> ตอบในแชท: <strong>ลุย</strong> <strong>Custom ก็เปิดได้แต่เตือน</strong> <strong>ไม่ต้องบังคับ Invite</strong></span>
+    </div>
+  </section>
+</div>
+<script>
+document.querySelectorAll('.btab').forEach(b=>{
+  b.onclick=()=>{
+    document.querySelectorAll('.btab').forEach(x=>x.classList.remove('on'));
+    document.querySelectorAll('.brief').forEach(x=>x.classList.remove('on'));
+    b.classList.add('on');
+    document.querySelector('[data-tab="'+b.dataset.t+'"]').classList.add('on');
+  };
+});
+document.querySelectorAll('#stylePick .theme').forEach(el=>{
+  el.onclick=()=>{
+    document.querySelectorAll('#stylePick .theme').forEach(x=>x.classList.remove('on'));
+    el.classList.add('on');
+    var k=el.getAttribute('data-prev');
+    var box=document.getElementById('stylePrev');
+    var lab=document.getElementById('prevLabel');
+    var h=document.getElementById('prevH');
+    var hint=document.getElementById('prevHint');
+    var open=document.getElementById('ctaOpen');
+    box.className='mini-shop '+(k==='luna'?'lu':'at');
+    if(k==='luna'){
+      lab.textContent='ตัวอย่าง · LUNA';
+      h.textContent='New in.';
+      hint.textContent='ชมพูแบบโฆษณา — กด Open project ได้เลย';
+      open.style.opacity='1';
+    }else if(k==='custom'){
+      lab.textContent='ตัวอย่าง · Custom';
+      h.textContent='เอเจนต์จะวาดให้';
+      hint.textContent='พิมพ์สไตล์ใน brief แล้วต้อง Invite (WebMCP)';
+      open.style.opacity='.4';
+    }else{
+      lab.textContent='ตัวอย่าง · Atelier';
+      h.textContent='New in.';
+      hint.textContent='ค่าเริ่มครีมเรียบหรู — กด Open project ได้เลย';
+      open.style.opacity='1';
+    }
+  };
+});
+document.querySelectorAll('.theme').forEach(el=>{
+  if(el.closest('#stylePick')) return;
+  el.onclick=()=>{
+    document.querySelectorAll('.theme').forEach(x=>{
+      if(!x.closest('#stylePick')) x.classList.remove('on');
+    });
+    el.classList.add('on');
+  };
+});
+
+
+(function(){
+  var stage=document.getElementById('lookStage');
+  if(!stage) return;
+  var DATA={
+    store:{
+      simple:{img:'looks/w3.jpg',alt:'Everyday V-Neck Tee',title:'Everyday V-Neck Tee',price:'$45.00',stock:'In stock',sizes:['XS','S','M','L','XL'],buy:'Buy now',add:'Add to bag',ship:'Free shipping on all continental US orders.',codeName:'simple.css',code:'<span class="c">/* Simple · swiss shop */</span>\n<span class="k">.card</span> { <span class="n">radius</span>: <span class="s">12px</span>; }\n<span class="k">.buy</span>  { <span class="n">bg</span>: <span class="s">#0f172a</span>; }\n<span class="k">.type</span> { <span class="n">sans</span>: <span class="s">system</span>; }'},
+      playful:{img:'looks/kid-girl.jpg',alt:'Rainbow zip hoodie',title:'Rainbow Zip Hoodie',price:'฿890',stock:'In stock',sizes:['XS','S','M','L','XL'],buy:'Buy now',add:'Add to bag',ship:'Free shipping on every drop.',codeName:'playful.css',code:'<span class="c">/* Playful · LUNA pink */</span>\n<span class="k">.card</span> { <span class="n">radius</span>: <span class="s">28px</span>; }\n<span class="k">.buy</span>  { <span class="n">bg</span>: <span class="s">#DB2777</span>; }\n<span class="k">.type</span> { <span class="n">weight</span>: <span class="s">900</span>; }'},
+      elegant:{img:'looks/shopw.jpg',alt:'Wool trench coat',title:'Wool Trench Coat',price:'฿4,200',stock:'In stock',sizes:['XS','S','M','L','XL'],buy:'Buy now',add:'Add to bag',ship:'Packed by hand in the atelier.',codeName:'elegant.css',code:'<span class="c">/* Elegant · Atelier cream */</span>\n<span class="k">.card</span> { <span class="n">bg</span>: <span class="s">#F6F1E8</span>; }\n<span class="k">.buy</span>  { <span class="n">rule</span>: <span class="s">1px ink</span>; }\n<span class="k">.type</span> { <span class="n">serif</span>: <span class="s">Georgia</span>; }'},
+      brutalist:{img:'looks/jacket2.jpg',alt:'Biker jacket',title:'Biker Jacket',price:'$220',stock:'IN STOCK',sizes:['XS','S','M','L','XL'],buy:'Buy now',add:'Add to bag',ship:'NO REFUNDS. NO WHISPERS.',codeName:'brutalist.css',code:'<span class="c">/* Brutalist · hard offset */</span>\n<span class="k">.card</span> { <span class="n">shadow</span>: <span class="s">6px 6px 0</span>; }\n<span class="k">.buy</span>  { <span class="n">bg</span>: <span class="s">#111</span>; }\n<span class="k">.type</span> { <span class="n">mono</span>: <span class="s">caps</span>; }'}
+    },
+    cafe:{
+      simple:{img:'looks/coffee2.jpg',alt:'House latte',title:'House Latte',price:'฿95',stock:'Live now',sizes:['S','M','L'],buy:'Order now',add:'Add',ship:'Extra shot on the house.',codeName:'simple.css',code:'<span class="c">/* Cafe · simple cup */</span>\n<span class="k">.card</span> { <span class="n">radius</span>: <span class="s">12px</span>; }\n<span class="k">.buy</span>  { <span class="n">label</span>: <span class="s">Order now</span>; }'},
+      playful:{img:'looks/coffee.jpg',alt:'Three cheers lattes',title:'Three Cheers',price:'฿120',stock:'Live now',sizes:['S','M','L'],buy:'Order now',add:'Add',ship:'Whipped cream if you ask nicely.',codeName:'playful.css',code:'<span class="c">/* Cafe · playful */</span>\n<span class="k">.card</span> { <span class="n">radius</span>: <span class="s">28px</span>; }\n<span class="k">.buy</span>  { <span class="n">bg</span>: <span class="s">#DB2777</span>; }'},
+      elegant:{img:'looks/coffee2.jpg',alt:'Flat white',title:'Flat White',price:'฿105',stock:'Pouring',sizes:['S','M','L'],buy:'Order now',add:'Add',ship:'Ceramic cup, linen napkin.',codeName:'elegant.css',code:'<span class="c">/* Cafe · elegant */</span>\n<span class="k">.card</span> { <span class="n">bg</span>: <span class="s">#F6F1E8</span>; }\n<span class="k">.type</span> { <span class="n">serif</span>: <span class="s">italic</span>; }'},
+      brutalist:{img:'looks/coffee.jpg',alt:'Black coffee',title:'BLACK COFFEE',price:'฿80',stock:'NOW',sizes:['S','M','L'],buy:'ORDER',add:'ADD',ship:'NO OAT. NO FOAM. NO APOLOGY.',codeName:'brutalist.css',code:'<span class="c">/* Cafe · brutalist */</span>\n<span class="k">.card</span> { <span class="n">bg</span>: <span class="s">#FDE047</span>; }\n<span class="k">.buy</span>  { <span class="n">bg</span>: <span class="s">#111</span>; }'}
+    },
+    conjure:{
+      simple:{img:'looks/notebook.jpg',alt:'Blank notebook',title:'Untitled page',price:'Draft',stock:'Blank canvas',sizes:[],buy:'Start writing',add:'Duplicate',ship:'Your agent paints this next.',codeName:'simple.css',code:'<span class="c">/* Conjure · simple */</span>\n<span class="k">.page</span> { <span class="n">bg</span>: <span class="s">#fff</span>; }\n<span class="k">.cta</span>  { <span class="n">label</span>: <span class="s">Start writing</span>; }'},
+      playful:{img:'looks/notebook.jpg',alt:'Playful notebook',title:'New sticker page',price:'Draft',stock:'Blank canvas',sizes:[],buy:'Start writing',add:'Duplicate',ship:'Drop stickers. Break the grid.',codeName:'playful.css',code:'<span class="c">/* Conjure · playful */</span>\n<span class="k">.page</span> { <span class="n">radius</span>: <span class="s">28px</span>; }\n<span class="k">.cta</span>  { <span class="n">bg</span>: <span class="s">#DB2777</span>; }'},
+      elegant:{img:'looks/notebook.jpg',alt:'Editorial notebook',title:'First folio',price:'Draft',stock:'Blank canvas',sizes:[],buy:'Start writing',add:'Duplicate',ship:'Serif on cream. Quiet margins.',codeName:'elegant.css',code:'<span class="c">/* Conjure · elegant */</span>\n<span class="k">.page</span> { <span class="n">bg</span>: <span class="s">#F6F1E8</span>; }\n<span class="k">.type</span> { <span class="n">serif</span>: <span class="s">Georgia</span>; }'},
+      brutalist:{img:'looks/blank.jpg',alt:'Raw hallway',title:'HELLO WORLD',price:'RAW',stock:'BLANK',sizes:[],buy:'START',add:'COPY',ship:'NO THEME. JUST TYPE.',codeName:'brutalist.css',code:'<span class="c">/* Conjure · brutalist */</span>\n<span class="k">.page</span> { <span class="n">shadow</span>: <span class="s">6px 6px 0</span>; }\n<span class="k">.cta</span>  { <span class="n">bg</span>: <span class="s">#111</span>; }'}
+    }
+  };
+  var CUSTOM={img:'looks/blank.jpg',alt:'Custom look',title:'Your look',price:'—',stock:'Waiting on your agent',sizes:[],buy:'Invite agent',add:'Disabled',ship:'Type the style. Open project stays off until Invite.',codeName:'custom.css',code:'<span class="c">/* Custom · agent writes files */</span>\n<span class="k">brief</span> { <span class="n">untrusted</span>: <span class="s">yes</span>; }\n<span class="k">css</span>   { <span class="n">from_user</span>: <span class="s">never</span>; }'};
+  function paint(){
+    var look=stage.getAttribute('data-look');
+    var sys=stage.getAttribute('data-sys');
+    var d=look==='custom'?CUSTOM:DATA[sys][look];
+    document.getElementById('pimg').src=d.img;
+    document.getElementById('pimg').alt=d.alt;
+    document.getElementById('ptitle').textContent=d.title;
+    document.getElementById('pprice').textContent=d.price;
+    document.getElementById('pstock').textContent=d.stock;
+    document.getElementById('pbuy').textContent=d.buy;
+    document.getElementById('padd').textContent=d.add;
+    document.getElementById('pship').textContent=d.ship;
+    document.getElementById('pcodeName').textContent=d.codeName;
+    document.getElementById('pcodePre').innerHTML=d.code;
+    var box=document.getElementById('psizes');
+    box.innerHTML='';
+    d.sizes.forEach(function(s,i){
+      var el=document.createElement('span');
+      el.className='psz'+(i===0?' on':'');
+      el.textContent=s;
+      el.onclick=function(){ box.querySelectorAll('.psz').forEach(function(x){x.classList.remove('on')}); el.classList.add('on'); };
+      box.appendChild(el);
+    });
+  }
+  document.querySelectorAll('#looksRow .look').forEach(function(el){
+    el.onclick=function(){
+      document.querySelectorAll('#looksRow .look').forEach(function(x){x.classList.remove('on')});
+      document.getElementById('customLook').classList.remove('on');
+      el.classList.add('on');
+      stage.setAttribute('data-look', el.getAttribute('data-look'));
+      paint();
+    };
+  });
+  document.getElementById('customLook').onclick=function(){
+    document.querySelectorAll('#looksRow .look').forEach(function(x){x.classList.remove('on')});
+    this.classList.add('on');
+    stage.setAttribute('data-look','custom');
+    paint();
+  };
+  document.querySelectorAll('#sysRow .sys').forEach(function(el){
+    el.onclick=function(){
+      document.querySelectorAll('#sysRow .sys').forEach(function(x){x.classList.remove('on')});
+      el.classList.add('on');
+      stage.setAttribute('data-sys', el.getAttribute('data-sys'));
+      if(stage.getAttribute('data-look')==='custom'){
+        document.getElementById('customLook').classList.remove('on');
+        document.querySelector('#looksRow .look[data-look="simple"]').classList.add('on');
+        stage.setAttribute('data-look','simple');
+      }
+      paint();
+    };
+  });
+})();
+
+
+
+(function(){
+  var stage=document.getElementById('wowStage');
+  var host=document.getElementById('wowVis');
+  if(!stage||!host) return;
+  function store(look){
+    var map={simple:['looks/w3.jpg','Everyday V-Neck Tee','$45.00','In stock','Buy now','Add to bag'],
+      playful:['looks/kid-girl.jpg','Rainbow Zip Hoodie','฿890','In stock','Buy now','Add to bag'],
+      elegant:['looks/shopw.jpg','Wool Trench Coat','฿4,200','In stock','Buy now','Add to bag'],
+      brutalist:['looks/jacket2.jpg','Biker Jacket','$220','IN STOCK','BUY NOW','ADD'],
+      custom:['looks/blank.jpg','Your look','—','Waiting on your agent','Invite agent','']};
+    var d=map[look]||map.simple;
+    return '<article class="vis store"><img src="'+d[0]+'" alt="'+d[1]+'"><div class="vis-body"><div class="prow"><h3 class="ptitle">'+d[1]+'</h3><div class="pprice">'+d[2]+'</div></div><div class="pstock">'+d[3]+'</div><div class="slots"><span class="slot on">XS</span><span class="slot">S</span><span class="slot">M</span><span class="slot">L</span><span class="slot">XL</span></div><div class="pctas"><span class="cta-main">'+d[4]+'</span>'+(d[5]?'<span class="padd" style="margin-left:8px">'+d[5]+'</span>':'')+'</div></div></article>';
+  }
+  var CAFE_TICKETS={
+    simple:[['looks/coffee2.jpg','#41 Oat latte','Preparing','2m'],['looks/coffee.jpg','#42 Mocha','Ready','now'],['looks/iced-latte.jpg','#43 Iced latte','Queued','6m']],
+    playful:[['looks/coffee.jpg','#12 Three Cheers','Preparing','1m'],['looks/iced-latte.jpg','#13 Iced latte','Ready','now'],['looks/cafepe.jpg','#14 House blend','Queued','4m']],
+    elegant:[['looks/cafepe.jpg','#07 Flat white','Preparing','3m'],['looks/espresso.jpg','#08 Espresso','Ready','now'],['looks/coffee2.jpg','#09 Oat latte','Queued','5m']],
+    brutalist:[['looks/espresso.jpg','#88 BLACK COFFEE','PREPARING','1m'],['looks/coffee2.jpg','#87 OAT LATTE','READY','now'],['looks/coffee.jpg','#86 MOCHA','QUEUED','7m']]
+  };
+  function cafe(look){
+    var rows=CAFE_TICKETS[look]||CAFE_TICKETS.simple;
+    var ticketsHtml=rows.map(function(t){
+      return '<div class="ticket"><img src="'+t[0]+'" alt=""><div><b>'+t[1]+'</b><span>'+t[2]+'</span></div><em>'+t[3]+'</em></div>';
+    }).join('');
+    var kds='<div class="vis-kicker" style="margin-top:12px">Behind the counter</div>'
+      +'<div class="kds"><div class="kds-col"><div class="kds-h">New</div><div class="kds-card">#44 Oat latte</div></div>'
+      +'<div class="kds-col"><div class="kds-h">Making</div><div class="kds-card">#43 Mocha</div></div>'
+      +'<div class="kds-col"><div class="kds-h">Ready</div><div class="kds-card">#41 Espresso</div></div></div>';
+    return '<article class="vis"><div class="vis-body"><div class="vis-kicker">Live orders · 3 open</div><h3 class="ptitle">Hearth bar</h3>'+ticketsHtml+kds+'</div></article>';
+  }
+  var LOOK_GROUP={simple:'calm',elegant:'calm',playful:'bold',brutalist:'bold'};
+  var ROOMS=[
+    {id:'a',name:'Studio A',imgs:{calm:'looks/studio.jpg',bold:'looks/meeting-bright.jpg'},seats:'6 seats · glass + garden',price:'฿450/hr'},
+    {id:'b',name:'Focus Room',imgs:{calm:'looks/desk.jpg',bold:'looks/meeting-loft.jpg'},seats:'2 seats · quiet corner',price:'฿250/hr'},
+    {id:'c',name:'Garden Room',imgs:{calm:'looks/room.jpg',bold:'looks/meeting-industrial.jpg'},seats:'10 seats · long table',price:'฿650/hr'}
+  ];
+  var HOST={simple:['w6','Mint'],playful:['w2','Prim'],elegant:['w1','Aran'],brutalist:['w4','Fah']};
+  var LOOK_ROOM={simple:'b',elegant:'a',playful:'a',brutalist:'c'};
+  function roomImg(r,look){ return r.imgs[LOOK_GROUP[look]||'calm']; }
+  function book(look){
+    var host_=HOST[look]||HOST.simple;
+    var roomId=stage.getAttribute('data-room')||LOOK_ROOM[look]||'a';
+    var active=ROOMS.filter(function(r){ return r.id===roomId; })[0]||ROOMS[0];
+    var picks=ROOMS.map(function(r){
+      return '<button type="button" class="room-pick'+(r.id===active.id?' on':'')+'" data-room="'+r.id+'"><img src="'+roomImg(r,look)+'" alt=""><span>'+r.name+'</span></button>';
+    }).join('');
+    return '<article class="vis book-vis">'
+      +'<div class="room-row">'+picks+'</div>'
+      +'<img class="vis-hero" src="'+roomImg(active,look)+'" alt="'+active.name+'">'
+      +'<div class="vis-body">'
+      +'<div class="prow"><h3 class="ptitle">'+active.name+'</h3><div class="pprice">'+active.price+'</div></div>'
+      +'<div class="pstock">'+active.seats+'</div>'
+      +'<div class="wow-persona"><img src="looks/'+host_[0]+'.jpg" alt=""><span>Hosted by <b>'+host_[1]+'</b></span></div>'
+      +'<div class="days"><span class="slot">Fri</span><span class="slot on">Sat</span><span class="slot">Sun</span></div>'
+      +'<div class="slots"><span class="slot">10:00</span><span class="slot on">11:30</span><span class="slot">14:00</span><span class="slot">16:00</span></div>'
+      +'<span class="cta-main">Reserve</span>'
+      +'<div class="vis-kicker" style="margin-top:12px">Today’s bookings</div>'
+      +'<div class="day-list">'
+      +'<div class="day-row"><i class="dot ok"></i><b>10:00</b><span>Ann</span><em>confirmed</em></div>'
+      +'<div class="day-row"><i class="dot pend"></i><b>11:30</b><span>Team focus</span><em>pending</em></div>'
+      +'<div class="day-row"><i class="dot open"></i><b>14:00</b><span>—</span><em>open</em></div>'
+      +'</div>'
+      +'</div></article>';
+  }
+  var LEARN_IMG={simple:'looks/w5.jpg',playful:'looks/learn-playful.jpg',elegant:'looks/notebook.jpg',brutalist:'looks/class.jpg'};
+  function learn(look){
+    var img=LEARN_IMG[look]||LEARN_IMG.simple;
+    return '<article class="vis"><img class="vis-hero" src="'+img+'" alt="Night Photography"><div class="vis-body"><div class="vis-kicker">Course</div><h3 class="ptitle">Night Photography</h3><div class="bar"><i></i></div><div class="pstock">3 of 8 lessons</div><div class="lesson done"><i>✓</i> Light</div><div class="lesson done"><i>✓</i> Camera</div><div class="lesson on"><i></i> Exposure</div><div class="lesson"><i></i> Prints</div><span class="cta-main">Continue</span></div></article>';
+  }
+  function conjure(){
+    return '<article class="vis canvas"><div class="vis-body"><div class="vis-kicker">New page</div><h3 class="ptitle" style="font-size:28px">Untitled</h3><p class="pship" style="margin:8px 0 0">Your agent writes here. No cart. No menu.</p><span class="cta-main">Start writing</span></div></article>';
+  }
+  var TAGLINE={
+    store:{simple:'Product, not props. Nothing you don’t need.',
+      playful:'Say it loud — keep the checkout dead simple.',
+      elegant:'Priced like it deserves a second look.',
+      brutalist:'NO PROPS. NO FILTER. JUST THE JACKET.'},
+    cafe:{simple:'Ticket in, ticket out — nobody guesses what’s next.',
+      playful:'Every order gets a little confetti.',
+      elegant:'Poured the same way, every single time.',
+      brutalist:'NO OAT. NO FOAM. NO APOLOGY.'},
+    book:{simple:'Pick a slot. Show up. That’s it.',
+      playful:'Your studio, your rules, your playlist.',
+      elegant:'Held quietly, for exactly you.',
+      brutalist:'SLOT’S YOURS. DON’T BE LATE.'},
+    learn:{simple:'Three lessons in, five to go — keep moving.',
+      playful:'Streaks, badges, and a tiny happy dance.',
+      elegant:'Mastery, one unhurried lesson at a time.',
+      brutalist:'FINISH THE MODULE. NO SHORTCUTS.'},
+    conjure:{simple:'A page with nothing on it — yet.',
+      playful:'Blank, but not for long.',
+      elegant:'Quiet margins. Infinite possibility.',
+      brutalist:'BLANK. RAW. YOURS.'}
+  };
+  function paint(){
+    var look=stage.getAttribute('data-look');
+    var sys=stage.getAttribute('data-sys');
+    var html=sys==='store'?store(look):sys==='cafe'?cafe(look):sys==='book'?book(look):sys==='learn'?learn(look):conjure();
+    host.innerHTML=html;
+    var cap=document.getElementById('wowCap');
+    if(cap){
+      cap.textContent = look==='custom'
+        ? 'พิมพ์สไตล์ของคุณเอง — เอเจนต์อ่านแล้วค่อยสร้างให้ตรงเป๊ะ'
+        : ((TAGLINE[sys]&&TAGLINE[sys][look]) || '');
+    }
+  }
+  host.addEventListener('click',function(e){
+    var r=e.target.closest('.room-pick');
+    if(r){
+      stage.setAttribute('data-room', r.getAttribute('data-room'));
+      paint();
+      return;
+    }
+    var t=e.target.closest('.slot');
+    if(!t) return;
+    t.parentNode.querySelectorAll('.slot').forEach(function(x){x.classList.remove('on')});
+    t.classList.add('on');
+  });
+  document.querySelectorAll('#wowLooks .look').forEach(function(el){
+    el.onclick=function(){
+      document.querySelectorAll('#wowLooks .look').forEach(function(x){x.classList.remove('on')});
+      document.getElementById('wowCustom').classList.remove('on');
+      el.classList.add('on');
+      stage.setAttribute('data-look', el.getAttribute('data-look'));
+      stage.removeAttribute('data-room');
+      paint();
+    };
+  });
+  document.getElementById('wowCustom').onclick=function(){
+    document.querySelectorAll('#wowLooks .look').forEach(function(x){x.classList.remove('on')});
+    this.classList.add('on');
+    stage.setAttribute('data-look','custom');
+    stage.removeAttribute('data-room');
+    paint();
+  };
+  document.querySelectorAll('#wowSys .sys').forEach(function(el){
+    el.onclick=function(){
+      document.querySelectorAll('#wowSys .sys').forEach(function(x){x.classList.remove('on')});
+      el.classList.add('on');
+      stage.setAttribute('data-sys', el.getAttribute('data-sys'));
+      if(stage.getAttribute('data-look')==='custom'){
+        document.getElementById('wowCustom').classList.remove('on');
+        document.querySelector('#wowLooks .look[data-look="simple"]').classList.add('on');
+        stage.setAttribute('data-look','simple');
+      }
+      paint();
+    };
+  });
+  paint();
+})();
+
+
+(function(){
+  var what=document.getElementById('mcWhat'), style=document.getElementById('mcStyle');
+  if(!what) return;
+  var pvWhat=document.getElementById('mcPvWhat'), pvStyle=document.getElementById('mcPvStyle');
+  function sync(){
+    pvWhat.textContent=what.value.trim()||'—';
+    pvStyle.textContent=style.value.trim()||'—';
+  }
+  what.addEventListener('input',sync);
+  style.addEventListener('input',sync);
+  document.querySelectorAll('.mc-chip').forEach(function(el){
+    el.onclick=function(){
+      var target=el.getAttribute('data-fill')==='what'?what:style;
+      target.value=el.getAttribute('data-v');
+      target.focus();
+      sync();
+    };
+  });
+})();
+
+</script>
+</body>
+</html>
+

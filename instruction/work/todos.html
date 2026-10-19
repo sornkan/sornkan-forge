@@ -384,9 +384,9 @@ details.fold .inner{padding-top:10px;font-size:13.5px;color:var(--ink-2)}
   <script type="application/json" id="workflow-state">
 {
   "schemaVersion": 2,
-  "session": "empty",
-  "updated": "2026-08-31 14:31",
-  "updatedBy": "grok",
+  "session": "luna-theme",
+  "updated": "2026-10-19 09:58",
+  "updatedBy": "release-worker-w4",
   "modelPolicy": {
     "registryVersion": 1,
     "standard": {
@@ -410,6 +410,15 @@ details.fold .inner{padding-top:10px;font-size:13.5px;color:var(--ink-2)}
       "grok": {
         "model": "grok-4.5",
         "strict": true
+      },
+      "opencode": {
+        "model": "inherit",
+        "strict": false
+      },
+      "muse": {
+        "model": "muse-spark",
+        "reasoning": "high",
+        "strict": true
       }
     },
     "security": {
@@ -430,10 +439,830 @@ details.fold .inner{padding-top:10px;font-size:13.5px;color:var(--ink-2)}
       "grok": {
         "model": "grok-4.5",
         "strict": true
+      },
+      "opencode": {
+        "model": "inherit",
+        "strict": false
+      },
+      "muse": {
+        "model": "muse-spark",
+        "reasoning": "high",
+        "strict": true
       }
     }
   },
-  "tasks": [],
+  "tasks": [
+    {
+      "id": "TASK-001",
+      "name": "LUNA lobby + editor chrome",
+      "status": "blocked",
+      "priority": "high",
+      "assigned": "unassigned",
+      "executionProfile": "standard",
+      "model": "grok-4.5",
+      "executedBy": null,
+      "skills": [
+        "ui-ux-pro-max",
+        "high-end-visual-design",
+        "emil-design-eng",
+        "make-interfaces-feel-better"
+      ],
+      "files": [
+        "public/styles.css",
+        "public/index.html"
+      ],
+      "note": "superseded 2026-09-02 07:05: keep cream Forge chrome; LUNA is optional create-time theme"
+    },
+    {
+      "id": "TASK-002",
+      "name": "LUNA store cafe blank seeds",
+      "status": "blocked",
+      "priority": "high",
+      "assigned": "unassigned",
+      "executionProfile": "standard",
+      "model": "grok-4.5",
+      "executedBy": null,
+      "skills": [
+        "ui-ux-pro-max",
+        "high-end-visual-design",
+        "emil-design-eng",
+        "make-interfaces-feel-better"
+      ],
+      "files": [
+        "src/lib/seed.ts"
+      ],
+      "note": "superseded 2026-09-02 07:05: keep cream Forge chrome; LUNA is optional create-time theme"
+    },
+    {
+      "id": "TASK-003",
+      "name": "Theme security contrast CDN trademark",
+      "status": "blocked",
+      "priority": "high",
+      "assigned": "unassigned",
+      "executionProfile": "security",
+      "model": "grok-4.5",
+      "executedBy": null,
+      "skills": [
+        "ui-ux-pro-max",
+        "web-design-guidelines"
+      ],
+      "files": [
+        "public/styles.css",
+        "src/lib/seed.ts",
+        "public/index.html"
+      ],
+      "note": "superseded 2026-09-02 07:05: keep cream Forge chrome; LUNA is optional create-time theme"
+    },
+    {
+      "id": "TASK-004",
+      "name": "Unit tests for LUNA visual contract",
+      "status": "blocked",
+      "priority": "high",
+      "assigned": "unassigned",
+      "executionProfile": "standard",
+      "model": "grok-4.5",
+      "executedBy": null,
+      "skills": [],
+      "files": [
+        "test/paths.test.ts"
+      ],
+      "note": "superseded 2026-09-02 07:05: keep cream Forge chrome; LUNA is optional create-time theme"
+    },
+    {
+      "id": "TASK-005",
+      "name": "Playwright LUNA lobby store cafe editor",
+      "status": "blocked",
+      "priority": "high",
+      "assigned": "unassigned",
+      "executionProfile": "standard",
+      "model": "grok-4.5",
+      "executedBy": null,
+      "skills": [
+        "frontend-test"
+      ],
+      "files": [
+        "public/index.html",
+        "public/styles.css",
+        "src/lib/seed.ts"
+      ],
+      "note": "superseded 2026-09-02 07:05: keep cream Forge chrome; LUNA is optional create-time theme"
+    },
+    {
+      "id": "TASK-006",
+      "name": "Custom domain forge.sornkan.com for demo",
+      "status": "done",
+      "priority": "high",
+      "assigned": "grok",
+      "executionProfile": "standard",
+      "model": "grok-4.5",
+      "executedBy": {
+        "agent": "grok",
+        "model": "grok-4.5"
+      },
+      "skills": [
+        "wrangler",
+        "cloudflare-naming",
+        "deploy",
+        "cloudflare"
+      ],
+      "files": [
+        "wrangler.jsonc",
+        "README.md",
+        "package.json"
+      ],
+      "note": "grok-4.5"
+    },
+    {
+      "id": "TASK-007",
+      "name": "Domain cookie isolation vs apex",
+      "status": "done",
+      "priority": "high",
+      "assigned": "grok",
+      "executionProfile": "security",
+      "model": "grok-4.5",
+      "executedBy": {
+        "agent": "grok",
+        "model": "grok-4.5"
+      },
+      "skills": [
+        "wrangler",
+        "cloudflare"
+      ],
+      "files": [
+        "src/lib/session.ts",
+        "wrangler.jsonc"
+      ],
+      "note": "grok-4.5"
+    },
+    {
+      "id": "TASK-008",
+      "name": "Verify live HTTPS forge.sornkan.com",
+      "status": "done",
+      "priority": "high",
+      "assigned": "grok",
+      "executionProfile": "standard",
+      "model": "grok-4.5",
+      "executedBy": {
+        "agent": "grok",
+        "model": "grok-4.5"
+      },
+      "skills": [
+        "frontend-test",
+        "deploy"
+      ],
+      "files": [
+        "wrangler.jsonc",
+        "README.md"
+      ],
+      "note": "grok-4.5"
+    },
+    {
+      "id": "TASK-009",
+      "name": "Lobby theme picker Atelier vs LUNA",
+      "status": "done",
+      "priority": "high",
+      "assigned": "grok",
+      "executionProfile": "standard",
+      "model": "grok-4.5",
+      "executedBy": {
+        "agent": "grok",
+        "model": "grok-4.5"
+      },
+      "skills": [
+        "ui-ux-pro-max",
+        "emil-design-eng",
+        "make-interfaces-feel-better"
+      ],
+      "files": [
+        "public/index.html",
+        "public/styles.css",
+        "public/app.js"
+      ],
+      "note": "grok-4.5"
+    },
+    {
+      "id": "TASK-010",
+      "name": "Optional LUNA seed for store cafe blank",
+      "status": "done",
+      "priority": "high",
+      "assigned": "grok",
+      "executionProfile": "standard",
+      "model": "grok-4.5",
+      "executedBy": {
+        "agent": "grok",
+        "model": "grok-4.5"
+      },
+      "skills": [
+        "ui-ux-pro-max",
+        "high-end-visual-design"
+      ],
+      "files": [
+        "src/lib/seed.ts",
+        "src/index.ts",
+        "src/lib/catalog.ts"
+      ],
+      "note": "grok-4.5"
+    },
+    {
+      "id": "TASK-011",
+      "name": "Theme allowlist no CSS interpolation",
+      "status": "done",
+      "priority": "high",
+      "assigned": "grok",
+      "executionProfile": "security",
+      "model": "grok-4.5",
+      "executedBy": {
+        "agent": "grok",
+        "model": "grok-4.5"
+      },
+      "skills": [
+        "ui-ux-pro-max"
+      ],
+      "files": [
+        "src/lib/seed.ts",
+        "src/index.ts",
+        "src/lib/catalog.ts"
+      ],
+      "note": "grok-4.5"
+    },
+    {
+      "id": "TASK-012",
+      "name": "Tests default Atelier and LUNA switch",
+      "status": "done",
+      "priority": "high",
+      "assigned": "grok",
+      "executionProfile": "standard",
+      "model": "grok-4.5",
+      "executedBy": {
+        "agent": "grok",
+        "model": "grok-4.5"
+      },
+      "skills": [
+        "frontend-test"
+      ],
+      "files": [
+        "test/paths.test.ts",
+        "public/index.html",
+        "src/lib/seed.ts"
+      ],
+      "note": "grok-4.5"
+    },
+    {
+      "id": "TASK-013",
+      "name": "Open project is per-browser no public ?p=",
+      "status": "done",
+      "priority": "high",
+      "assigned": "grok",
+      "executionProfile": "standard",
+      "model": "grok-4.5",
+      "executedBy": {
+        "agent": "grok",
+        "model": "grok-4.5"
+      },
+      "skills": [],
+      "files": [
+        "public/app.js",
+        "src/index.ts"
+      ],
+      "note": "grok-4.5"
+    },
+    {
+      "id": "TASK-014",
+      "name": "Unguessable project ids invite-only join",
+      "status": "done",
+      "priority": "high",
+      "assigned": "grok",
+      "executionProfile": "security",
+      "model": "grok-4.5",
+      "executedBy": {
+        "agent": "grok",
+        "model": "grok-4.5"
+      },
+      "skills": [],
+      "files": [
+        "src/index.ts",
+        "src/lib/session.ts",
+        "src/lib/catalog.ts",
+        "public/app.js"
+      ],
+      "note": "grok-4.5"
+    },
+    {
+      "id": "TASK-015",
+      "name": "Lobby preview shows Atelier and LUNA",
+      "status": "blocked",
+      "priority": "high",
+      "assigned": "unassigned",
+      "executionProfile": "standard",
+      "model": "grok-4.5",
+      "executedBy": null,
+      "skills": [
+        "ui-ux-pro-max",
+        "emil-design-eng"
+      ],
+      "files": [
+        "public/index.html",
+        "public/styles.css",
+        "public/app.js"
+      ],
+      "note": "confirmed superseded: 0 atelier/luna refs in public/index.html, fully replaced by TASK-018 four-look system"
+    },
+    {
+      "id": "TASK-016",
+      "name": "Custom theme typed in brief requires Invite",
+      "status": "done",
+      "priority": "high",
+      "assigned": "unassigned",
+      "executionProfile": "standard",
+      "model": "grok-4.5",
+      "executedBy": null,
+      "skills": [
+        "ui-ux-pro-max"
+      ],
+      "files": [
+        "public/index.html",
+        "public/app.js",
+        "public/styles.css"
+      ],
+      "note": "confirmed: app.js paint() disables+aria-disables Open project for custom; index.html ctaNote explains why"
+    },
+    {
+      "id": "TASK-017",
+      "name": "Lobby context exposes brief and theme to agent",
+      "status": "done",
+      "priority": "high",
+      "assigned": "worker-backend",
+      "executionProfile": "standard",
+      "model": "grok-4.5",
+      "executedBy": null,
+      "skills": [],
+      "files": [
+        "src/index.ts",
+        "src/lib/catalog.ts",
+        "test/paths.test.ts"
+      ],
+      "note": "verified: START_MODES now has all 5 starts, START_THEMES has 4 looks+custom, catalog.ts start_project schema has buildPrompt/stylePrompt fields"
+    },
+    {
+      "id": "TASK-018",
+      "name": "Lobby look switcher Simple/Playful/Elegant/Brutalist with large sample",
+      "status": "done",
+      "priority": "high",
+      "assigned": "worker-a",
+      "executionProfile": "standard",
+      "model": "grok-4.5",
+      "executedBy": {
+        "agent": "claude",
+        "model": "opus"
+      },
+      "skills": [
+        "frontend-design",
+        "ui-ux-pro-max",
+        "make-interfaces-feel-better",
+        "emil-design-eng",
+        "high-end-visual-design"
+      ],
+      "files": [
+        "public/index.html",
+        "public/styles.css",
+        "public/app.js"
+      ],
+      "note": "confirmed: 4-look switcher (Simple/Playful/Elegant/Brutalist) live in index.html/app.js/styles.css, tests pass"
+    },
+    {
+      "id": "TASK-019",
+      "name": "Four look CSS plus atelier/luna aliases and rotated local photos",
+      "status": "done",
+      "priority": "high",
+      "assigned": "worker-b",
+      "executionProfile": "standard",
+      "model": "grok-4.5",
+      "executedBy": {
+        "agent": "claude",
+        "model": "opus"
+      },
+      "skills": [
+        "frontend-design",
+        "ui-ux-pro-max",
+        "high-end-visual-design"
+      ],
+      "files": [
+        "src/lib/seed.ts",
+        "src/index.ts",
+        "src/lib/catalog.ts",
+        "public/looks/"
+      ],
+      "note": "confirmed: parseTheme allowlist + LEGACY_LOOKS aliases (atelier->elegant, luna->playful), rotated local photos, audit-looks.mjs all-pass"
+    },
+    {
+      "id": "TASK-020",
+      "name": "Sample card shape follows Store Cafe Conjure",
+      "status": "done",
+      "priority": "high",
+      "assigned": "unassigned",
+      "executionProfile": "standard",
+      "model": "grok-4.5",
+      "executedBy": null,
+      "skills": [
+        "frontend-design",
+        "ui-ux-pro-max",
+        "emil-design-eng"
+      ],
+      "files": [
+        "public/index.html",
+        "public/app.js",
+        "public/styles.css"
+      ],
+      "note": "confirmed: 5 distinct view*() functions in app.js, each shaped to its system (store/cafe/book/learn/blank)"
+    },
+    {
+      "id": "TASK-021",
+      "name": "Expand theme allowlist, no photo hotlink, no user CSS",
+      "status": "done",
+      "priority": "high",
+      "assigned": "unassigned",
+      "executionProfile": "security",
+      "model": "grok-4.5",
+      "executedBy": null,
+      "skills": [
+        "web-design-guidelines"
+      ],
+      "files": [
+        "src/lib/seed.ts",
+        "src/index.ts",
+        "src/lib/catalog.ts",
+        "test/paths.test.ts"
+      ],
+      "note": "confirmed: strict allowlist in parseTheme, no hotlinking, prompts never touch generated CSS (sanitizePrompt only)"
+    },
+    {
+      "id": "TASK-022",
+      "name": "E2E looks, start-shaped samples, local photos",
+      "status": "done",
+      "priority": "high",
+      "assigned": "unassigned",
+      "executionProfile": "standard",
+      "model": "grok-4.5",
+      "executedBy": null,
+      "skills": [
+        "frontend-test"
+      ],
+      "files": [
+        "test/paths.test.ts",
+        "public/index.html",
+        "src/lib/seed.ts"
+      ],
+      "note": "confirmed: paths.test.ts lobby preview/assets suites pass + scripts/audit-looks.mjs all-pass"
+    },
+    {
+      "id": "TASK-023",
+      "name": "Visual-only samples: cafe queue, book rooms, learn course",
+      "status": "done",
+      "priority": "high",
+      "assigned": "unassigned",
+      "executionProfile": "standard",
+      "model": "grok-4.5",
+      "executedBy": null,
+      "skills": [
+        "frontend-design",
+        "ui-ux-pro-max",
+        "emil-design-eng",
+        "make-interfaces-feel-better"
+      ],
+      "files": [
+        "public/index.html",
+        "public/styles.css",
+        "public/app.js"
+      ],
+      "note": "confirmed: viewCafe/viewBook/viewLearn are visual-only, no code pane, correct per-system shape"
+    },
+    {
+      "id": "TASK-024",
+      "name": "Seed Book and Learn start templates",
+      "status": "done",
+      "priority": "high",
+      "assigned": "unassigned",
+      "executionProfile": "standard",
+      "model": "grok-4.5",
+      "executedBy": null,
+      "skills": [
+        "frontend-design",
+        "high-end-visual-design"
+      ],
+      "files": [
+        "src/lib/seed.ts",
+        "src/index.ts",
+        "src/lib/catalog.ts"
+      ],
+      "note": "confirmed: seed.ts BOOK_TABLES/LEARN_TABLES + schemaForStart + honoBook/honoLearn generate served app"
+    },
+    {
+      "id": "TASK-025",
+      "name": "E2E no code pane, cafe is not a cart, book and learn distinct",
+      "status": "progress",
+      "priority": "high",
+      "assigned": "worker-cafe",
+      "executionProfile": "standard",
+      "model": "grok-4.5",
+      "executedBy": null,
+      "skills": [
+        "frontend-test"
+      ],
+      "files": [
+        "test/paths.test.ts",
+        "public/index.html"
+      ],
+      "note": "found real bug: CAFE_HTML = SEED_HTML.replace('Atelier','Hearth')... - served cafe app still says Add to bag / Cart N, genuinely cart-shaped not order-queue-shaped, violates plan's own 'cafe is a queue not products' intent. worker-cafe: give cafe its own template + lock in with tests"
+    },
+    {
+      "id": "TASK-026",
+      "name": "Dimension cards: persona + front/back-of-house per look (cafe, book)",
+      "status": "blocked",
+      "priority": "high",
+      "assigned": "unassigned",
+      "executionProfile": "standard",
+      "model": "opus",
+      "executedBy": null,
+      "skills": [
+        "frontend-design",
+        "ui-ux-pro-max",
+        "emil-design-eng",
+        "make-interfaces-feel-better",
+        "high-end-visual-design"
+      ],
+      "files": [
+        "public/index.html",
+        "public/styles.css",
+        "public/app.js"
+      ],
+      "note": "superseded 2026-09-02 10:30: dropped separate dimension-tab (same board reused across systems, too repetitive); store photo fix now under TASK-019/020, cafe back-of-house split out as TASK-033"
+    },
+    {
+      "id": "TASK-027",
+      "name": "Evocative per-look copy replaces generic two-liner across all systems",
+      "status": "done",
+      "priority": "high",
+      "assigned": "unassigned",
+      "executionProfile": "standard",
+      "model": "opus",
+      "executedBy": null,
+      "skills": [
+        "frontend-design",
+        "emil-design-eng"
+      ],
+      "files": [
+        "src/lib/seed.ts",
+        "src/lib/catalog.ts",
+        "public/app.js"
+      ],
+      "note": "confirmed: 20/20 distinct taglines, lives in public/preview-data.js (board file list was stale, code is correct)"
+    },
+    {
+      "id": "TASK-028",
+      "name": "Persona photo allowlist: looks/ only, no URL from brief",
+      "status": "blocked",
+      "priority": "high",
+      "assigned": "unassigned",
+      "executionProfile": "security",
+      "model": "opus",
+      "executedBy": null,
+      "skills": [
+        "web-design-guidelines"
+      ],
+      "files": [
+        "src/lib/catalog.ts",
+        "src/index.ts",
+        "test/paths.test.ts"
+      ],
+      "note": "superseded 2026-09-02 10:30: redundant with TASK-021 (theme/photo allowlist already covers no-URL-from-brief, local-only images)"
+    },
+    {
+      "id": "TASK-029",
+      "name": "Custom split into 2 fields (what to build / style) with prefill chips",
+      "status": "done",
+      "priority": "high",
+      "assigned": "worker-a",
+      "executionProfile": "standard",
+      "model": "opus",
+      "executedBy": {
+        "agent": "claude",
+        "model": "opus"
+      },
+      "skills": [
+        "ui-ux-pro-max",
+        "emil-design-eng",
+        "make-interfaces-feel-better"
+      ],
+      "files": [
+        "public/index.html",
+        "public/app.js",
+        "public/styles.css"
+      ],
+      "note": "confirmed: 2-field build/style textareas + prefill chips + live preview sync, 3 tests pass"
+    },
+    {
+      "id": "TASK-030",
+      "name": "get_page_context carries buildPrompt and stylePrompt as separate keys",
+      "status": "done",
+      "priority": "high",
+      "assigned": "worker-backend",
+      "executionProfile": "standard",
+      "model": "opus",
+      "executedBy": {
+        "agent": "claude",
+        "model": "opus",
+        "reasoning": "medium"
+      },
+      "skills": [],
+      "files": [
+        "src/index.ts",
+        "src/lib/catalog.ts",
+        "test/paths.test.ts"
+      ],
+      "note": "verified: migration 0004 applied local, createSession/isGated/projectView fixed, 50/50 tests, tsc clean of TS2554/TS2304"
+    },
+    {
+      "id": "TASK-031",
+      "name": "Length-limit/strip both custom prompts; Invite still required before Open project",
+      "status": "done",
+      "priority": "high",
+      "assigned": "worker-backend",
+      "executionProfile": "security",
+      "model": "opus",
+      "executedBy": null,
+      "skills": [],
+      "files": [
+        "src/lib/session.ts",
+        "src/index.ts",
+        "test/paths.test.ts"
+      ],
+      "note": "verified: sanitizePrompt caps 2000 chars, isGated blocks custom-look projects opened without via=invite"
+    },
+    {
+      "id": "TASK-032",
+      "name": "E2E: dimension cards per look + custom 2-field prefill/preview sync",
+      "status": "done",
+      "priority": "high",
+      "assigned": "unassigned",
+      "executionProfile": "standard",
+      "model": "opus",
+      "executedBy": null,
+      "skills": [
+        "frontend-test"
+      ],
+      "files": [
+        "test/paths.test.ts",
+        "public/index.html"
+      ],
+      "note": "2-field prefill/sync half: 3 tests pass. dimension-cards half targeted a design TASK-026 already dropped - nothing left to build"
+    },
+    {
+      "id": "TASK-033",
+      "name": "Cafe view: behind-the-counter KDS panel (New/Making/Ready), cafe-only",
+      "status": "done",
+      "priority": "high",
+      "assigned": "unassigned",
+      "executionProfile": "standard",
+      "model": "opus",
+      "executedBy": null,
+      "skills": [
+        "frontend-design",
+        "ui-ux-pro-max",
+        "emil-design-eng"
+      ],
+      "files": [
+        "public/index.html",
+        "public/styles.css",
+        "public/app.js",
+        "src/lib/seed.ts"
+      ],
+      "note": "confirmed: viewCafe() renders .kds board from CAFE_BOARD[look], scoped-to-cafe test passes"
+    },
+    {
+      "id": "TASK-034",
+      "name": "Book view: room picker (3 rooms) + host persona per look + today's bookings list",
+      "status": "done",
+      "priority": "high",
+      "assigned": "unassigned",
+      "executionProfile": "standard",
+      "model": "opus",
+      "executedBy": null,
+      "skills": [
+        "frontend-design",
+        "ui-ux-pro-max",
+        "emil-design-eng",
+        "make-interfaces-feel-better"
+      ],
+      "files": [
+        "public/index.html",
+        "public/styles.css",
+        "public/app.js",
+        "src/lib/seed.ts"
+      ],
+      "note": "confirmed: viewBook() renders 3-room picker + host persona + Today's bookings list"
+    },
+    {
+      "id": "TASK-035",
+      "name": "Store photos: person visible in every look (simple/playful/elegant), no duplicate files across systems",
+      "status": "done",
+      "priority": "high",
+      "assigned": "unassigned",
+      "executionProfile": "standard",
+      "model": "opus",
+      "executedBy": null,
+      "skills": [
+        "frontend-design",
+        "ui-ux-pro-max"
+      ],
+      "files": [
+        "public/index.html",
+        "public/app.js",
+        "src/lib/seed.ts",
+        "instruction/work/looks/CREDITS.md"
+      ],
+      "note": "confirmed: distinct photo per look in STORE (preview-data.js), person visible in simple/playful/elegant, no cross-system reuse"
+    },
+    {
+      "id": "TASK-036",
+      "name": "Bug fix: cafe KDS panel edge-flush (div nesting), learn .lesson.on full-row color block (was sharing .slot.on rule)",
+      "status": "done",
+      "priority": "high",
+      "assigned": "unassigned",
+      "executionProfile": "standard",
+      "model": "opus",
+      "executedBy": null,
+      "skills": [
+        "frontend-design",
+        "make-interfaces-feel-better"
+      ],
+      "files": [
+        "public/index.html",
+        "public/styles.css",
+        "public/app.js"
+      ],
+      "note": "confirmed: .lesson.current (never .lesson.on) documented fix in styles.css, KDS nesting clean, test passes"
+    },
+    {
+      "id": "TASK-037",
+      "name": "Cafe/Book/Learn: photos change per selected look (not the same image across all looks)",
+      "status": "blocked",
+      "priority": "high",
+      "assigned": "unassigned",
+      "executionProfile": "standard",
+      "model": "opus",
+      "executedBy": null,
+      "skills": [
+        "frontend-design",
+        "ui-ux-pro-max"
+      ],
+      "files": [
+        "public/index.html",
+        "public/app.js",
+        "src/lib/seed.ts",
+        "instruction/work/looks/CREDITS.md"
+      ],
+      "note": "superseded 2026-09-02 11:00: fix was incomplete (only changed which default was shown, not the underlying per-look assets) - replaced by TASK-038"
+    },
+    {
+      "id": "TASK-038",
+      "name": "Cafe 3 tickets + Book 3 rooms (2 states each) + Learn 4 looks all show genuinely distinct photos, verified with a script (no shared asset across any two looks)",
+      "status": "done",
+      "priority": "high",
+      "assigned": "unassigned",
+      "executionProfile": "standard",
+      "model": "opus",
+      "executedBy": null,
+      "skills": [
+        "frontend-design",
+        "ui-ux-pro-max"
+      ],
+      "files": [
+        "public/index.html",
+        "public/app.js",
+        "src/lib/seed.ts",
+        "instruction/work/looks/CREDITS.md"
+      ],
+      "note": "confirmed via node scripts/audit-looks.mjs: ALL CHECKS PASSED, no shared assets across any two looks"
+    },
+    {
+      "id": "TASK-039",
+      "name": "Invite flow strands the human in a blank editor; /api/lobby bypasses the invite gate",
+      "status": "progress",
+      "priority": "high",
+      "assigned": "worker-invite",
+      "executionProfile": "security",
+      "model": "opus",
+      "executedBy": null,
+      "skills": [
+        "web-design-guidelines"
+      ],
+      "files": [
+        "public/app.js",
+        "src/index.ts"
+      ],
+      "note": "worker-invite implementing the 4-part fix worker-backend traced"
+    }
+  ],
   "fileLocks": [],
   "resume": null
 }

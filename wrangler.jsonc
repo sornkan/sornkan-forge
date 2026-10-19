@@ -9,7 +9,11 @@
   "vars": {
     "CLOUDFLARE_ACCOUNT_ID": "a24ce30584273b42333051f1cdec48e2"
   },
+  "workers_dev": true,
   "observability": { "enabled": true, "head_sampling_rate": 1 },
+  "routes": [
+    { "pattern": "forge.sornkan.com", "custom_domain": true }
+  ],
   "assets": {
     "directory": "./public",
     "binding": "ASSETS",

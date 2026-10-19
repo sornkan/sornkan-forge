@@ -11,7 +11,7 @@
 <div class="grain" aria-hidden="true"></div>
 
 <div id="empty" class="first">
-  <div class="first-grid">
+  <div class="first-grid" id="lobbyStage" data-sys="store" data-look="simple">
     <div class="first-copy">
       <div class="first-who reveal r1">
         <span class="eyebrow">SORNKan Forge</span>
@@ -21,43 +21,73 @@
         </div>
       </div>
       <h1 class="reveal r2">Let’s build<br>your system.</h1>
-      <p class="reveal r3">Tell us the system you want. Invite your agent. We attach <em>web</em> · <em>database</em> · <em>storage</em> on the same page.</p>
+      <p class="reveal r3">Pick the system and the look. Invite your agent. We attach <em>web</em> · <em>database</em> · <em>storage</em> on the same page.</p>
+
       <div class="composer reveal r4">
-        <label class="sr" for="brief">What to build</label>
-        <textarea id="brief" rows="2">An online store with a cart, live stock in the database, and product photos in storage.</textarea>
-        <div class="modes" role="radiogroup" aria-label="How to start">
-          <button type="button" class="mode" data-start="blank" data-brief="Conjure a site from this brief. Start from a blank page.">
-            <strong>Conjure</strong><span>Blank canvas. Agent builds it.</span>
+        <div class="sys-row" id="sysRow" role="radiogroup" aria-label="Which system to build">
+          <button type="button" class="sys on" role="radio" aria-checked="true" data-start="store"><b>Store</b>Shop</button>
+          <button type="button" class="sys" role="radio" aria-checked="false" data-start="cafe"><b>Cafe</b>Queue</button>
+          <button type="button" class="sys" role="radio" aria-checked="false" data-start="book"><b>Book</b>Rooms</button>
+          <button type="button" class="sys" role="radio" aria-checked="false" data-start="learn"><b>Learn</b>Course</button>
+          <button type="button" class="sys" role="radio" aria-checked="false" data-start="blank"><b>Conjure</b>Blank</button>
+        </div>
+
+        <div class="looks-row" id="looksRow" role="radiogroup" aria-label="Which look">
+          <button type="button" class="look on" role="radio" aria-checked="true" data-theme="simple">
+            <i aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="5" y="5" width="14" height="14" rx="3.5"/></svg></i><b>Simple</b>
           </button>
-          <button type="button" class="mode on" data-start="store" data-brief="An online store with a cart, live stock in the database, and product photos in storage.">
-            <strong>Store</strong><span>Shop template. Stock + photos.</span>
+          <button type="button" class="look" role="radio" aria-checked="false" data-theme="playful">
+            <i aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3.5" y="8" width="11" height="11" rx="3"/><rect x="9.5" y="4" width="11" height="11" rx="3"/></svg></i><b>Playful</b>
           </button>
-          <button type="button" class="mode" data-start="cafe" data-brief="A cafe menu. Orders go to the database.">
-            <strong>Cafe</strong><span>Menu template. Live orders.</span>
+          <button type="button" class="look" role="radio" aria-checked="false" data-theme="elegant">
+            <i aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 3.5 13.2 8l4.8.2-3.8 3.2 1.4 4.6L12 13.7 8.4 16l1.4-4.6L6 8.2 10.8 8z"/></svg></i><b>Elegant</b>
+          </button>
+          <button type="button" class="look" role="radio" aria-checked="false" data-theme="brutalist">
+            <i aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="4" width="9" height="9"/><rect x="11" y="11" width="9" height="9"/></svg></i><b>Brutalist</b>
           </button>
         </div>
+
+        <button type="button" class="custom-look" id="customLook" data-theme="custom" aria-pressed="false">
+          <b>Custom</b><span>Describe your own style · needs Invite</span>
+        </button>
+
+        <p class="tagline" id="tagline" aria-live="polite">Product, not props. Nothing you don’t need.</p>
+
+        <div class="brief-field" id="briefField">
+          <label class="sr" for="brief">What to build</label>
+          <textarea id="brief" rows="2">An online store with a cart, live stock in the database, and product photos in storage.</textarea>
+        </div>
+        <p class="brief-swap hidden" id="briefSwap">Your brief comes from the Custom builder →</p>
+
         <div class="cta-row">
           <button type="button" class="pri" id="invite">Invite your agent<span class="arr">↗</span></button>
           <button type="button" class="ghost" id="startOnly">Open project</button>
         </div>
+        <p class="cta-note hidden" id="ctaNote">Custom styles are written by your agent, so this path needs Invite.</p>
       </div>
+
       <p class="foot-hint reveal r5">This text is saved as the brief. Your agent can read it as soon as it arrives.</p>
     </div>
-    <div class="stage-stack reveal r6" aria-hidden="true">
-      <article class="float f1">
-        <img src="/shop/tote.jpg" alt="" width="280" height="360">
-        <div><b>Tote</b><span>890 · database</span></div>
-      </article>
-      <article class="float f2">
-        <img src="/shop/cap.jpg" alt="" width="280" height="360">
-        <div><b>Cap</b><span>450 · storage</span></div>
-      </article>
-      <article class="float f3">
-        <img src="/shop/tee.jpg" alt="" width="280" height="360">
-        <div><b>Tee</b><span>1,290 · web</span></div>
-      </article>
-      <div class="mods">
-        <i>web</i><i>database</i><i>storage</i>
+
+    <div class="pv-stage reveal r6">
+      <div class="pv-host" id="pvHost"></div>
+
+      <div class="cb hidden" id="customBuilder">
+        <div class="cb-form">
+          <label class="cb-label" for="cbBuild">What do you want to build? <span class="cb-req">required</span></label>
+          <div class="cb-chips" id="cbBuildChips"></div>
+          <textarea class="cb-input" id="cbBuild" rows="3" placeholder="e.g. a queue board where baristas move each order along…"></textarea>
+
+          <label class="cb-label" for="cbStyle">What style should it have?</label>
+          <div class="cb-chips" id="cbStyleChips"></div>
+          <textarea class="cb-input" id="cbStyle" rows="2" placeholder="e.g. minimal, black and white, square buttons…"></textarea>
+        </div>
+        <div class="cb-preview">
+          <div class="cb-pv-label">Sent to your agent once invited</div>
+          <div class="cb-pv-block"><b>build</b><span id="cbPvBuild">—</span></div>
+          <div class="cb-pv-block"><b>style</b><span id="cbPvStyle">—</span></div>
+          <p class="cb-pv-hint">Two separate fields. Your agent reads both, then writes the files itself — neither string is pasted into CSS.</p>
+        </div>
       </div>
     </div>
   </div>

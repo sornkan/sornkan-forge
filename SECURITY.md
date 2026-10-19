@@ -36,7 +36,7 @@ Do not grant billing, DNS, or user-management scopes.
 ## Product notes for a public demo
 
 - **Invite links** (`?p=` project id) are capability URLs. Anyone with the link can join the editor. Project ids are short hex; this is a hackathon demo, not a multi-tenant SaaS.
-- **Preview** (`/preview/:id/`) is reachable without a session so ChatGPT’s in-app browser can load it.
+- **Preview** (`/preview/:id/`) is reachable without a session so ChatGPT’s in-app browser can load it. The order APIs (`POST`/`GET /preview/:id/api/orders`) require the project session cookie; the catalog, product images, and page shell stay public.
 - **SQL tools** refuse mutating statements unless the tool is the confirmed `run_sql` path. File writes are limited to `src/`, `public/`, `schema.sql`, and `wrangler.jsonc`.
 - **No LLM keys** in this app. ChatGPT / Codex bring their own model. The page only registers WebMCP tools.
 

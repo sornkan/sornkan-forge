@@ -35,7 +35,7 @@ export const LOBBY_TOOLS: ToolDef[] = [
     name: "get_page_context",
     title: "Read this page",
     description:
-      "Read the current Forge screen, start modes, and any open project. Call this first when you arrive. Returns whether the human already typed a brief.",
+      "Read the current Forge screen, the start modes and looks on offer, and any open project. Call this first when you arrive. Returns whether the human already typed a brief.",
     side: "read",
     annotations: readUntrusted,
     always: true,
@@ -45,7 +45,7 @@ export const LOBBY_TOOLS: ToolDef[] = [
     name: "start_project",
     title: "Start a project",
     description:
-      "Create a new Forge project from the brief. start=store seeds a shop with stock and photos, cafe seeds a menu, blank is an empty canvas. After this, use editor tools like get_project and attach_module.",
+      "Create a new Forge project from the brief. start picks the template; theme picks the look. theme=custom ships no CSS — you build the look yourself from buildPrompt and stylePrompt, and the project then opens only from its invite link. After this, use editor tools like get_project and attach_module.",
     side: "write",
     annotations: writeUntrusted,
     always: true,
@@ -54,9 +54,20 @@ export const LOBBY_TOOLS: ToolDef[] = [
         brief: str("What the human wants built, in their words.", { minLength: 1, maxLength: 2000 }),
         start: {
           type: "string",
-          enum: ["store", "cafe", "blank"],
-          description: "store = shop template, cafe = menu template, blank = empty page.",
+          enum: ["store", "cafe", "book", "learn", "blank"],
+          description:
+            "store = shop with stock and photos, cafe = menu with a live order queue, book = rooms with day and time slots, learn = course with saved progress, blank = empty page.",
         },
+        theme: {
+          type: "string",
+          enum: ["simple", "playful", "elegant", "brutalist", "custom"],
+          description:
+            "simple = plain system UI, playful = pink and rounded, elegant = cream editorial serif, brutalist = mono on yellow, custom = no stock CSS, you build the look. Legacy atelier and luna are still accepted and map to elegant and playful. Unknown values use elegant.",
+        },
+        buildPrompt: str("What to build, when the human split it out from the look. Plain text; never CSS.", {
+          maxLength: 2000,
+        }),
+        stylePrompt: str("How it should look, for theme=custom. Plain text; never CSS.", { maxLength: 2000 }),
       },
       ["brief", "start"],
     ),
@@ -70,7 +81,7 @@ export const LOBBY_TOOLS: ToolDef[] = [
     annotations: write,
     always: true,
     inputSchema: obj(
-      { project_id: str("Project id from the invite URL, 8 hex characters.", { minLength: 8, maxLength: 36 }) },
+      { project_id: str("Project id from the invite URL.", { minLength: 8, maxLength: 36 }) },
       ["project_id"],
     ),
   },

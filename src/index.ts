@@ -2,7 +2,18 @@ import { LOBBY_TOOLS, toolsForState } from "./lib/catalog.ts";
 import { sanitizePath } from "./lib/paths.ts";
 import { isMutatingSql } from "./lib/sql.ts";
 import { json, readSid, sidCookie } from "./lib/session.ts";
-import { htmlForStart, indexForStart, schemaForStart, type StartMode } from "./lib/seed.ts";
+import {
+  DEFAULT_LOOK,
+  htmlForStart,
+  indexForStart,
+  parseStart,
+  parseThemeChoice,
+  requiresInvite,
+  sanitizePrompt,
+  schemaForStart,
+  type StartMode,
+  type ThemeChoice,
+} from "./lib/seed.ts";
 import {
   createD1,
   createR2,
@@ -18,7 +29,7 @@ import { handlePreview } from "./lib/shop.ts";
 import { APP_STACK, d1Name, isOwnDb, r2Name } from "./lib/isolate.ts";
 
 function requireCf(env: EditorEnv): CfEnv {
-  if (!env.CLOUDFLARE_API_TOKEN) throw new Error("CLOUDFLARE_API_TOKEN missing");
+  if (!env.CLOUDFLARE_API_TOKEN) throw new Error("service unavailable");
   return {
     CLOUDFLARE_ACCOUNT_ID: env.CLOUDFLARE_ACCOUNT_ID,
     CLOUDFLARE_API_TOKEN: env.CLOUDFLARE_API_TOKEN,
@@ -43,7 +54,55 @@ type Project = {
   r2_prefix: string | null;
   r2_bucket: string | null;
   logs: string;
+  look: string | null;
+  start_mode: string | null;
+  build_prompt: string | null;
+  style_prompt: string | null;
 };
+
+/** How a session was opened. Only an invited session may enter a custom project. */
+type SessionVia = "open" | "invite";
+
+type StartOptions = {
+  brief: string;
+  start: StartMode;
+  theme: ThemeChoice;
+  buildPrompt: string;
+  stylePrompt: string;
+  intent: SessionVia;
+};
+
+function readStartOptions(body: Record<string, unknown>): StartOptions {
+  return {
+    brief: sanitizePrompt(body.brief),
+    start: parseStart(body.start),
+    theme: parseThemeChoice(body.theme),
+    buildPrompt: sanitizePrompt(body.buildPrompt ?? body.build_prompt),
+    stylePrompt: sanitizePrompt(body.stylePrompt ?? body.style_prompt),
+    intent: body.intent === "invite" ? "invite" : "open",
+  };
+}
+
+/**
+ * A custom look has no CSS of its own — an agent builds it from the invite link.
+ * So a project whose look is "custom" only opens for a session that came in that way.
+ */
+async function isGated(env: EditorEnv, projectId: string, via: string | null): Promise<boolean> {
+  const p = await getProject(env, projectId);
+  return requiresInvite(p.look) && via !== "invite";
+}
+
+function inviteRequired(projectId: string): Response {
+  return json(
+    {
+      error: "invite required",
+      invite_required: true,
+      invite_path: `/?p=${projectId}`,
+      reason: "a custom look is built by an invited agent, so this project opens from its invite link only",
+    },
+    { status: 403 },
+  );
+}
 
 export default {
   async fetch(request, env): Promise<Response> {
@@ -70,10 +129,8 @@ export default {
 async function handleApi(request: Request, env: EditorEnv): Promise<Response> {
   const url = new URL(request.url);
   if (url.pathname === "/api/session" && request.method === "POST") {
-    const body = (await request.json().catch(() => ({}))) as { brief?: string; start?: StartMode };
-    const start: StartMode =
-      body.start === "blank" || body.start === "cafe" || body.start === "store" ? body.start : "store";
-    return createSession(env, url.protocol === "https:", String(body.brief || "").slice(0, 2000), start);
+    const body = (await request.json().catch(() => ({}))) as Record<string, unknown>;
+    return createSession(env, url.protocol === "https:", readStartOptions(body));
   }
 
   if (url.pathname === "/api/join" && request.method === "POST") {
@@ -101,11 +158,12 @@ async function handleApi(request: Request, env: EditorEnv): Promise<Response> {
     }
     return json({ error: "no session" }, { status: 401 });
   }
-  const session = await env.DB_PROJECTS.prepare("SELECT project_id FROM sessions WHERE id = ?")
+  const session = await env.DB_PROJECTS.prepare("SELECT project_id, via FROM sessions WHERE id = ?")
     .bind(sid)
-    .first<{ project_id: string }>();
+    .first<{ project_id: string; via: string | null }>();
   if (!session) return json({ error: "unknown session" }, { status: 401 });
   const projectId = session.project_id;
+  if (await isGated(env, projectId, session.via)) return inviteRequired(projectId);
 
   if (url.pathname === "/api/catalog" && request.method === "GET") {
     const p = await getProject(env, projectId);
@@ -138,10 +196,21 @@ async function handleApi(request: Request, env: EditorEnv): Promise<Response> {
   return json({ error: "not found" }, { status: 404 });
 }
 
+// Same five starts and five looks the human picker offers in public/index.html.
 const START_MODES = [
   { id: "store", title: "Store", hint: "Shop template. Stock + photos." },
-  { id: "cafe", title: "Cafe", hint: "Menu template. Live orders." },
+  { id: "cafe", title: "Cafe", hint: "Menu template. Live order queue." },
+  { id: "book", title: "Book", hint: "Rooms, days, and time slots." },
+  { id: "learn", title: "Learn", hint: "Course with saved lesson progress." },
   { id: "blank", title: "Conjure", hint: "Blank canvas. Agent builds it." },
+];
+
+const START_THEMES = [
+  { id: "simple", title: "Simple", hint: "Plain system UI. Default pick." },
+  { id: "playful", title: "Playful", hint: "Pink and rounded." },
+  { id: "elegant", title: "Elegant", hint: "Cream editorial serif." },
+  { id: "brutalist", title: "Brutalist", hint: "Mono, yellow, hard edges." },
+  { id: "custom", title: "Custom", hint: "An agent builds the look. Needs an invite." },
 ];
 
 async function lobbyView(request: Request, env: EditorEnv) {
@@ -157,6 +226,7 @@ async function lobbyView(request: Request, env: EditorEnv) {
         screen: "editor",
         title: "SORNKan Forge",
         start_modes: START_MODES,
+        start_themes: START_THEMES,
         invite_url: `${origin}/?p=${p.id}`,
         ...p,
       };
@@ -166,6 +236,7 @@ async function lobbyView(request: Request, env: EditorEnv) {
     screen: "start",
     title: "SORNKan Forge",
     start_modes: START_MODES,
+    start_themes: START_THEMES,
     project_id: null,
     brief: null,
     invite_url: null,
@@ -180,9 +251,7 @@ async function runLobbyTool(
 ): Promise<Response> {
   if (name === "get_page_context") return json(await lobbyView(request, env));
   if (name === "start_project") {
-    const start: StartMode =
-      input.start === "blank" || input.start === "cafe" || input.start === "store" ? input.start : "store";
-    return createSession(env, new URL(request.url).protocol === "https:", String(input.brief || "").slice(0, 2000), start);
+    return createSession(env, new URL(request.url).protocol === "https:", readStartOptions(input));
   }
   if (name === "join_project") {
     return joinSession(env, new URL(request.url).protocol === "https:", String(input.project_id || input.projectId || ""));
@@ -190,31 +259,28 @@ async function runLobbyTool(
   return json({ error: `unknown lobby tool ${name}` }, { status: 400 });
 }
 
-async function createSession(
-  env: EditorEnv,
-  secure: boolean,
-  brief: string,
-  start: StartMode,
-): Promise<Response> {
-  const projectId = crypto.randomUUID().slice(0, 8);
+async function createSession(env: EditorEnv, secure: boolean, opts: StartOptions): Promise<Response> {
+  const { brief, start, theme, buildPrompt, stylePrompt, intent } = opts;
+  const projectId = crypto.randomUUID();
   const sid = crypto.randomUUID();
   const now = new Date().toISOString();
   const preview = `/preview/${projectId}/`;
   await env.DB_PROJECTS.batch([
     env.DB_PROJECTS.prepare(
-      "INSERT INTO projects (id, brief, created_at, logs, preview_url) VALUES (?, ?, ?, '[]', ?)",
-    ).bind(projectId, brief, now, preview),
-    env.DB_PROJECTS.prepare("INSERT INTO sessions (id, project_id, created_at) VALUES (?, ?, ?)").bind(
+      "INSERT INTO projects (id, brief, created_at, logs, preview_url, look, start_mode, build_prompt, style_prompt) VALUES (?, ?, ?, '[]', ?, ?, ?, ?, ?)",
+    ).bind(projectId, brief, now, preview, theme, start, buildPrompt, stylePrompt),
+    env.DB_PROJECTS.prepare("INSERT INTO sessions (id, project_id, created_at, via) VALUES (?, ?, ?, ?)").bind(
       sid,
       projectId,
       now,
+      intent,
     ),
     env.DB_PROJECTS.prepare(
       "INSERT INTO files (project_id, path, content, updated_at) VALUES (?, ?, ?, ?)",
-    ).bind(projectId, "src/index.js", indexForStart(start), now),
+    ).bind(projectId, "src/index.js", indexForStart(start, theme), now),
     env.DB_PROJECTS.prepare(
       "INSERT INTO files (project_id, path, content, updated_at) VALUES (?, ?, ?, ?)",
-    ).bind(projectId, "public/index.html", htmlForStart(start), now),
+    ).bind(projectId, "public/index.html", htmlForStart(start, theme), now),
     env.DB_PROJECTS.prepare(
       "INSERT INTO files (project_id, path, content, updated_at) VALUES (?, ?, ?, ?)",
     ).bind(projectId, "schema.sql", schemaForStart(start), now),
@@ -228,14 +294,14 @@ async function createSession(
     try {
       await runTool(env, projectId, "provision_d1", { confirmation: true });
       isolated.database = true;
-    } catch (err) {
-      isolated.error = err instanceof Error ? err.message : "d1 failed";
+    } catch {
+      isolated.error = "d1 failed";
     }
     try {
       await runTool(env, projectId, "provision_r2", { confirmation: true });
       isolated.storage = true;
-    } catch (err) {
-      isolated.error = isolated.error || (err instanceof Error ? err.message : "r2 failed");
+    } catch {
+      isolated.error = isolated.error || "r2 failed";
     }
   }
   return json({ projectId, preview, start, isolated }, { headers: { "set-cookie": sidCookie(sid, secure) } });
@@ -248,10 +314,12 @@ async function joinSession(env: EditorEnv, secure: boolean, projectId: string): 
     .first();
   if (!row) return json({ error: "unknown project" }, { status: 404 });
   const sid = crypto.randomUUID();
-  await env.DB_PROJECTS.prepare("INSERT INTO sessions (id, project_id, created_at) VALUES (?, ?, ?)").bind(
+  // Joining only ever happens through an invite link, so this session clears the custom gate.
+  await env.DB_PROJECTS.prepare("INSERT INTO sessions (id, project_id, created_at, via) VALUES (?, ?, ?, ?)").bind(
     sid,
     projectId,
     new Date().toISOString(),
+    "invite",
   ).run();
   return json({ projectId }, { headers: { "set-cookie": sidCookie(sid, secure) } });
 }
@@ -277,6 +345,12 @@ async function projectView(env: EditorEnv, id: string) {
   return {
     id: p.id,
     brief: p.brief,
+    // The two custom prompts stay separate all the way to the agent: buildPrompt is
+    // what to build, stylePrompt is how it should look. brief is the older combined text.
+    buildPrompt: p.build_prompt ?? "",
+    stylePrompt: p.style_prompt ?? "",
+    look: p.look ?? DEFAULT_LOOK,
+    startMode: p.start_mode ?? "store",
     preview_url: p.preview_url,
     published_url: p.published_url,
     hasD1: isOwnDb(p.d1_id),

@@ -1,0 +1,382 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light only">
+<title>เลือกโทน · SORNKan Forge</title>
+<style>/* =============================================================
+   DESIGN SYSTEM — primitives + swappable themes
+   ============================================================= */
+*{box-sizing:border-box;margin:0;padding:0}
+html{color-scheme:light only}
+:root{
+  --bg:#F4F0FF; --card:#FFFFFF; --card-2:#FBFAFF;
+  --chrome:#EEE9FF; --line:#E4DCF6; --line-2:#CDBFE8;
+  --ink:#1A1230; --ink-2:#5A4E72; --ink-3:#8B82A0; --ink-4:#B8B0C8;
+  --accent:#7C3AED; --accent-rgb:124,58,237;
+  --accent-soft:#EDE4FF; --accent-line:#C4B0F0; --accent-deep:#5B21B6;
+  --ok:#14C7A1; --ok-rgb:20,199,161; --ok-soft:#DEFAF1; --ok-line:#8FE5CE; --ok-deep:#0E9D80;
+  --bad:#FF6B6B; --bad-rgb:255,107,107; --bad-soft:#FFE5E5; --bad-line:#FFB1B1; --bad-deep:#E54848;
+  --warn:#FFC53D; --warn-soft:#FFF4D1; --warn-deep:#A87800;
+  --info:#4FB8E5; --info-soft:#DCF1FB;
+  --pop:#FF80B5;
+  --r:18px; --r-s:12px; --r-xs:8px;
+  --shadow-sm:0 1px 2px rgba(26,18,48,.05),0 3px 10px -3px rgba(26,18,48,.08);
+  --shadow:0 2px 4px rgba(26,18,48,.06),0 14px 32px -10px rgba(var(--accent-rgb),.22);
+  --sans:-apple-system,BlinkMacSystemFont,'Leelawadee UI','Segoe UI','Sukhumvit Set','Helvetica Neue',Arial,sans-serif;
+  --mono:'JetBrains Mono','SF Mono',ui-monospace,Menlo,Consolas,monospace;
+  color-scheme:light only;
+}
+html,body{background:var(--bg);height:100%}
+body{font-family:var(--sans);color:var(--ink);line-height:1.55;font-size:14px;
+  font-weight:450;-webkit-font-smoothing:antialiased;overflow:hidden;padding:18px 22px 16px}
+.kicker{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--accent)}
+h1{font-weight:800;letter-spacing:-.03em;line-height:1.1;font-size:26px;margin:4px 0 0}
+.lead{font-size:13.5px;color:var(--ink-2);margin-top:4px}
+.now{display:inline-flex;align-items:center;gap:6px;margin-left:10px;font-size:11.5px;
+  background:#fff;border:1px solid var(--line);border-radius:999px;padding:4px 10px;color:var(--ink-3)}
+.now i{width:10px;height:10px;border-radius:50%;background:#C45C26;display:block}
+.brief-tabs{display:flex;gap:6px;margin:10px 0 12px}
+.btab{font-family:var(--sans);font-size:12.5px;cursor:pointer;font-weight:700;
+  padding:8px 14px;border-radius:999px;border:1px solid var(--line);
+  background:var(--card);color:var(--ink-2)}
+.btab:hover{border-color:var(--accent-line);color:var(--accent-deep);background:var(--accent-soft)}
+.btab.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.brief{display:none}.brief.on{display:block}
+.looks{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.look{text-align:left;border:2px solid var(--line);background:#fff;border-radius:22px;
+  padding:8px;cursor:pointer;color:inherit;font:inherit;overflow:hidden;
+  transition:transform .16s cubic-bezier(.23,1,.32,1),box-shadow .16s}
+.look:hover{transform:translateY(-2px)}
+.look.on{border-color:var(--accent);box-shadow:0 0 0 4px var(--accent-soft),0 18px 40px -18px rgba(124,58,237,.4)}
+.look .meta{padding:6px 8px 8px;display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.look .meta strong{font-size:14px;font-weight:800}
+.look .meta em{font-style:normal;font-size:11.5px;color:var(--ink-3)}
+.look .rec{font-size:10px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;
+  background:var(--accent-soft);color:var(--accent-deep);border-radius:999px;padding:2px 8px}
+.device{border-radius:16px;overflow:hidden;height:430px;position:relative;outline:1px solid rgba(0,0,0,.08)}
+
+/* ---- shared shop / landing mocks ---- */
+.shop{height:100%;padding:10px 12px 12px;font-family:var(--sans);position:relative}
+.shop .bar{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.shop .logo{font-weight:900;font-size:15px;letter-spacing:-.03em}
+.shop .cart{font-size:10px;font-weight:700;border:1px solid currentColor;border-radius:999px;padding:3px 8px;opacity:.7}
+.bubble{font-weight:900;font-size:22px;line-height:.95;letter-spacing:-.03em;color:#fff;
+  -webkit-text-stroke:3px #1A1230;paint-order:stroke fill;text-wrap:balance}
+.sub{font-size:10.5px;font-weight:700;margin:4px 0 8px;opacity:.8}
+.grid3{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.pcard{background:#fff;border-radius:14px;overflow:hidden;box-shadow:0 10px 24px -14px rgba(26,18,48,.35);
+  outline:1px solid rgba(0,0,0,.07)}
+.pimg{height:78px;position:relative}
+.pimg::after{content:"";position:absolute;inset:0;outline:1px solid rgba(0,0,0,.1);pointer-events:none;border-radius:inherit}
+.sil{position:absolute;inset:0;margin:auto}
+.sil.shoe{width:58px;height:28px;border-radius:40% 55% 40% 35%;background:#fff;box-shadow:0 6px 0 #86efac, inset 0 -6px 0 #bbf7d0;top:22px}
+.sil.buds{width:36px;height:36px;border-radius:12px;background:#111;box-shadow:10px 0 0 #111;left:18px;top:20px}
+.sil.watch{width:28px;height:34px;border-radius:8px;background:#1a1a1a;border:3px solid #fb923c;top:18px}
+.sil.bag{width:40px;height:28px;border-radius:6px 6px 10px 10px;background:#2a2a2a;top:24px;box-shadow:inset 0 8px 0 #111}
+.sil.cup{width:22px;height:32px;border-radius:4px 4px 10px 10px;background:#93c5fd;border:2px solid #fff;top:20px}
+.sil.case{width:22px;height:36px;border-radius:5px;background:#ec4899;top:18px;box-shadow:14px 4px 0 #f9a8d4}
+.sil.heart{width:16px;height:16px;background:#ff4fa0;top:10px;right:10px;left:auto;margin:0;transform:rotate(-45deg);border-radius:2px}
+.sil.heart::before,.sil.heart::after{content:"";position:absolute;width:16px;height:16px;background:#ff4fa0;border-radius:50%}
+.sil.heart::before{left:8px;top:0}.sil.heart::after{left:0;top:-8px}
+.pcard b{display:block;font-size:10.5px;padding:6px 8px 0;line-height:1.25}
+.price{color:var(--p);font-weight:800;font-size:12px;padding:2px 8px 0;font-variant-numeric:tabular-nums}
+.btns{display:flex;gap:4px;padding:6px 8px 8px}
+.btns span{flex:1;text-align:center;font-size:9px;font-weight:800;border-radius:999px;padding:5px 0}
+.add{border:1.5px solid var(--p);color:var(--p);background:#fff}
+.buy{background:var(--buy,#1A1230);color:#fff}
+.heart{position:absolute;width:14px;height:14px;right:8px;top:8px;opacity:.85}
+
+/* vibe palettes */
+.v-drop{background:linear-gradient(180deg,#F6E7FF 0%,#FFF3E8 48%,#FFE8D2 100%);--p:#C026D3;--buy:#7C3AED}
+.v-drop .logo{background:linear-gradient(90deg,#FF80B5,#7CFFB2);-webkit-background-clip:text;color:transparent}
+.v-luna{background:linear-gradient(180deg,#FFE4F2 0%,#FFF7FB 55%,#F3E8FF 100%);--p:#E11D8A;--buy:#FF4FA0}
+.v-luna .logo{color:#FF4FA0}
+.v-live{background:linear-gradient(180deg,#C084FC 0%,#E9D5FF 42%,#FBCFE8 100%);--p:#DB2777;--buy:#6D28D9}
+.v-live .logo{color:#5B21B6}
+
+.sneak{background:radial-gradient(120px 80px at 70% 30%,#d1fae5,transparent),linear-gradient(160deg,#ecfdf5,#a7f3d0)}
+.buds{background:radial-gradient(80px 60px at 50% 40%,#52525b,transparent),linear-gradient(160deg,#18181b,#3f3f46)}
+.watch{background:radial-gradient(90px 70px at 60% 40%,#fdba74,transparent),linear-gradient(160deg,#ffedd5,#fb923c)}
+.pinkg{background:radial-gradient(90px 70px at 50% 40%,#fbcfe8,transparent),linear-gradient(160deg,#fce7f3,#f9a8d4)}
+.liveb{background:linear-gradient(160deg,#4c1d95,#7c3aed)}
+.badge{position:absolute;left:6px;top:6px;font-size:8px;font-weight:800;letter-spacing:.04em;
+  background:#DB2777;color:#fff;border-radius:999px;padding:2px 6px}
+
+/* landing mini */
+.land{height:100%;padding:12px;display:grid;grid-template-columns:1.05fr .95fr;gap:8px}
+.land h2{font-size:18px;line-height:.95;letter-spacing:-.04em;font-weight:800;margin:6px 0 4px}
+.land p{font-size:10px;color:inherit;opacity:.72;line-height:1.35}
+.comp{margin-top:8px;background:#fff;border-radius:16px;padding:6px;box-shadow:0 12px 28px -16px rgba(26,18,48,.4)}
+.modes{display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px}
+.mode{border:1px solid rgba(26,18,48,.12);border-radius:10px;padding:5px 6px;font-size:9px;background:#fafafa}
+.mode b{display:block;font-size:10px}
+.mode.on{border-color:var(--p);box-shadow:0 0 0 2px color-mix(in srgb, var(--p) 25%, white)}
+.pri{display:block;margin-top:6px;width:100%;border:0;border-radius:999px;background:#1A1230;color:#fff;
+  font-size:10px;font-weight:800;padding:7px 0;text-align:center}
+.floatc{position:relative}
+.fc{position:absolute;width:78px;background:#fff;border-radius:12px;padding:5px;box-shadow:0 14px 28px -12px rgba(26,18,48,.4)}
+.fc .pimg{height:54px;border-radius:8px}
+.fc b{font-size:9px;padding:4px 2px 0}
+.fc1{left:4px;top:18px;transform:rotate(-7deg)}
+.fc2{right:6px;top:0;transform:rotate(6deg)}
+.chip{display:inline-block;font-size:8px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;
+  border:1px solid currentColor;border-radius:999px;padding:2px 7px;opacity:.75}
+
+.scope{display:flex;gap:8px;margin-top:10px;align-items:center}
+.scope span.label{font-size:11.5px;color:var(--ink-3);font-weight:700;margin-right:4px}
+.sc{border:1.5px solid var(--line);background:#fff;border-radius:999px;padding:7px 12px;
+  font-size:12.5px;font-weight:700;cursor:pointer;color:var(--ink-2)}
+.sc.on{border-color:var(--accent);background:var(--accent-soft);color:var(--accent-deep);
+  box-shadow:0 0 0 3px rgba(124,58,237,.12)}
+.cta-strip{margin-top:10px;padding:10px 14px;
+  background:linear-gradient(135deg,var(--accent-soft),#fff 60%);
+  border:1px solid var(--accent-line);border-radius:14px;font-size:12.5px;color:var(--ink-2);
+  display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.cta-strip .arrow{color:var(--accent);font-weight:800;margin-right:4px}
+.cta-strip strong{color:var(--accent-deep);background:#fff;padding:3px 8px;border-radius:6px;
+  border:1px solid var(--accent-line);font-family:var(--mono);font-size:11.5px}
+.copy{border:0;background:var(--ink);color:#fff;border-radius:999px;padding:8px 14px;
+  font-weight:800;font-size:12px;cursor:pointer}
+.copy:active{transform:scale(.96)}
+.muted{color:var(--ink-3)}
+@media(max-width:900px){
+  body{overflow:auto}
+  .looks{grid-template-columns:1fr}
+  .device{height:320px}
+}
+</style>
+</head>
+<body>
+<div class="kicker">เลือกโทนก่อนลงมือ · 2026-09-02</div>
+<h1>Forge จะพูดภาษาไหนของโฆษณานี้
+  <span class="now"><i></i>ตอนนี้เป็นครีมเอเจนซี่ · serif</span>
+</h1>
+<p class="lead">สามภาพใช้โครงเดียวกัน — การ์ดขาวมน ราคาชมพู/ม่วง ปุ่มเม็ดยา — แต่สีคนละชุด กดการ์ดเพื่อเลือก แล้วบอกในแชทว่าเอาโทนไหน กับทาถึงไหน</p>
+
+<nav class="brief-tabs">
+  <button class="btab on" data-t="shop">ร้านที่ agent สร้าง</button>
+  <button class="btab" data-t="land">หน้าแรก Forge</button>
+</nav>
+
+<section class="brief on" data-tab="shop">
+  <div class="looks" id="looks-shop">
+    <button class="look on" data-vibe="Vibe Drop" type="button">
+      <div class="device">
+        <div class="shop v-drop">
+          <div class="bar"><span class="logo">VIBE DROP</span><span class="cart">Cart 0</span></div>
+          <div class="bubble">ขายง่ายขึ้น</div>
+          <div class="sub">ขายซ้ำได้ · ไม่เสียค่าคอม</div>
+          <div class="grid3">
+            <article class="pcard"><div class="pimg sneak"><i class="sil shoe"></i></div><b>Air Duke Low</b><div class="price">฿2,890</div>
+              <div class="btns"><span class="add">ใส่รถเข็น</span><span class="buy">ซื้อเลย</span></div></article>
+            <article class="pcard"><div class="pimg buds"><i class="sil buds"></i></div><b>BeatBuds Pro</b><div class="price">฿1,699</div>
+              <div class="btns"><span class="add">ใส่รถเข็น</span><span class="buy">ซื้อเลย</span></div></article>
+            <article class="pcard"><div class="pimg watch"><i class="sil watch"></i></div><b>Pulse Gear</b><div class="price">฿3,499</div>
+              <div class="btns"><span class="add">ใส่รถเข็น</span><span class="buy">ซื้อเลย</span></div></article>
+            <article class="pcard"><div class="pimg" style="background:linear-gradient(160deg,#111,#444)"><i class="sil bag"></i></div><b>Street Sling</b><div class="price">฿1,299</div>
+              <div class="btns"><span class="add">ใส่รถเข็น</span><span class="buy">ซื้อเลย</span></div></article>
+          </div>
+        </div>
+      </div>
+      <div class="meta"><strong>Vibe Drop</strong><span class="rec">แนะนำ</span></div>
+      <div class="meta" style="padding-top:0"><em>พีช + มินต์ + ม่วง — ใกล้ครีมปัจจุบัน ใช้กับเครื่องมือได้</em></div>
+    </button>
+
+    <button class="look" data-vibe="LUNA ชมพู" type="button">
+      <div class="device">
+        <div class="shop v-luna">
+          <div class="bar"><span class="logo">LUNA</span><span class="cart">Cart 0</span></div>
+          <div class="bubble">ขายง่ายขึ้น</div>
+          <div class="sub">สินค้าฮิต · ส่งฟรี · ของดีราคาโดน</div>
+          <div class="grid3">
+            <article class="pcard"><div class="pimg pinkg"><i class="sil shoe"></i><i class="sil heart"></i></div><b>Lilac Dream</b><div class="price">฿1,890</div>
+              <div class="btns"><span class="add">ใส่รถเข็น</span><span class="buy">ซื้อเลย</span></div></article>
+            <article class="pcard"><div class="pimg" style="background:linear-gradient(160deg,#dbeafe,#93c5fd)"><i class="sil cup"></i></div><b>Shaker 700ml</b><div class="price">฿449</div>
+              <div class="btns"><span class="add">ใส่รถเข็น</span><span class="buy">ซื้อเลย</span></div></article>
+            <article class="pcard"><div class="pimg" style="background:linear-gradient(160deg,#fce7f3,#f9a8d4)"><i class="sil case"></i></div><b>Lucky Cat Case</b><div class="price">฿690</div>
+              <div class="btns"><span class="add">ใส่รถเข็น</span><span class="buy">ซื้อเลย</span></div></article>
+            <article class="pcard"><div class="pimg" style="background:linear-gradient(160deg,#fff,#fbcfe8)"><i class="sil buds"></i></div><b>Luna Buds</b><div class="price">฿1,299</div>
+              <div class="btns"><span class="add">ใส่รถเข็น</span><span class="buy">ซื้อเลย</span></div></article>
+          </div>
+        </div>
+      </div>
+      <div class="meta"><strong>LUNA ชมพู</strong></div>
+      <div class="meta" style="padding-top:0"><em>พาสเทลหัวใจ — น่ารักสุด ร้านสาว ๆ ชัดเจน เครื่องมืออาจหวานไป</em></div>
+    </button>
+
+    <button class="look" data-vibe="ม่วงไลฟ์" type="button">
+      <div class="device">
+        <div class="shop v-live">
+          <div class="bar"><span class="logo">กำลังไลฟ์</span><span class="cart">LIVE</span></div>
+          <div class="bubble">ขายง่ายขึ้น</div>
+          <div class="sub">ขายซ้ำได้ / ไม่เสียค่าคอม</div>
+          <div class="grid3">
+            <article class="pcard"><div class="pimg sneak"><i class="badge">LIVE</i><i class="sil shoe"></i></div><b>Sneaker</b><div class="price">฿890</div>
+              <div class="btns"><span class="add">ใส่ตะกร้า</span><span class="buy">ซื้อเลย</span></div></article>
+            <article class="pcard"><div class="pimg liveb"><i class="badge">LIVE</i></div><b>Street hoodie</b><div class="price">฿1,290</div>
+              <div class="btns"><span class="add">ใส่ตะกร้า</span><span class="buy">ซื้อเลย</span></div></article>
+            <article class="pcard"><div class="pimg buds"><i class="badge">LIVE</i><i class="sil buds"></i></div><b>SoundBuds</b><div class="price">฿690</div>
+              <div class="btns"><span class="add">ใส่ตะกร้า</span><span class="buy">ซื้อเลย</span></div></article>
+            <article class="pcard"><div class="pimg watch"><i class="badge">LIVE</i><i class="sil watch"></i></div><b>BKK VIBES</b><div class="price">฿690</div>
+              <div class="btns"><span class="add">ใส่ตะกร้า</span><span class="buy">ซื้อเลย</span></div></article>
+          </div>
+        </div>
+      </div>
+      <div class="meta"><strong>ม่วงไลฟ์</strong></div>
+      <div class="meta" style="padding-top:0"><em>พลังสูงสุดแบบมือถือไลฟ์ — เด่นในโฆษณา แต่ editor จะเสียงดัง</em></div>
+    </button>
+  </div>
+</section>
+
+<section class="brief" data-tab="land">
+  <div class="looks" id="looks-land">
+    <button class="look on" data-vibe="Vibe Drop" type="button">
+      <div class="device">
+        <div class="shop v-drop land">
+          <div>
+            <span class="chip">SORNKan Forge</span>
+            <h2 class="bubble" style="font-size:20px;margin-top:8px">มาสร้าง<br>ระบบกัน</h2>
+            <p>บอกสิ่งที่อยากได้ เชิญเอเจนต์ ติดเว็บ · ฐานข้อมูล · ที่เก็บ ในหน้าเดียว</p>
+            <div class="comp">
+              <div class="modes">
+                <div class="mode"><b>Conjure</b>ว่าง</div>
+                <div class="mode on"><b>Store</b>ร้าน</div>
+                <div class="mode"><b>Cafe</b>เมนู</div>
+              </div>
+              <span class="pri">เชิญเอเจนต์ ↗</span>
+            </div>
+          </div>
+          <div class="floatc">
+            <article class="fc fc1"><div class="pimg sneak"><i class="sil shoe"></i></div><b>Tote</b></article>
+            <article class="fc fc2"><div class="pimg watch"><i class="sil watch"></i></div><b>Cap</b></article>
+          </div>
+        </div>
+      </div>
+      <div class="meta"><strong>Vibe Drop</strong><span class="rec">แนะนำ</span></div>
+      <div class="meta" style="padding-top:0"><em>หัวข้อฟองสบู่ + การ์ดเอียง — ยังอ่าน brief ได้</em></div>
+    </button>
+    <button class="look" data-vibe="LUNA ชมพู" type="button">
+      <div class="device">
+        <div class="shop v-luna land">
+          <div>
+            <span class="chip">SORNKan Forge</span>
+            <h2 class="bubble" style="font-size:20px;margin-top:8px">มาสร้าง<br>ระบบกัน</h2>
+            <p>บอกสิ่งที่อยากได้ เชิญเอเจนต์ ติดโมดูลในหน้าเดียว</p>
+            <div class="comp">
+              <div class="modes">
+                <div class="mode"><b>Conjure</b></div>
+                <div class="mode on"><b>Store</b></div>
+                <div class="mode"><b>Cafe</b></div>
+              </div>
+              <span class="pri" style="background:#FF4FA0">เชิญเอเจนต์ ↗</span>
+            </div>
+          </div>
+          <div class="floatc">
+            <article class="fc fc1"><div class="pimg pinkg"><i class="sil shoe"></i></div><b>Tote</b></article>
+            <article class="fc fc2"><div class="pimg" style="background:linear-gradient(160deg,#fff,#fbcfe8)"><i class="sil heart"></i></div><b>Cap</b></article>
+          </div>
+        </div>
+      </div>
+      <div class="meta"><strong>LUNA ชมพู</strong></div>
+      <div class="meta" style="padding-top:0"><em>หวานทั้งหน้าแรก — เหมาะถ้าร้านคือผลิตภัณฑ์หลัก</em></div>
+    </button>
+    <button class="look" data-vibe="ม่วงไลฟ์" type="button">
+      <div class="device">
+        <div class="shop v-live land">
+          <div>
+            <span class="chip">SORNKan Forge</span>
+            <h2 class="bubble" style="font-size:20px;margin-top:8px">มาสร้าง<br>ระบบกัน</h2>
+            <p>บอกสิ่งที่อยากได้ เชิญเอเจนต์ ติดโมดูลในหน้าเดียว</p>
+            <div class="comp">
+              <div class="modes">
+                <div class="mode"><b>Conjure</b></div>
+                <div class="mode on"><b>Store</b></div>
+                <div class="mode"><b>Cafe</b></div>
+              </div>
+              <span class="pri" style="background:#6D28D9">เชิญเอเจนต์ ↗</span>
+            </div>
+          </div>
+          <div class="floatc">
+            <article class="fc fc1"><div class="pimg liveb"></div><b>Tote</b></article>
+            <article class="fc fc2"><div class="pimg sneak"><i class="sil shoe"></i></div><b>Cap</b></article>
+          </div>
+        </div>
+      </div>
+      <div class="meta"><strong>ม่วงไลฟ์</strong></div>
+      <div class="meta" style="padding-top:0"><em>ไล่ม่วงเต็มจอ — จำได้ทันที แต่อ่านตัวอักษรยากกว่า</em></div>
+    </button>
+  </div>
+</section>
+
+<div class="scope">
+  <span class="label">ทาถึง</span>
+  <button class="sc on" data-scope="ทั้งระบบ" type="button">ทั้งระบบ</button>
+  <button class="sc" data-scope="แค่ร้านที่ generate" type="button">แค่ร้านที่ generate</button>
+  <button class="sc" data-scope="แค่หน้าแรกกับ editor" type="button">แค่หน้าแรกกับ editor</button>
+</div>
+
+<div class="cta-strip">
+  <span><span class="arrow">→</span> ตอบในแชทด้วยข้อความที่เลือกอยู่:
+    <strong id="hint">Vibe Drop ทั้งระบบ</strong>
+    <span class="muted">หรือ</span>
+    <strong>ม่วงไลฟ์ แค่ร้านที่ generate</strong></span>
+  <button class="copy" type="button" id="copy">คัดลอกคำตอบ</button>
+</div>
+
+<script>
+const hint = document.getElementById('hint');
+function vibe(){
+  const vis = document.querySelector('.brief.on');
+  const on = vis.querySelector('.look.on');
+  return on ? on.dataset.vibe : 'Vibe Drop';
+}
+function scope(){
+  const on = document.querySelector('.sc.on');
+  return on ? on.dataset.scope : 'ทั้งระบบ';
+}
+function sync(){
+  const t = vibe() + ' ' + scope();
+  hint.textContent = t;
+}
+document.querySelectorAll('.btab').forEach(b=>{
+  b.onclick=()=>{
+    document.querySelectorAll('.btab').forEach(x=>x.classList.remove('on'));
+    document.querySelectorAll('.brief').forEach(x=>x.classList.remove('on'));
+    b.classList.add('on');
+    document.querySelector('[data-tab="'+b.dataset.t+'"]').classList.add('on');
+    sync();
+  };
+});
+function wireLooks(root){
+  root.querySelectorAll('.look').forEach(el=>{
+    el.onclick=()=>{
+      root.querySelectorAll('.look').forEach(x=>x.classList.remove('on'));
+      el.classList.add('on');
+      const other = root.id==='looks-shop' ? document.getElementById('looks-land') : document.getElementById('looks-shop');
+      other.querySelectorAll('.look').forEach(x=>{
+        x.classList.toggle('on', x.dataset.vibe===el.dataset.vibe);
+      });
+      sync();
+    };
+  });
+}
+wireLooks(document.getElementById('looks-shop'));
+wireLooks(document.getElementById('looks-land'));
+document.querySelectorAll('.sc').forEach(el=>{
+  el.onclick=()=>{
+    document.querySelectorAll('.sc').forEach(x=>x.classList.remove('on'));
+    el.classList.add('on');
+    sync();
+  };
+});
+document.getElementById('copy').onclick=async()=>{
+  const t = vibe() + ' ' + scope();
+  try{ await navigator.clipboard.writeText(t); }catch(e){}
+  document.getElementById('copy').textContent = 'คัดลอกแล้ว · วางในแชท';
+};
+</script>
+</body>
+</html>
