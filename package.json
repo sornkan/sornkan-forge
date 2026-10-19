@@ -19,14 +19,14 @@
     "vendor:hono": "node scripts/vendor-hono.mjs"
   },
   "dependencies": {
-    "hono": "^4.13.5"
+    "hono": "^4.13.13"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "latest",
     "esbuild": "^0.25.9",
     "typescript": "^5.9.2",
     "vitest": "^4.1.11",
-    "wrangler": "^4.132.0"
+    "wrangler": "^4.151.1"
   },
   "overrides": {
     "undici": ">=7.29.1"
