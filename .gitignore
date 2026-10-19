@@ -22,25 +22,8 @@ Thumbs.db
 # Root screenshots from planning sessions
 /*.png
 
-# Look photos with no recorded source/license yet (see looks/CREDITS.md).
+# Plan-mockup look photos with no recorded source/license (see looks/CREDITS.md).
 # Kept local until their origin is confirmed; do not publish.
-/public/looks/blank.jpg
-/public/looks/cafepe.jpg
-/public/looks/class.jpg
-/public/looks/coffee.jpg
-/public/looks/coffee2.jpg
-/public/looks/desk.jpg
-/public/looks/jacket2.jpg
-/public/looks/notebook.jpg
-/public/looks/room.jpg
-/public/looks/shopw.jpg
-/public/looks/studio.jpg
-/public/looks/w1.jpg
-/public/looks/w2.jpg
-/public/looks/w3.jpg
-/public/looks/w4.jpg
-/public/looks/w5.jpg
-/public/looks/w6.jpg
 /instruction/work/looks/blank.jpg
 /instruction/work/looks/cafepe.jpg
 /instruction/work/looks/cap.jpg
